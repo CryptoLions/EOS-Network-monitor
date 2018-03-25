@@ -72,3 +72,11 @@ function humanTimingAPI (sec){
 
 }
 
+function convertUTCDateToLocalDate(date) {
+    var newDate = new Date(date);
+    newDate.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+
+    return newDate.getFullYear()+ "-" + ("0" + newDate.getMonth()).slice(-2)  + "-" + ("0" + newDate.getDate()).slice(-2) + " " + ("0" + newDate.getHours()).slice(-2) + ":" + ("0" + newDate.getMinutes()).slice(-2) + ":" + ("0" + newDate.getSeconds()).slice(-2);
+    return newDate;
+}
+

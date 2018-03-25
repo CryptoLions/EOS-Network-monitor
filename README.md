@@ -1,7 +1,7 @@
 # EOS-Testnet-monitor
-This tool helps monitor BP nodes
+This tool helps monitor EOS BP nodes
 
-To use, chneg node list in bps.js to your.
+To use, change node list in bps.js to your.
 
 please add line to all nodes config.ini:  
 access-control-allow-origin = *   

@@ -63,7 +63,7 @@ function updateNodeInfo(node, nodeID){
 	   	LastBlockNum = node.head_block_num;
 		$('#lastBlock').html(node.head_block_num);
 		$('#lastProducer').html(node.head_block_producer);
-		$('#lastDate').html(node.head_block_time);
+		$('#lastDate').html(convertUTCDateToLocalDate(new Date(node.head_block_time)));
 		$('#lastIrrevBlock').html(node.last_irreversible_block_num);
 
 		if (LastProducer != node.head_block_producer) {

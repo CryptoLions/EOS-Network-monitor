@@ -1,8 +1,9 @@
 # EOS Testnet monitor
-This tool helps monitor EOS BP nodes
+Simple tool to monitor EOS testnet BP node.
 
 To use, change node list in /js/bps.js to your.  
-To checge request interval edit /js/check_nodes.js variable var _reqInterval = 500;  
+To change request interval edit file /js/check_nodes.js   
+and modify variable var _reqInterval = 500; 
 
 
 please add line to config.ini for all nodes:  

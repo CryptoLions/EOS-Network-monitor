@@ -105,7 +105,7 @@ function initNodesList(){
  		var node_http_url = "<a href='http://"+blockProducerList[bp].node_addr+":"+blockProducerList[bp].port_http+"/v1/chain/get_info' target='_blank'>"+blockProducerList[bp].port_http+"</a>";
 
  		$('#bpTable').append("<tr  id='noderow_"+bpN+"'> \
- 								<td id='c0_"+bpN+"'>"+bp+"</td> \
+ 								<td id='c0_"+bpN+"'>"+(bp*1+1)+"</td> \
  								<td id='c1_"+bpN+"'>"+blockProducerList[bp].bp_name+"</td> \
  								<td id='c2_"+bpN+"'>"+lastCheck+"</td> \
  								<td id='c3_"+bpN+"'>"+lastNodeBlock+"</td> \

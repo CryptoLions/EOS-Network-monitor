@@ -1,0 +1,73 @@
+body, html {
+	height: 100%;
+}
+
+
+.bg {
+	background-image: linear-gradient(to bottom, rgba(255,255,255,0.8) 0%,rgba(255,255,255,.2) 100%), url(imgs/bg.jpg);
+	height: 100%;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+.page {
+	overflow: auto;
+  		height: 100%;
+}
+
+.green {
+	color: green;
+}
+
+.s1 {
+	font-size: 20px;
+}
+
+
+.bold {
+	font-weight: bold;
+}
+
+.red {
+	color: red;
+}
+
+.greentblrow{
+	background: rgb(17,168,39,0.5) !important;
+}
+
+.redtblrow{
+	background: rgb(255,4,4,0.5)  !important;
+}
+.tblrow{
+	background: rgb(255, 255, 255, 0.5);
+}
+
+.footer{	background-color: rgb(255, 255, 255, 0.3);
+	padding: 10px 30px;
+}
+
+.fotertext{
+	color: black;
+	font-size: 28px;
+}
+.foterlink{
+	color: black;
+	font-size: 28px;
+}
+.foterlink:hover{
+	color: black;
+	text-decoration: none;
+          font-weight: bold;
+}
+
+      .table tbody tr:hover td, .table tbody tr:hover th {
+  		background-color: rgb(255, 255, 255, 0.6);
+}
+.table > tbody > tr > td {
+   		vertical-align: middle;
+}
+
+.dot {	color: rgb(0, 0, 0, 0.3);
+	padding: 0px 10px;
+}

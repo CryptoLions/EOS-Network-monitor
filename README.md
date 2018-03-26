@@ -16,5 +16,6 @@ Upd: 2018-03-26
 - Added checking last produced blcok
 - Added Time from last production
 - Added server version
+- Added node version
 - Added favicon
 - Small code refactoring

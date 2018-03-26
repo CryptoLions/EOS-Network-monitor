@@ -1,10 +1,10 @@
-# EOS-Testnet-monitor
+# EOS Testnet monitor
 This tool helps monitor EOS BP nodes
 
 To use, change node list in bps.js to your.
 
-please add line to all nodes config.ini:  
+please add line to config.ini for all nodes:  
 access-control-allow-origin = *   
-To allow easy eos testnet monitor access
-
+to allow access to monitor  
+  
 Example: http://jungle.cryptolions.io:9898/nodes/

@@ -5,6 +5,13 @@
 *
 ***********************************************/
 
+/**********************************************
+*
+* CryptoLions.io
+* https://github.com/CryptoLions/EOS-Testnet-monitor
+*
+***********************************************/
+
 
 var blockProducerList = [
   {
@@ -30,9 +37,9 @@ var blockProducerList = [
     "organisation": "EOSNet.io",
     "location": "USA, Bluffdale, UT",
     "node_addr": "eosslc.com",
-    "port_http": "8876",
+    "port_http": "8800",
     "port_ssl": "",
-    "port_p2p": "9876"
+    "port_p2p": "9877"
   },
   {
     "bp_name": "python",
@@ -47,10 +54,10 @@ var blockProducerList = [
     "bp_name": "bat",
     "organisation": "EOSIO.se",
     "location": "Sweden",
-    "node_addr": "jungle.cryptolions.io",
-    "port_http": "8896",
+    "node_addr": "ctestnet.eosio.se",
+    "port_http": "8881",
     "port_ssl": "",
-    "port_p2p": "9884"
+    "port_p2p": "9871"
   },
   {
     "bp_name": "wolf",
@@ -65,34 +72,70 @@ var blockProducerList = [
     "bp_name": "fox",
     "organisation": "EOS Rio",
     "location": "Brazil, Rio de Janeiro",
-    "node_addr": "201.18.14.130",
+    "node_addr": "eosrio.entropia.in",
     "port_http": "8889",
     "port_ssl": "",
     "port_p2p": "9876"
   },
   {
     "bp_name": "bear",
-    "organisation": "CryptoLions.io",
-    "location": "Free",
-    "node_addr": "jungle.cryptolions.io",
-    "port_http": "8890",
+    "organisation": "EOS.Cafe",
+    "location": "Canada",
+    "node_addr": "35.182.219.0",
+    "port_http": "8888",
     "port_ssl": "",
-    "port_p2p": "9878"
+    "port_p2p": "9876"
   },
 
   {
     "bp_name": "panther",
-    "organisation": "CryptoLions.io",
-    "location": "Free",
-    "node_addr": "jungle.cryptolions.io",
-    "port_http": "8891",
+    "organisation": "EOS42.io",
+    "location": "UK, London",
+    "node_addr": "bp2-d3.eos42.io",
+    "port_http": "8888",
     "port_ssl": "",
-    "port_p2p": "9879"
+    "port_p2p": "9876"
+  },
+  {
+    "bp_name": "leopard",
+    "organisation": "--eosio.africa--",
+    "location": "Africa",
+    "node_addr": "jungle.cryptolions.io",
+    "port_http": "8903",
+    "port_ssl": "",
+    "port_p2p": "9891"
+  },
+  {
+    "bp_name": "wombat",
+    "organisation": "--",
+    "location": "--",
+    "node_addr": "jungle.cryptolions.io",
+    "port_http": "8906",
+    "port_ssl": "",
+    "port_p2p": "9894"
+  },
+  {
+    "bp_name": "boar",
+    "organisation": "-EOSBR-",
+    "location": "-USA, San Francisco-",
+    "node_addr": "jungle.cryptolions.io",
+    "port_http": "8902",
+    "port_ssl": "",
+    "port_p2p": "9890"
+  },
+  {
+    "bp_name": "elephant",
+    "organisation": "-Blockpro.one-",
+    "location": "-USA-",
+    "node_addr": "jungle.cryptolions.io",
+    "port_http": "8895",
+    "port_ssl": "",
+    "port_p2p": "9883"
   },
   {
     "bp_name": "langurs",
-    "organisation": "CryptoLions.io",
-    "location": "Free",
+    "organisation": "-EOSgreen.io-",
+    "location": "-UK-",
     "node_addr": "jungle.cryptolions.io",
     "port_http": "8892",
     "port_ssl": "",
@@ -106,15 +149,6 @@ var blockProducerList = [
     "port_http": "8893",
     "port_ssl": "",
     "port_p2p": "9881"
-  },
-  {
-    "bp_name": "elephant",
-    "organisation": "CryptoLions.io",
-    "location": "Free",
-    "node_addr": "jungle.cryptolions.io",
-    "port_http": "8895",
-    "port_ssl": "",
-    "port_p2p": "9883"
   },
   {
     "bp_name": "cobra",
@@ -144,24 +178,6 @@ var blockProducerList = [
     "port_p2p": "9889"
   },
   {
-    "bp_name": "boar",
-    "organisation": "CryptoLions.io",
-    "location": "Free",
-    "node_addr": "jungle.cryptolions.io",
-    "port_http": "8902",
-    "port_ssl": "",
-    "port_p2p": "9890"
-  },
-  {
-    "bp_name": "leopard",
-    "organisation": "CryptoLions.io",
-    "location": "Free",
-    "node_addr": "jungle.cryptolions.io",
-    "port_http": "8903",
-    "port_ssl": "",
-    "port_p2p": "9891"
-  },
-  {
     "bp_name": "lizard",
     "organisation": "CryptoLions.io",
     "location": "Free",
@@ -178,15 +194,6 @@ var blockProducerList = [
     "port_http": "8905",
     "port_ssl": "",
     "port_p2p": "9893"
-  },
-  {
-    "bp_name": "wombat",
-    "organisation": "CryptoLions.io",
-    "location": "Free",
-    "node_addr": "jungle.cryptolions.io",
-    "port_http": "8906",
-    "port_ssl": "",
-    "port_p2p": "9894"
   },
   {
     "bp_name": "zebra",

@@ -5,14 +5,6 @@
 *
 ***********************************************/
 
-/**********************************************
-*
-* CryptoLions.io
-* https://github.com/CryptoLions/EOS-Testnet-monitor
-*
-***********************************************/
-
-
 var blockProducerList = [
   {
     "bp_name": "lion",

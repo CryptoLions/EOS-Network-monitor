@@ -5,7 +5,7 @@
 *
 ***********************************************/
 
-var _reqInterval = 500;
+var _reqInterval = 100;
 
 var LastBlockNum = -1;
 var LastNodeChecked = -1;

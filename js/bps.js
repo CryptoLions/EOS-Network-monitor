@@ -5,6 +5,7 @@
 *
 ***********************************************/
 
+
 var blockProducerList = [
   {
     "bp_name": "lion",
@@ -16,42 +17,6 @@ var blockProducerList = [
     "port_p2p": "9876"
   },
   {
-    "bp_name": "tiger",
-    "organisation": "CryptoLions.io",
-    "location": "Ukraine, Lviv",
-    "node_addr": "193.93.219.219",
-    "port_http": "8888",
-    "port_ssl": "",
-    "port_p2p": "9876"
-  },
-  {
-    "bp_name": "jaguar",
-    "organisation": "EOSNet.io",
-    "location": "USA, Bluffdale, UT",
-    "node_addr": "eosslc.com",
-    "port_http": "8800",
-    "port_ssl": "",
-    "port_p2p": "9877"
-  },
-  {
-    "bp_name": "python",
-    "organisation": "Prometeos.io",
-    "location": "Spain",
-    "node_addr": "python.prometeos.io",
-    "port_http": "8888",
-    "port_ssl": "",
-    "port_p2p": "9876"
-  },
-  {
-    "bp_name": "bat",
-    "organisation": "EOSIO.se",
-    "location": "Sweden",
-    "node_addr": "ctestnet.eosio.se",
-    "port_http": "8881",
-    "port_ssl": "",
-    "port_p2p": "9871"
-  },
-  {
     "bp_name": "wolf",
     "organisation": "EOS Brazil",
     "location": "Brazil, Sao Paulo",
@@ -59,15 +24,6 @@ var blockProducerList = [
     "port_http": "8890",
     "port_ssl": "",
     "port_p2p": "9878"
-  },
-  {
-    "bp_name": "fox",
-    "organisation": "EOS Rio",
-    "location": "Brazil, Rio de Janeiro",
-    "node_addr": "eosrio.entropia.in",
-    "port_http": "8889",
-    "port_ssl": "",
-    "port_p2p": "9876"
   },
   {
     "bp_name": "bear",
@@ -78,7 +34,6 @@ var blockProducerList = [
     "port_ssl": "",
     "port_p2p": "9876"
   },
-
   {
     "bp_name": "panther",
     "organisation": "EOS42.io",
@@ -87,42 +42,6 @@ var blockProducerList = [
     "port_http": "8888",
     "port_ssl": "",
     "port_p2p": "9876"
-  },
-  {
-    "bp_name": "leopard",
-    "organisation": "--eosio.africa--",
-    "location": "Africa",
-    "node_addr": "jungle.cryptolions.io",
-    "port_http": "8903",
-    "port_ssl": "",
-    "port_p2p": "9891"
-  },
-  {
-    "bp_name": "wombat",
-    "organisation": "--",
-    "location": "--",
-    "node_addr": "jungle.cryptolions.io",
-    "port_http": "8906",
-    "port_ssl": "",
-    "port_p2p": "9894"
-  },
-  {
-    "bp_name": "boar",
-    "organisation": "-EOSBR-",
-    "location": "-USA, San Francisco-",
-    "node_addr": "jungle.cryptolions.io",
-    "port_http": "8902",
-    "port_ssl": "",
-    "port_p2p": "9890"
-  },
-  {
-    "bp_name": "elephant",
-    "organisation": "-Blockpro.one-",
-    "location": "-USA-",
-    "node_addr": "jungle.cryptolions.io",
-    "port_http": "8895",
-    "port_ssl": "",
-    "port_p2p": "9883"
   },
   {
     "bp_name": "langurs",
@@ -143,6 +62,42 @@ var blockProducerList = [
     "port_p2p": "9881"
   },
   {
+    "bp_name": "python",
+    "organisation": "Prometeos.io",
+    "location": "Spain",
+    "node_addr": "python.prometeos.io",
+    "port_http": "8888",
+    "port_ssl": "",
+    "port_p2p": "9876"
+  },
+  {
+    "bp_name": "elephant",
+    "organisation": "Blockpro.one",
+    "location": "USA",
+    "node_addr": "18.188.133.163",
+    "port_http": "8888",
+    "port_ssl": "",
+    "port_p2p": "9876"
+  },
+  {
+    "bp_name": "bat",
+    "organisation": "EOSIO.se",
+    "location": "Sweden",
+    "node_addr": "ctestnet.eosio.se",
+    "port_http": "8881",
+    "port_ssl": "",
+    "port_p2p": "9871"
+  },
+  {
+    "bp_name": "tiger",
+    "organisation": "CryptoLions.io",
+    "location": "Ukraine, Lviv",
+    "node_addr": "193.93.219.219",
+    "port_http": "8888",
+    "port_ssl": "",
+    "port_p2p": "9876"
+  },
+  {
     "bp_name": "cobra",
     "organisation": "CryptoLions.io",
     "location": "Free",
@@ -152,13 +107,31 @@ var blockProducerList = [
     "port_p2p": "9885"
   },
   {
+    "bp_name": "fox",
+    "organisation": "EOS Rio",
+    "location": "Brazil, Rio de Janeiro",
+    "node_addr": "eosrio.entropia.in",
+    "port_http": "8889",
+    "port_ssl": "",
+    "port_p2p": "9876"
+  },
+   {
     "bp_name": "gorilla",
-    "organisation": "CryptoLions.io",
-    "location": "Free",
+    "organisation": "-EOSnottingham.io-",
+    "location": "-UK-",
     "node_addr": "jungle.cryptolions.io",
     "port_http": "8899",
     "port_ssl": "",
     "port_p2p": "9887"
+  },
+  {
+    "bp_name": "jaguar",
+    "organisation": "EOSNet.io",
+    "location": "USA, Bluffdale, UT",
+    "node_addr": "eosslc.com",
+    "port_http": "8800",
+    "port_ssl": "",
+    "port_p2p": "9877"
   },
   {
     "bp_name": "lemur",
@@ -168,6 +141,24 @@ var blockProducerList = [
     "port_http": "8901",
     "port_ssl": "",
     "port_p2p": "9889"
+  },
+  {
+    "bp_name": "boar",
+    "organisation": "EOSBR",
+    "location": "USA, San Francisco",
+    "node_addr": "138.68.238.129",
+    "port_http": "8890",
+    "port_ssl": "",
+    "port_p2p": "9876"
+  },
+  {
+    "bp_name": "leopard",
+    "organisation": "EOSio.africa",
+    "location": "Africa",
+    "node_addr": "hlathi.eosio.africa",
+    "port_http": "8888",
+    "port_ssl": "",
+    "port_p2p": "9877"
   },
   {
     "bp_name": "lizard",
@@ -188,15 +179,22 @@ var blockProducerList = [
     "port_p2p": "9893"
   },
   {
+    "bp_name": "wombat",
+    "organisation": "--",
+    "location": "--",
+    "node_addr": "jungle.cryptolions.io",
+    "port_http": "8906",
+    "port_ssl": "",
+    "port_p2p": "9894"
+  },
+  {
     "bp_name": "zebra",
-    "organisation": "CryptoLions.io",
-    "location": "Free",
+    "organisation": "-EOS New York-",
+    "location": "-Canada, Montreal-",
     "node_addr": "jungle.cryptolions.io",
     "port_http": "8907",
     "port_ssl": "",
     "port_p2p": "9895"
   }
-
-
 
 ]

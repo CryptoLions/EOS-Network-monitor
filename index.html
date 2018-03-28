@@ -12,10 +12,10 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
-	<script src="js/utils.js?05"></script>
-	<script src="js/bps.js?05"></script>
-	<script src="js/check_nodes.js?05"></script>
-	<link rel="stylesheet" href="style.css?05">
+	<script src="js/utils.js?08"></script>
+	<script src="js/bps.js?23"></script>
+	<script src="js/check_nodes.js?08"></script>
+	<link rel="stylesheet" href="style.css?10">
 
 
 
@@ -28,7 +28,7 @@
 	<div class="container">
 		<h1>EOS Jungle Testnet Monitor (<a target="_blank" href="https://github.com/CryptoLions/JungleTestnet">GitHub</a>)</h1>
 	    <BR>
-        <div class="s1">
+        <div class="mainInfo">
 			<nobr> Last Block: <span class="green" id="lastBlock">--</span> <span class="dot">&#9899;</span> </nobr>
 			<nobr> Produced by: <span class="green" id="lastProducer">--</span> <span class="dot">&#9899;</span> </nobr>
 			<nobr> Last irreversible block: <span class="green" id="lastIrrevBlock">--</span> <span class="dot">&#9899;</span> </nobr>
@@ -63,7 +63,7 @@
 				<div class="table-responsive-sm vscroll">
 					<table class="table table-hover table-sm" id="bpTable">
 						<thead>
-							<tr class="text-center">
+							<tr class="text-center tblheader">
 								<th scope="col">#</th>
 								<th scope="col" width="100">BP name</th>
 								<th scope="col">Answered</th>
@@ -71,8 +71,8 @@
 								<th scope="col">Produced</th>
 								<th scope="col">Block</th>
 								<th scope="col">Address</th>
-								<th scope="col">HTTP port</th>
-								<th scope="col">P2P port</th>
+								<th scope="col">HTTP</th>
+								<th scope="col">P2P</th>
 								<th scope="col">Version</th>
 								<th scope="col">Organisation</th>
 								<th scope="col">Location</th>

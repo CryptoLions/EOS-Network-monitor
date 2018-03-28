@@ -18,6 +18,10 @@ GitGub: https://github.com/CryptoLions
 SteemIt: https://steemit.com/eos/@cryptolions/crypto-lions-eos-block-producer-candidates#comments  
 
 # Updates
+Upd: 2018-03-28
+- Small design fixes for better view
+- Month showing fix in last block date
+
 Upd: 2018-03-26
 - Small table layout
 - Added checking last produced blcok

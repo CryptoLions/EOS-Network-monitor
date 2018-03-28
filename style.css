@@ -4,7 +4,7 @@ body, html {
 
 
 .bg {
-	background-image: linear-gradient(to bottom, rgba(255,255,255,0.8) 0%,rgba(255,255,255,.2) 100%), url(imgs/bg.jpg);
+	background-image: linear-gradient(to bottom, rgba(255,255,255,0.9) 0%,rgba(255,255,255,.5) 100%), url(imgs/bg2.jpg);
 	height: 100%;
 	background-position: center;
 	background-repeat: no-repeat;
@@ -20,9 +20,14 @@ body, html {
 }
 
 .s1 {
-	font-size: 20px;
+
 }
 
+.mainInfo {
+	font-size: 21px;
+	background-color: rgb(255, 255, 255, 0.6);
+	padding: 10px 30px;
+}
 
 .bold {
 	font-weight: bold;
@@ -30,6 +35,10 @@ body, html {
 
 .red {
 	color: red;
+}
+
+.tblheader {
+	background: rgb(158, 214, 103, 0.6);
 }
 
 .greentblrow{
@@ -45,7 +54,7 @@ body, html {
 }
 
 .footer{
-	background-color: rgb(255, 255, 255, 0.5);
+	background-color: rgb(255, 255, 255, 0.4);
 	padding: 10px 30px;
 }
 

@@ -33,17 +33,19 @@ body, html {
 }
 
 .greentblrow{
-	background: rgb(17,168,39,0.5) !important;
+	background: rgb(17,168,39,0.8) !important;
+	color: white;
 }
 
 .redtblrow{
-	background: rgb(255,4,4,0.5)  !important;
+	background: rgb(255,4,4,0.6)  !important;
 }
 .tblrow{
-	background: rgb(255, 255, 255, 0.5);
+	background: rgb(255, 255, 255, 0.8);
 }
 
-.footer{	background-color: rgb(255, 255, 255, 0.3);
+.footer{
+	background-color: rgb(255, 255, 255, 0.5);
 	padding: 10px 30px;
 }
 
@@ -68,6 +70,7 @@ body, html {
    		vertical-align: middle;
 }
 
-.dot {	color: rgb(0, 0, 0, 0.3);
+.dot {
+	color: rgb(0, 0, 0, 0.3);
 	padding: 0px 10px;
 }

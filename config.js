@@ -4,7 +4,7 @@
 * https://github.com/CryptoLions/EOS-Testnet-monitor
 *
 ***********************************************/
-
+var _reqInterval = 500;
 
 var blockProducerList = [
   {

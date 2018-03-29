@@ -5,8 +5,6 @@
 *
 ***********************************************/
 
-var _reqInterval = 100;
-
 var LastBlockNum = -1;
 var LastNodeChecked = -1;
 var LastProducer = "";

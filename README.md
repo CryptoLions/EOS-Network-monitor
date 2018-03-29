@@ -11,13 +11,17 @@ access-control-allow-origin = *
 to allow access to monitor  
   
 Example: http://jungle.cryptolions.io:9898/monitor/
+DAWN3-ALPHA: http://jungle.cryptolions.io:9898/monitor2/
 
 # Creators
 WebSite: http://cryptolions.io/  
 GitGub: https://github.com/CryptoLions  
-SteemIt: https://steemit.com/eos/@cryptolions/crypto-lions-eos-block-producer-candidates#comments  
+SteemIt: https://steemit.com/@cryptolions 
 
 # Updates
+Upd: 2018-03-30
+- fix view for mobile
+
 Upd: 2018-03-28
 - Small design fixes for better view
 - Month showing fix in last block date

@@ -10,7 +10,7 @@ access-control-allow-origin = *
 to allow access to monitor  
   
 Example: http://jungle.cryptolions.io:9898/monitor/  
-DAWN3-ALPHA: http://jungle.cryptolions.io:9898/monitor2/
+DAWN3-ALPHA: http://jungle.cryptolions.io:9898/monitor3/
 
 # Creators
 WebSite: http://cryptolions.io/  

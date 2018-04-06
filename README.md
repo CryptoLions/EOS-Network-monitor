@@ -1,6 +1,10 @@
 # EOS Testnet monitor
 Simple tool to monitor EOS testnet BP node.
 
+OLD Simple version Version. To get new server side monitor build on Nodejs+mongoDB+Socket.io please folow master brach: 
+======
+https://github.com/CryptoLions/EOS-Testnet-monitor
+
 To use, change node list in config.js to your.  
 To change request interval modify variable var _reqInterval = 500; 
 
@@ -9,7 +13,7 @@ please add line to config.ini for all nodes:
 access-control-allow-origin = *   
 to allow access to monitor  
   
-Example: http://jungle.cryptolions.io:9898/monitor/  
+
 DAWN3-ALPHA: http://jungle.cryptolions.io:9898/monitor3/
 
 # Creators

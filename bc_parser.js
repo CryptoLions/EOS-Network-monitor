@@ -36,8 +36,7 @@ module.exports = {
   getTransactions: getTransactions,
   announceMsg: announceMsg,
 
-
-  test: 0
+	test: 0
 }
 
 function reinit(){
@@ -60,7 +59,8 @@ function reinit(){
     this.nodeDownCount = {};
 }
 
-function init(data){
+function init(data){
+
     this.connections = 0;
     this.connections_data = {};
     this.data = data;
@@ -83,14 +83,18 @@ function init(data){
 
 	//var msgObject = {"c1": blocknum, "c2": action.name};
 	var th = this;
-	this.getTransactions(this, 0, 6, function(this_, res){    	th.LastTransactions = res.reverse();
-    	th.LastTXLoaded = true;        console.log(res);	});
+	this.getTransactions(this, 0, 6, function(this_, res){
+    	th.LastTransactions = res.reverse();
+    	th.LastTXLoaded = true;
+        console.log(res);
+	});
 	//clearInterval(interval);
 }
 
 
 
-function mainLoop(this_){
+function mainLoop(this_){
+
 	if (!this_.statsLoaded) return;
 	if (!this_.producersLoaded) return;
 	if (!this_.nodesLoaded) return;
@@ -110,7 +114,8 @@ function mainLoop(this_){
 
 }
 
-function CheckNewBlocksTimer(this_){    if (!this_.statsLoaded) return;
+function CheckNewBlocksTimer(this_){
+    if (!this_.statsLoaded) return;
     if (!this_.producersLoaded) return;
     if (!this_.nodesLoaded) return;
 
@@ -120,21 +125,24 @@ function CheckNewBlocksTimer(this_){    if (!this_.statsLoaded) return;
 
     if (this_.blockProcessing > 0 ) return;
 
-	if (this_.STATS.lastBlock < lastblockinfo){        var nextBlocknum = this_.STATS.lastBlock + 1;
+	if (this_.STATS.lastBlock < lastblockinfo){
+        var nextBlocknum = this_.STATS.lastBlock + 1;
 		this_.blockProcessing = nextBlocknum;
 		this_.getBlockInfo(this_, this_.data.CONFIG.nodeAddr, nextBlocknum);
 	}
 
 }
 
-function announceMsg(this_, action, msg){	if (this_.connections>0) {
+function announceMsg(this_, action, msg){
+	if (this_.connections>0) {
 		var r = -1;
 		this_.data.io.emit(action, msg);
 		//console.log("OK");
 	}
 }
 
-function connected(socket){
+function connected(socket){
+
 	socket.emit("initNodes", this.NODES);
 
     //console.log(this.NODES);
@@ -150,7 +158,8 @@ function connected(socket){
     this.announceMsg(this, "usersonline", this.connections);
 
     var ltx = this.LastTransactions;
-	for (var t in ltx){		socket.emit("transaction", ltx[t].msgObject);
+	for (var t in ltx){
+		socket.emit("transaction", ltx[t].msgObject);
 	}
 
 
@@ -159,18 +168,22 @@ function connected(socket){
 }
 
 
-function disconnected(socket){	this.connections--;
+function disconnected(socket){
+	this.connections--;
 	delete this.connections_data[socket.id];
 	this.announceMsg(this, "usersonline", this.connections);
 }
 
 
-function test(){}
+function test(){
+}
 
 
 
 
-function getNodeInfo(this_, ipaddr, nodeid){	var url = "http://"+ipaddr + this_.data.EOSAPI.api_get_info;	//var url = "http://127.0.0.1:8898/v1/chain/get_info";
+function getNodeInfo(this_, ipaddr, nodeid){
+	var url = "http://"+ipaddr + this_.data.EOSAPI.api_get_info;
+	//var url = "http://127.0.0.1:8898/v1/chain/get_info";
     this_.LastCheckedNodePing[nodeid] = new Date().getTime();
 
 	this_.announceMsg(this_, "ping", {nodeid: nodeid});
@@ -186,10 +199,12 @@ function getNodeInfo(this_, ipaddr, nodeid){	var url = "http://"+ipaddr + this_
             //console.log('Ping: '+body.ping);
 	        this_.announceMsg(this_, "get_info", body);
 
-            if (this_.data.CONFIG.TELEGRAM_API.enabled && this_.NODES[nodeid]){            	this_.nodeDownCount[this_.NODES[nodeid].bp_name] = 0;
+            if (this_.data.CONFIG.TELEGRAM_API.enabled && this_.NODES[nodeid]){
+            	this_.nodeDownCount[this_.NODES[nodeid].bp_name] = 0;
             	this_.nodeUpNotification(this_, this_.NODES[nodeid].bp_name);
             }
-	    } else {	 		this_.announceMsg(this_, "error_node", nodeid);
+	    } else {
+	 		this_.announceMsg(this_, "error_node", nodeid);
 	 		//this_.NODES[nodeid].bp_name
             if (this_.data.CONFIG.TELEGRAM_API.enabled) {
             	if (!this_.nodeDownCount[this_.NODES[nodeid].bp_name]) this_.nodeDownCount[this_.NODES[nodeid].bp_name] = 0;
@@ -197,7 +212,8 @@ function getNodeInfo(this_, ipaddr, nodeid){	var url = "http://"+ipaddr + this_
             	if (this_.nodeDownCount[this_.NODES[nodeid].bp_name] >= this_.data.CONFIG.TELEGRAM_API.tryToCheckBeforeSend-1) {
             		this_.nodeDownAlarm(this_, this_.NODES[nodeid].bp_name);
             		this_.nodeDownCount[this_.NODES[nodeid].bp_name] = 0;
-            	} else {            		this_.nodeDownCount[this_.NODES[nodeid].bp_name]++;
+            	} else {
+            		this_.nodeDownCount[this_.NODES[nodeid].bp_name]++;
             	}
             }
 	    }
@@ -209,7 +225,8 @@ function getNodeInfo(this_, ipaddr, nodeid){	var url = "http://"+ipaddr + this_
 function getBlockInfo(this_, ipaddr, blocknum){
 	var url = "http://"+ipaddr + this_.data.EOSAPI.api_get_block;
 	//var url = "http://127.0.0.1:8898/v1/chain/get_info";
-	this_.data.request.post({			headers: {	'content-type' : 'application/x-www-form-urlencoded'},
+	this_.data.request.post({
+			headers: {	'content-type' : 'application/x-www-form-urlencoded'},
 			url: url,
 			body: '{"block_num_or_id": '+blocknum+'}',
 			json: true
@@ -220,7 +237,8 @@ function getBlockInfo(this_, ipaddr, blocknum){
 		        //console.log(body); // Print the json response
 		        //this_.LAST_GETINFG = body;
 
-		    } else {		    	//ERROR BED BLOCK !!!!!!!!!!!!!!
+		    } else {
+		    	//ERROR BED BLOCK !!!!!!!!!!!!!!
 		    	//console.log("ERROR: "+blocknum);
 		    	this_.STATS.lastBlock = blocknum;
 		    	this_.blockProcessing = -1;
@@ -232,7 +250,8 @@ function getBlockInfo(this_, ipaddr, blocknum){
 }
 
 
-function processBlock(this_, blocknum, block){
+function processBlock(this_, blocknum, block){
+
 	this_.announceMsg(this_, "blockupdate", block);
 
 	//this_.announceMsg(this_, "chat message", JSON.stringify(block) );
@@ -247,7 +266,8 @@ function processBlock(this_, blocknum, block){
 		this_.PRODUCERS[block.producer].produced += 1;
 		this_.PRODUCERS[block.producer].tx_count += block.input_transactions.length;
 		this_.PRODUCERS[block.producer].tx_sum += 0;  //!!!! ADD SUMS
-	} else {		this_.PRODUCERS[block.producer] = {};
+	} else {
+		this_.PRODUCERS[block.producer] = {};
 		this_.PRODUCERS[block.producer].produced = 1;
 		this_.PRODUCERS[block.producer].tx_count = block.input_transactions.length;
 		this_.PRODUCERS[block.producer].tx_sum = 0;  //!!!! ADD SUMS
@@ -257,7 +277,8 @@ function processBlock(this_, blocknum, block){
 	this_.announceMsg(this_, "blockprod_update", this_.PRODUCERS[block.producer]);
 
 
-    if (block.input_transactions.length > 0){    	this_.STATS.total_txblocks_count ++;
+    if (block.input_transactions.length > 0){
+    	this_.STATS.total_txblocks_count ++;
 
     	this_.STATS.total_tx_count += block.input_transactions.length;
 
@@ -280,11 +301,13 @@ function processBlock(this_, blocknum, block){
 
 }
 
-function processTransaction(this_, blocknum, block){    //console.log(txs);
+function processTransaction(this_, blocknum, block){
+    //console.log(txs);
 	var txs = block.input_transactions;
 	//var txs_id =block.regions[0];
 
-	for (var t in txs) {		var txs_id = "";
+	for (var t in txs) {
+		var txs_id = "";
 
 		if (block.regions[0] && block.regions[0].cycles_summary[1] && block.regions[0].cycles_summary[1][0].transactions)
     		txs_id = block.regions[0].cycles_summary[1][0].transactions[t].id;
@@ -292,7 +315,8 @@ function processTransaction(this_, blocknum, block){    //console.log(txs);
 		var tx = txs[t].transaction;
        	var actions = tx.actions;
 
-       	for (var a in actions){       		var action = actions[a];
+       	for (var a in actions){
+       		var action = actions[a];
        		//action.account
        		//action.name  //setcode, setabi, newaccount, issue, transfer
        		a_data = action.data; //obj
@@ -308,7 +332,8 @@ function processTransaction(this_, blocknum, block){    //console.log(txs);
 
 
 
-            switch (action.name){            	case 'setcode':
+            switch (action.name){
+            	case 'setcode':
             		msgObject.c3 = action.account;
             		msgObject.c4 = "->";
             		msgObject.c5 = a_data.account;
@@ -509,7 +534,8 @@ function processTransaction(this_, blocknum, block){    //console.log(txs);
 
             //this_.LastTransactions.unshift(txInfo);
             this_.LastTransactions.push(txInfo);
-            if (this_.LastTransactions.length > 8) {            	this_.LastTransactions.shift();
+            if (this_.LastTransactions.length > 8) {
+            	this_.LastTransactions.shift();
             }
 
 
@@ -535,12 +561,14 @@ function processTransaction(this_, blocknum, block){    //console.log(txs);
 
 
 
-
+
+
 }
 
 
 
-function updateSTATS(this_){	var newvalues = { $set: this_.STATS };
+function updateSTATS(this_){
+	var newvalues = { $set: this_.STATS };
 	var th = this_;
 	this_.data.dbo.collection("stats").updateOne({ id: 1 }, newvalues, {upsert: true}, function(err, res) {
 		if (err) throw err;
@@ -651,9 +679,12 @@ function APIrequest(msg, socket){  //data = '{"block_num_or_id": '+blocknum+'}'
 
 //--------------Telegarmm
 
-function CheckNewTelegramUsers(this_){ 	//this.data.CONFIG.Telegram
+function CheckNewTelegramUsers(this_){
+ 	//this.data.CONFIG.Telegram
     var request_data = {url: this_.data.CONFIG.TELEGRAM_API.getUpdates(), data: ""};
- 	this_.telegramRequest(request_data, this_, function(error, response, body){ 		if (!error && response.statusCode === 200) { 			//this_.announceMsg(this_, "console", body);
+ 	this_.telegramRequest(request_data, this_, function(error, response, body){
+ 		if (!error && response.statusCode === 200) {
+ 			//this_.announceMsg(this_, "console", body);
 
 			this_.processTelegramUpdate(body.result, this_);
 			//updateTelegramUsres(this_, chatid, data)
@@ -667,14 +698,16 @@ function CheckNewTelegramUsers(this_){ 	//this.data.CONFIG.Telegram
 }
 
 
-function processTelegramUpdate(data, this_){    var data_upd;
+function processTelegramUpdate(data, this_){
+    var data_upd;
 
     if (!this_.STATS.lastTelegramUpd_last) this_.STATS.lastTelegramUpd_last = 0;
 
 	for (var i in data) {
 		//console.log(data[i].message);
 		//console.log(this_.STATS.lastTelegramUpd_last +" < "+  data[i].update_id);
-		if (this_.STATS.lastTelegramUpd_last <  data[i].update_id * 1) {
+
+		if (this_.STATS.lastTelegramUpd_last <  data[i].update_id * 1) {
 			this_.STATS.lastTelegramUpd_last = data[i].update_id * 1;
 			//data[i].message.message_id
 			//{fname: ,lname: ,username, lang: , producer, enabled}
@@ -690,7 +723,8 @@ function processTelegramUpdate(data, this_){    var data_upd;
 			var enabled = false;
             var isCmd = false;
 			if (cmd_arr.length > 1)
-				if (cmd_arr[0] == "/init"){                    isCmd = true;
+				if (cmd_arr[0] == "/init"){
+                    isCmd = true;
                     var names = "";
 					for (var j=1; j<cmd_arr.length; j++){
 						producers_.push(cmd_arr[j]);
@@ -699,7 +733,8 @@ function processTelegramUpdate(data, this_){    var data_upd;
 					enabled = true;
 
 
-					data_upd = { $set: {							chatid: data[i].message.chat.id,
+					data_upd = { $set: {
+							chatid: data[i].message.chat.id,
 							first_name: data[i].message.chat.first_name,
 							last_name: data[i].message.chat.last_name,
 							username: data[i].message.chat.username,
@@ -711,11 +746,16 @@ function processTelegramUpdate(data, this_){    var data_upd;
 					this_.sendTelegramMessage(this_, data[i].message.chat.id, "Your nodes [" + names + "] added to EOS Jungle monitor notification system. \nThank You. To disable type: /disable" + "");
 				}
 			if (cmd_arr.length > 0) {
-				if (cmd_arr[0] == "/enable"){					isCmd = true;                	data_upd = { $set: { chatid: data[i].message.chat.id, enabled: true } }
+				if (cmd_arr[0] == "/enable"){
+					isCmd = true;
+                	data_upd = { $set: { chatid: data[i].message.chat.id, enabled: true } }
                 	this_.updateTelegramUsres(this_, data[i].message.chat.id, data_upd);
                 	this_.sendTelegramMessage(this_, data[i].message.chat.id, "Notification System Enabled. ");
 				}
-				if (cmd_arr[0] == "/disable"){					isCmd = true;					data_upd = { $set: { chatid: data[i].message.chat.id, enabled: false } }                	this_.updateTelegramUsres(this_, data[i].message.chat.id, data_upd);
+				if (cmd_arr[0] == "/disable"){
+					isCmd = true;
+					data_upd = { $set: { chatid: data[i].message.chat.id, enabled: false } }
+                	this_.updateTelegramUsres(this_, data[i].message.chat.id, data_upd);
                 	this_.sendTelegramMessage(this_, data[i].message.chat.id, "Notification System Disabled.");
              	}
              	if (!isCmd){
@@ -732,7 +772,8 @@ function processTelegramUpdate(data, this_){    var data_upd;
 
 }
 
-function nodeUpNotification(this_, node_name){
+function nodeUpNotification(this_, node_name){
+
 	if (this_.LastTelegramNotify[node_name] > 0) {
 		this_.data.dbo.collection("telegram").find({producer_name: {$in: [node_name]} }).toArray(function(err, result) {
 			for (var k in result){
@@ -748,16 +789,19 @@ function nodeUpNotification(this_, node_name){
 
 }
 
-function nodeDownAlarm(this_, node_name){	var th = this_;
+function nodeDownAlarm(this_, node_name){
+	var th = this_;
 
 	this_.data.dbo.collection("telegram").find({producer_name: {$in: [node_name]} }).toArray(function(err, result) {
     	if (err) throw err;
 
          for (var k in result){
-         	if (result[k].enabled){                if (! this_.LastTelegramNotify[node_name])
+         	if (result[k].enabled){
+                if (! this_.LastTelegramNotify[node_name])
                 	this_.LastTelegramNotify[node_name] = 0;
 
-                if (new Date().getTime() - this_.LastTelegramNotify[node_name] > th.data.CONFIG.TELEGRAM_API.intervalBetweenMsg * 1000){                	this_.LastTelegramNotify[node_name] = new Date().getTime();
+                if (new Date().getTime() - this_.LastTelegramNotify[node_name] > th.data.CONFIG.TELEGRAM_API.intervalBetweenMsg * 1000){
+                	this_.LastTelegramNotify[node_name] = new Date().getTime();
          			th.sendTelegramMessage(th, result[k].chatid, "Hi "+result[k].first_name + ",  you node <b>"+node_name+"</b> seems to be <b>DOWN</b>. Please take a look. Thanks in advanced.&parse_mode=html");
          		}
          	}
@@ -766,8 +810,10 @@ function nodeDownAlarm(this_, node_name){	var th = this_;
 
 }
 
-function sendTelegramMessage(this_, chatid, msg){
-	var telegr_msg = {			url: this_.data.CONFIG.TELEGRAM_API.sendMessage() ,
+function sendTelegramMessage(this_, chatid, msg){
+
+	var telegr_msg = {
+			url: this_.data.CONFIG.TELEGRAM_API.sendMessage() ,
 			data: 'chat_id='+chatid+'&text='+msg+''
 	};
 	//var telegr_msg = 'chat_id='+chatid+'&text='+msg;

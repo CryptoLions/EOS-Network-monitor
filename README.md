@@ -10,9 +10,17 @@ access-control-allow-origin = *
 to allow access to monitor  
   
 Monitor example: http://jungle.cryptolions.io:9898/monitor/  
+# Features
+- Fast nodes status monitor
+- Telegram bot @JungleTestnet_bot to get notification on node crash. 
+- Auto generated server peer list
+- Last transaction monitor.
+- Simple node API
+
 
 # How to install and Use
 Will be update shortly
+
 
 
 # Creators

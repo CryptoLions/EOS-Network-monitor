@@ -101,7 +101,7 @@ Create new Collection "nodes" and import in this collection edited nodes list
 6. Runing Monitor  
 cd /var/www/EOS-Testnet-monitor  
 ./start.sh  
-Monitor will start syncing and add records to db.. You can open your monitor by link http://<yourserver>:4000  
+Monitor will start syncing and add records to db.. You can open your monitor by link http://\<yourserver\>:4000  
   
 or link html folder to your webserver forlder: ln -s /var/www/EOS-Testnet-monitor/html /var/www/html/monitor  
   

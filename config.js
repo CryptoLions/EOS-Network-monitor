@@ -15,9 +15,9 @@ module.exports = {
 	mongoURL: "mongodb://localhost:27017/",  //mongoDB url Path
 	mongoDB: "eosbemonitor",  //mongoDB database name
 
-    mainLoopInterval: 100,   //Intervval between noded check
-    blockCheckInterval: 50,  //Interval between block parsing
-    TelegramCheckInterval: 1000, //Telegram Bot check intervall
+    	mainLoopInterval: 100,   //Intervval between noded check
+    	blockCheckInterval: 50,  //Interval between block parsing
+    	TelegramCheckInterval: 1000, //Telegram Bot check intervall
 
 	EOSAPI : {
 		api_get_info: "/v1/chain/get_info",   

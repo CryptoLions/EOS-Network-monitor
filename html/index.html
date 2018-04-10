@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="Description" content="EOS Network Monitor. By CryptoLions.io">
+
+	<title>Jungle3 EOS Network Monitor (CryptoLions.io)</title>
+    <link rel="icon" href="imgs/favicon.png" type="image/x-icon">
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <script src="/socket.io/socket.io.js"></script>
+
+	<script  src="vendor/jquery-3.3.1.min.js"></script>
+	<script  src="vendor/popper.min.js"></script>
+	<script  src="vendor/bootstrap.min.js"></script>
+	<script  src="vendor/all_fontawesome_509.js"></script>
+
+    <script src="config.js?3"></script>
+	<script src="js/utils.js?11"></script>
+	<script src="js/check_nodes.js?16"></script>
+	<link rel="stylesheet" href="style.css?20">
+
+	</style>
+</head>
+<body class="bg">
+    <div class="page">
+	<center>
+    <div id="infoMsg">Loading...</div>
+	<div class="container">
+
+
+		<h1>EOS Jungle Testnet Monitor (<a target="_blank" href="https://github.com/CryptoLions/EOS-Jungle-Testnet">GitHub</a>)</h1>
+	    <b>dawn-v3.0.0</b> | <a href="#" id="apiPopup">API</a> | <a href="#" id="p2pPopup">P2P List</a> | <a href="http://t.me/JungleTestnet_bot" target="_blank">Telegram Bot</a>    |  Connected Users: <span class="green" id="connectedUsers">--</span></span>
+
+		<div class="row">
+			<div class="col-md-6">
+            	<div class="mainInfo text-left">
+
+					<span class="green" id="lastBlock">--</span>
+
+					<span id="irrBlock"> Irreversible Block: <span class="green" id="lastIrrevBlock">--</span> </span>
+
+            		<span id="blocData">  <span class="green" id="lastDate">--</span></span>
+            		<nobr> Produced by: <span class="green" id="lastProducer">--</span>  </nobr><BR>
+
+
+
+
+            	</div>
+			</div>
+			<div class="col-md-6">
+				<div class="mainInfo">
+                    <div class="table-responsive-sm vscroll">
+						<h6> <nobr> Total <span class="green" id="txCount">--</span> Transactions in <span class="green" id="nonEmptyBlockCount">--</span> Blocks</nobr> / <span id="totProcessedBlocks">--</span> Blocks</nobr></h6>
+					<table class="table table-sm hidesm" id="txTable">
+						<tbody id="table-body1">
+
+						</tbody>
+					</table>
+					</div>
+
+                    <span class="hidesm"><BR/><BR/><BR/><BR/><BR/><BR/></span>
+				</div>
+			</div>
+		</div>
+
+
+
+		<BR><BR>
+
+		<h2>Network Status </h2>
+
+
+
+		<div id="nodesList"></div>
+
+
+		<div class="row">
+			<div class="col-sm-12 col-md-12">
+
+
+
+				<div class="table-responsive-sm vscroll">
+					<table class="table table-hover table-sm" id="bpTable">
+						<thead>
+							<tr class="text-center tblheader">
+								<th class='c0' scope="col">#</th>
+								<th class='c1' scope="col">Name</th>
+								<th class='c2' scope="col">Answered</th>
+								<th class='c3' scope="col">Block</th>
+								<th class='c5' scope="col">Produced</th>
+								<th class='c4' scope="col">Block</th>
+								<th class='c7' scope="col"><a href="#" class="showHideAddresInfo"><i class="fas fa-minus-circle"></i></a> Address</th>
+								<th class='c8' scope="col">HTTP</th>
+								<th class='c9' scope="col">P2P</th>
+								<th class='c6' scope="col">Version</th>
+
+								<th class='c12' scope="col" title="total blocks in blockchain produced by this name">Blocks</th>
+								<th class='c13' scope="col" title="Processed transactions producer">TXs</th>
+
+								<th class='c10' scope="col"><a href="#" class="showHideAddresInfo" id="showHideAddresInfo"><i class="fas fa-plus-circle"></i></a> Organisation</th>
+								<th class='c11' scope="col">Location</th>
+							</tr>
+						</thead>
+						<tbody id="table-body">
+						</tbody>
+					</table>
+				</div>
+
+                <h2>Nodes</h2>
+				<div class="table-responsive-sm vscroll">
+					<table class="table table-hover table-sm" id="nodeTable">
+						<thead>
+							<tr class="text-center tblheader">
+								<th class='cn0' scope="col">#</th>
+								<th class='cn1' scope="col">Name</th>
+								<th class='cn2' scope="col">Answered</th>
+								<th class='cn3' scope="col">Block</th>
+								<th class='cn4' scope="col">Address</th>
+								<th class='cn5' scope="col">HTTP</th>
+								<th class='cn6' scope="col">P2P</th>
+								<th class='cn7' scope="col">Version</th>
+								<th class='cn8' scope="col">Agent Name</th>
+								<th class='cn9' scope="col">Location</th>
+							</tr>
+						</thead>
+						<tbody id="table-body-node">
+						</tbody>
+					</table>
+				</div>
+
+			</div>
+		</div>
+
+		<BR><BR>
+		<span class="footer">
+			<span  class="fotertext" >2018, Created by  <a class="foterlink" target="_blank" href="http://CryptoLions.io">CryptoLions.io</a> | <a  class="foterlink" target="_blank" href="https://github.com/CryptoLions">GitHub</a> v0.5.2</span>
+		</span>
+
+
+    </div>
+
+
+
+    </center>
+
+<!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+			<div id = "modalheaderTitle"></div>
+			<div id = "apiInput" class="input-group mb-3">
+				<input id="api_req" type="text" class="form-control" placeholder="API Request" aria-label="API Request" aria-describedby="basic-addon2" value="/v1/chain/get_block">
+				<input id="api_data" type="text" class="form-control" placeholder="DATA" aria-label="DATA" aria-describedby="basic-addon2" value='{"block_num_or_id": 1}'>
+				<div class="input-group-append">
+					<button class="btn btn-outline-secondary" type="button" id="btn_API_req">Get</button>
+				</div>
+			</div>
+
+
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+        </div>
+        <div class="modal-body" id="modal_body">
+
+
+        </div>
+        <!--div class="modal-footer">
+
+        </div-->
+
+      </div>
+    </div>
+  </div>
+
+
+
+	</div>
+
+</body>
+</html>

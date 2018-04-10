@@ -25,7 +25,7 @@ Will be update shortly
 1. Installing Nodejs v8  and MongoDB  
 curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -    
 sudo apt-get install -y nodejs  
-apt-get install mongodb  
+sudo apt-get install mongodb  
 
 2. Create project Dir and install modules   
 cd /var/www   

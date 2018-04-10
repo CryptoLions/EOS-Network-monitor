@@ -29,8 +29,13 @@ cd /var/www
 git clone https://github.com/CryptoLions/EOS-Testnet-monitor.git  
 cd EOS-Testnet-monitor  
 npm install  
-  
+
 3. edit config.js and html/config.js  
+
+4. Create Telegram Bot Using @BotFather and use authorization token and add to config 
+
+
+
 
 
 

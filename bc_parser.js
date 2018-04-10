@@ -36,7 +36,8 @@ module.exports = {
   getTransactions: getTransactions,
   announceMsg: announceMsg,
 
-	test: 0
+
+  test: 0
 }
 
 function reinit(){

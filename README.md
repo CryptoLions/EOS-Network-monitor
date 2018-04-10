@@ -20,6 +20,18 @@ Monitor example: http://jungle.cryptolions.io:9898/monitor/
 
 # How to install and Use
 Will be update shortly
+1. Installing Nodejs v8
+curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+2. Create project Dir and install modules
+cd /var/www
+git clone https://github.com/CryptoLions/EOS-Testnet-monitor.git
+cd EOS-Testnet-monitor
+npm install
+
+3. edit config.js and html/config.js
+
 
 
 

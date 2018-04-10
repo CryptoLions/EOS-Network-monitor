@@ -48,8 +48,8 @@ MongoClient.connect( CONFIG.mongoURL, function(err, db) {
 
 
 	app.get('/:blockid', function(req, res){
-		//blockid = req.params.blockid
-	    res.sendFile('index.html');
+	    //blockid = req.params.blockid
+	    //res.sendFile('index.html');
 	});
 
 

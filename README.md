@@ -47,16 +47,14 @@ cd adminMongo
 npm install  
 edit file config/app.json to edit your webmongo db port and password  
   
-{ "app":   
-  {  
+{ "app": {  
     "host": "0.0.0.0",  
     "port": 5000,  
     "password": "my_webadmin_pass",  
     "locale": "en",  
     "context": "dbApp",  
     "monitoring": false  
-  }  
-}  
+}  }  
   
 to start serrivce in folder /var/wwwadminMongo run:  
 node app  

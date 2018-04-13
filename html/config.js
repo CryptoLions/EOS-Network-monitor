@@ -8,4 +8,4 @@
 #
 ###############################################################################  */
 
-var eosMonitorServer = "http://94.154.212.15:8889";
+var eosMonitorServer = "http://MONITOR_SERVER_IP:4000";

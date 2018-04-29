@@ -22,8 +22,8 @@ Monitor example: http://jungle.cryptolions.io:9898/monitor/
 Will be update shortly   
 
 
-1. Installing Nodejs v8  and MongoDB  
-curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -    
+1. Installing Nodejs v10  and MongoDB  
+curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -    
 sudo apt-get install -y nodejs  
 sudo apt-get install mongodb  
 

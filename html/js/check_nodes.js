@@ -292,6 +292,11 @@ function updNodeCheckTime(){
 
 
 function transactionController(msg){
+    var lt = /</g,
+        gt = />/g,
+        ap = /'/g,
+        ic = /"/g;
+        msg = msg.toString().replace(lt, "&lt;").replace(gt, "&gt;").replace(ap, "&#39;").replace(ic, "&#34;");
     if (!this.tblStripe) {
 	    this.tblStripe = 1;
 	} else {

@@ -1,0 +1,16 @@
+(node:9869) DeprecationWarning: current URL string parser is deprecated, and will be removed in a future version. To use the new parser, pass option { useNewUrlParser: true } to MongoClient.connect.
+/Users/gabo/Code/forks/EOS-Testnet-monitor/monitor/bc_parser.js:211
+            	if (!this_.nodeDownCount[this_.NODES[nodeid].bp_name]) this_.nodeDownCount[this_.NODES[nodeid].bp_name] = 0;
+            	                                             ^
+
+TypeError: Cannot read property 'bp_name' of undefined
+    at Request._callback (/Users/gabo/Code/forks/EOS-Testnet-monitor/monitor/bc_parser.js:211:59)
+    at self.callback (/Users/gabo/Code/forks/EOS-Testnet-monitor/node_modules/request/request.js:185:22)
+    at emitOne (events.js:116:13)
+    at Request.emit (events.js:211:7)
+    at Request.onRequestError (/Users/gabo/Code/forks/EOS-Testnet-monitor/node_modules/request/request.js:877:8)
+    at emitOne (events.js:121:20)
+    at ClientRequest.emit (events.js:211:7)
+    at Socket.socketErrorListener (_http_client.js:387:9)
+    at emitOne (events.js:116:13)
+    at Socket.emit (events.js:211:7)

@@ -1,0 +1,30 @@
+# Dockerfile for development
+
+FROM node:9-alpine
+
+LABEL maintainer="Gabo Esquivel <gaboesquivel.com>"
+LABEL description="Jungle TestNet EOS.IO Monitor"
+
+# install curl, it's useful for debugging
+RUN apk --no-cache add curl
+
+# install nodemon for reloading the service when a file changes
+RUN npm install -g nodemon
+
+# prevent errors while building native modules on alpine
+RUN apk --no-cache add g++ gcc libgcc libstdc++ linux-headers make python
+RUN npm install --quiet node-gyp -g
+
+# Create app directory
+# WORKDIR /usr/src/app
+
+# Install app dependencies
+COPY package*.json ./
+
+RUN npm install
+
+# Bundle app source
+# COPY . .
+
+EXPOSE 9329
+CMD [ "nodemon", "monitor/index" ]

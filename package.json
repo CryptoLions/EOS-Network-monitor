@@ -1,7 +1,12 @@
 {
-  "name": "eos-be-monitor",
+  "name": "eos-jungle-monitor",
   "version": "0.0.1",
-  "description": "CryptoLions.io",
+  "description": "A web based monitor for EOS.IO networks.",
+  "author": "CryptoLions.io",
+  "scripts":{
+    "docker": "docker-compose up --build",
+    "docker:down" : "docker-compose down"
+  },
   "dependencies": {
     "express": "^4.15.2",
     "mongodb": "^3.0.5",

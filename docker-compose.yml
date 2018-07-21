@@ -1,0 +1,78 @@
+version: "3"
+
+services:
+  monitor:
+    build:
+      context: ./
+      dockerfile: Dockerfile-dev
+    image: eos-jungle-monitor
+    working_dir: /usr/src/app
+    volumes:
+      - ./:/usr/src/app:delegated
+    environment:
+      - EOS_MONITOR_PORT=4040
+      - MONGO_HOST=mongodb.local.jungle.eosio.cr
+      - MONGO_DB_NAME=eosjunglemonitor
+      - TESTNET_NODE_ADDRESS=jungle.eosio.cr
+      - VIRTUAL_HOST=monitor.local.jungle.eosio.cr
+      - VIRTUAL_PORT=4040
+    ports:
+      - "4040:4040"
+    depends_on:
+      - mongodb
+    networks:
+      jungle-local:
+        aliases:
+          - monitor.local.jungle.eosio.cr
+
+  admin-mongo:
+    image: mrvautin/adminmongo:latest
+    ports:
+      - "8082:8082"
+    environment:
+      - PORT=8082
+      - CONN_NAME=testnet-monitor-db
+      - DB_HOST=mongodb.local.jungle.eosio.cr
+      - VIRTUAL_HOST=admin-mongo.local.jungle.eosio.cr
+      - VIRTUAL_PORT=8082
+    depends_on:
+      - mongodb
+    networks:
+      jungle-local:
+        aliases:
+          - admin-mongo.local.jungle.eosio.cr
+
+  mongodb:
+    image: mongo:latest
+    container_name: "mongodb"
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+    volumes:
+      - mongo-data-volume:/data/db
+    ports:
+        - 27017:27017
+    command: mongod --smallfiles --logpath=/dev/null # --quiet
+    networks:
+      jungle-local:
+        aliases:
+          - mongodb.local.jungle.eosio.cr
+
+  # nginx reverse proxy that allows accesing the services directly on the host machine
+  # the wildcard *.local.jungle.eosio.cr that points to 127.0.0.1,
+  # hence as long as you can hit the dns server it will redirect all requests to your machine
+  # and nginx-proxy does the routing to the right service
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    networks:
+      jungle-local:
+
+volumes:
+ mongo-data-volume:
+
+networks:
+  jungle-local:

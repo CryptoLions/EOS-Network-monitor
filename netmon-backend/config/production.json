@@ -1,0 +1,18 @@
+{
+  "SERVER": {
+    "HOST": "",
+    "PORT": ""
+  },
+  "NODE": {
+    "HOST": "",
+    "PORT": ""
+  },
+  "MONGODB": {
+    "ADDRESS": "",
+    "AUTH_SOURCE": "",
+    "USER": "",
+    "PASSWORD": ""
+  },
+  "ENABLE_CORS_SUPPORT": true,
+  "WHITE_LIST": []
+}

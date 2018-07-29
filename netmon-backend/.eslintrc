@@ -1,0 +1,14 @@
+{
+  "extends": "airbnb-base",
+  "rules": {
+    "max-len": [
+      "error",
+      { "code": 120, "ignoreTrailingComments": true, "ignoreTemplateLiterals": true }
+    ],
+    "prefer-promise-reject-errors": 0,
+    "arrow-parens": 0,
+    "object-curly-newline": 0,
+    "function-paren-newline": 0,
+    "camelcase": 0
+  }
+}

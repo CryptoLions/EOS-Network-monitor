@@ -1,0 +1,15 @@
+{
+  "MONGODB": {
+    "ADDRESS": "mongodb://127.0.0.1:27020/",
+    "DB_NAME": "MainNet",
+    "AUTH_IS_REQUIRED": true,
+    "AUTH_SOURCE": "admin",
+    "USER": "",
+    "PASSWORD": ""
+  },
+  "SERVER": {
+    "HOST": "http://localhost", // webaddress
+    "PORT": "3000"
+  },
+  "LOG_CONSOLE": false
+}

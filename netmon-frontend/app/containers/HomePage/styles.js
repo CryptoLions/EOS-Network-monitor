@@ -40,3 +40,7 @@ export const FooterSpan = styled.span`
   text-align: center;
   color: #fff;
 `;
+
+export const Link = styled.a`
+  color: white;
+`;

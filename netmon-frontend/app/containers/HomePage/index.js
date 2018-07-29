@@ -21,7 +21,7 @@ import { selectModal } from '../../bus/ui/selectors';
 import lion from '../../assets/images/lion.png';
 
 // Styles
-import { MainContainer, Footer, Lion, FooterSpan } from './styles';
+import { MainContainer, Footer, Lion, FooterSpan, Link } from './styles';
 
 const mapStateToProps = createStructuredSelector({
   // modal
@@ -63,7 +63,14 @@ export default class HomePage extends PureComponent {
         </MainContainer>
         <Footer>
           <FooterSpan>
-            <Lion src={lion} alt="Lion" /> 2018 Created by CryptoLions.io (GitHub v2.0.{process.env.VERSION_NUMBER})
+            <Lion src={lion} alt="Lion" /> 2018 Created by{' '}
+            <Link href="https://cryptolions.io" target="__blank">
+              CryptoLions.io
+            </Link>{' '}
+            (<Link href="https://github.com/CryptoLions/EOS-Testnet-monitor" target="__blank">
+              GitHub
+            </Link>{' '}
+            v2.0.{process.env.VERSION_NUMBER})
           </FooterSpan>
         </Footer>
       </Fragment>

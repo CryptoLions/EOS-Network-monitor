@@ -14,7 +14,7 @@ const startRoutine = async () => {
   await connectToDB();
 
   startUpdateProducersRoutine();
-  startHandleBlockRoutine();
+  // startHandleBlockRoutine();
 };
 
 startRoutine();

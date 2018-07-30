@@ -17,6 +17,7 @@ module.exports = async () => {
   try {
     const data = await getData();
     await handleData(data);
+    console.log('bp.json updated');
   } catch (e) {
     console.log(e);
   }

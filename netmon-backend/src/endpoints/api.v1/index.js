@@ -36,7 +36,7 @@ const init = ({ app, handlers }) => {
       { $group: { _id: '$mentionedIn', position: { $first: '$position' } } }, // mentionedIn: { $last: '$mentionedIn' } } },
       { $sort: { position: -1 } },
       { $skip: castToInt(skip) },
-      { $limit: castToInt(limit) },
+      { $limit: castToInt(limit + limit) },
       {
         $lookup:
           {
@@ -60,9 +60,12 @@ const init = ({ app, handlers }) => {
       },
       },
     ]);
+    const correctedHistory = history
+      .filter(e => Object.keys(e).length > 0)
+      .slice(0, limit);
     res
       .status(200)
-      .send(history);
+      .send(correctedHistory);
   });
   app.get(`${API_PREFIX}/transactions/:txid/`, async (req, res) => {
     const { txid } = req.params;

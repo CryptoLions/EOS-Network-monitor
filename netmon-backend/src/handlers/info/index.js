@@ -4,7 +4,7 @@ const {
   LAST_BLOCKS_NUMBER_FOR_CALCULATING_AVG_APS_TPS,
 } = require('config');
 
-const { createEosApi, createLogger } = require('../../helpers');
+const { createEosApi, createLogger, castToInt } = require('../../helpers');
 const { StateModelV2 } = require('../../db');
 const getBlockInfo = require('./getBlockInfo');
 
@@ -74,17 +74,17 @@ const initProducerHandler = async () => {
 
   const getInfo = async () => {
     try {
+      const state = await StateModelV2.findOne({ id: 1 }).exec();
+      if (!state) {
+        return;
+      }
       const nextInfo = await getBlockInfo();
-      if (info.number >= nextInfo.number) {
+      if (castToInt(info.number) >= castToInt(nextInfo.number)) {
         return;
       }
       blockStorage.previous = {
         ...info.block,
       };
-      const state = await StateModelV2.findOne({ id: 1 }).exec();
-      if (!state) {
-        return;
-      }
       info = {
         ...nextInfo,
         block: composeData({

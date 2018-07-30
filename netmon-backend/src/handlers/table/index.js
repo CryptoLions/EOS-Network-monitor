@@ -76,6 +76,7 @@ const processNodeAndGetInfo = async (host, port, name, nodeId, wasEnabled) => {
         ping: Date.now() - startTs,
         name,
         isNode: true,
+        isNodeBroken: false,
       },
     };
   }

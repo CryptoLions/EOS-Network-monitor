@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 const { BLACK_PRODUCERS_LIST, ALLOWABLE_NON_SYNCHRONIZED_DIFFERENCE_IN_BLOCKS } = require('config');
 const differenceBy = require('lodash/differenceBy');
+const pick = require('lodash/pick');
 
 const createStorage = () => {
   let updated = {};
@@ -18,10 +19,13 @@ const createStorage = () => {
         head_block_num + ALLOWABLE_NON_SYNCHRONIZED_DIFFERENCE_IN_BLOCKS < lastGoodBlockNumber
       ) {
         // the checked node is unsynced
-        checked = { name: checked.name, isUnsynced: true };
+        checked = pick(checked, ['ping', 'name', 'isNode', 'isNodeBroken', 'requestTS']);
       } else if (head_block_num) {
         // data is old because the checked node ping is very big
-        checked = { name: checked.name, ping: checked.ping, isUnsynced: false };
+        checked = pick(
+          checked,
+          ['ping', 'name', 'isNode', 'isNodeBroken', 'requestTS', 'version', 'answeredBlock', 'answeredTimestamp'],
+        );
       }
 
       lastGoodBlockNumber = head_block_num;
@@ -71,6 +75,7 @@ const createStorage = () => {
           tx_count: p.tx_count,
           votesPercentage: p.votesPercentage,
           votesInEOS: p.votesInEOS,
+          isNode: p.isNode,
           nodes: p.nodes,
         }))
         .filter(p => !BLACK_PRODUCERS_LIST.find(b => b.key === p.key));

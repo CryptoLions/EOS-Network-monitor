@@ -35,6 +35,7 @@ const getProducersInfo = async () => {
     produced: p.produced,
     tx_count: p.tx_count,
     name: p.name,
+    isNode: p.nodes && p.nodes.length,
     nodes: p.nodes,
     producer_key: p.producer_key,
     total_votes: p.total_votes,
@@ -61,7 +62,7 @@ const processNodeAndGetInfo = async (host, port, name, nodeId, wasEnabled) => {
   } catch ({ message }) {
     if (message.indexOf(CONNECTION_REFUSED_BE_SERVER) > 0) {
       if (!wasEnabled) {
-        return { checked: { name, isNodeBroken: true } };
+        return { checked: { name, isNodeBroken: true, requestTS: startTs } };
       }
       ProducerModelV2.updateOne(
         { name, 'nodes._id': nodeId },
@@ -77,6 +78,7 @@ const processNodeAndGetInfo = async (host, port, name, nodeId, wasEnabled) => {
         name,
         isNode: true,
         isNodeBroken: false,
+        requestTS: startTs,
       },
     };
   }
@@ -95,6 +97,7 @@ const processNodeAndGetInfo = async (host, port, name, nodeId, wasEnabled) => {
       version,
       answeredBlock: info.head_block_num,
       isNode: true,
+      requestTS: startTs,
       isUpdated: true,
       isUnsynced: false,
     },
@@ -135,7 +138,10 @@ const initProducerHandler = async () => {
     storage.updateProducers(await getProducersInfo());
   };
   const checkInfo = async () => {
-    const producers = await storage.getAll().slice(21);
+    const producers = await storage
+      .getAll()
+      .slice(21)
+      .filter(e => e.isNode);
     if (producers.length < 1) {
       return;
     }
@@ -145,14 +151,6 @@ const initProducerHandler = async () => {
       checkedProducerNumber += 1;
     }
     const { nodes } = producers[checkedProducerNumber - 1];
-    if (!nodes || nodes.length < 1) {
-      if (producers.length <= checkedProducerNumber) {
-        checkedProducerNumber = 0;
-      } else {
-        checkedProducerNumber += 1;
-      }
-      return;
-    }
     const nodesInfo = await Promise.all(nodes.map(async node => {
       const {
         _id,

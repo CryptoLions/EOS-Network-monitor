@@ -35,8 +35,9 @@ const correctSslUrl = url => {
   url = removeLastSlashIfExist(url);
   if (url && url.length > 0 && url.indexOf(':') < 6) {
     url += ':443';
+    return url;
   }
-  return url;
+  return null;
 };
 
 const correctApiUrl = url => {

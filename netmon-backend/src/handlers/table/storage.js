@@ -77,6 +77,7 @@ const createStorage = () => {
           votesInEOS: p.votesInEOS,
           isNode: p.isNode,
           nodes: p.nodes,
+          specialNodeEndpoint: p.specialNodeEndpoint,
         }))
         .filter(p => !BLACK_PRODUCERS_LIST.find(b => b.key === p.key));
       if (storage.length === 0) {

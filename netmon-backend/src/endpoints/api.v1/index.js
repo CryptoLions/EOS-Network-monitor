@@ -1,8 +1,8 @@
-
 const { API_PREFIX } = require('config');
+const uniq = require('lodash/uniq');
+const { castToInt } = require('../../helpers');
 
 const { TransactionModelV2, AccountModelV2 } = require('../../db');
-const { castToInt } = require('../../helpers');
 
 const init = ({ app, handlers }) => {
   const {
@@ -28,42 +28,39 @@ const init = ({ app, handlers }) => {
   app.get(`${API_PREFIX}/accounts/:name/history/`, async (req, res) => {
     const { name } = req.params;
     const { skip = 0, limit = 10 } = req.query;
-    const history = await AccountModelV2.aggregate([
-      { $match: { name } },
-      { $project: { mentionedIn: 1, array: '$mentionedIn' } },
-      { $unwind: '$mentionedIn' },
-      { $project: { mentionedIn: 1, position: { $indexOfArray: ['$array', '$mentionedIn'] } } },
-      { $group: { _id: '$mentionedIn', position: { $first: '$position' } } }, // mentionedIn: { $last: '$mentionedIn' } } },
-      { $sort: { position: -1 } },
+    const account = await AccountModelV2.findOne({ name }).exec();
+    if (!account) {
+      res.send([]);
+      return;
+    }
+    const { mentionedIn } = account;
+    const txids = uniq(mentionedIn);
+    const count = txids.length;
+    const history = await TransactionModelV2.aggregate([
+      { $match: { txid: { $in: txids } } },
+      { $group: {
+        _id: '$txid',
+        id: { $first: '$_id' },
+        msgObject: { $first: '$msgObject' },
+        mentionedAccounts: { $first: '$mentionedAccounts' },
+        txid: { $first: '$txid' },
+        block: { $first: '$block' },
+        account: { $first: '$account' },
+        to: { $first: '$to' },
+        action: { $first: '$action' },
+        date: { $first: '$date' },
+        description: { $first: '$description' },
+        createdAt: { $first: '$createdAt' },
+      } },
+      { $sort: { date: -1 } },
       { $skip: castToInt(skip) },
-      { $limit: castToInt(limit + limit) },
-      {
-        $lookup:
-          {
-            from: 'Transaction',
-            localField: '_id',
-            foreignField: 'txid',
-            as: 'transactions',
-          },
-      },
-      { $project: { transaction: { $arrayElemAt: ['$transactions', 0] }, _id: 0 } },
-      { $project: {
-        txid: '$transaction.txid',
-        action: '$transaction.action',
-        block: '$transaction.block',
-        account: '$transaction.account',
-        date: '$transaction.date',
-        to: '$transaction.to',
-        description: '$transaction.description',
-        msgObject: '$transaction.msgObject',
-        mentionedAccounts: '$transaction.mentionedAccounts',
-      },
-      },
+      { $limit: castToInt(limit) },
     ]);
     const correctedHistory = history
       .filter(e => Object.keys(e).length > 0)
       .slice(0, limit);
     res
+      .set('count', count)
       .status(200)
       .send(correctedHistory);
   });

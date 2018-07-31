@@ -39,6 +39,7 @@ const getProducersInfo = async () => {
     isNode: p.nodes && p.nodes.length,
     nodes: p.nodes,
     producer_key: p.producer_key,
+    specialNodeEndpoint: p.specialNodeEndpoint,
     total_votes: p.total_votes,
     votesPercentage: p.total_votes / onePercent,
     votesInEOS: calculateEosFromVotes(p.total_votes),
@@ -51,7 +52,7 @@ const processNodeAndGetInfo = async (host, port, name, nodeId, wasEnabled) => {
   let info;
   try {
     info = await localEosApi.getInfo({});
-    if (!wasEnabled) {
+    if (!wasEnabled && nodeId) {
       ProducerModelV2.updateOne(
         { name, 'nodes._id': nodeId },
         {
@@ -65,13 +66,15 @@ const processNodeAndGetInfo = async (host, port, name, nodeId, wasEnabled) => {
       if (!wasEnabled) {
         return { checked: { name, isNodeBroken: true, requestTS: startTs } };
       }
-      ProducerModelV2.updateOne(
-        { name, 'nodes._id': nodeId },
-        {
-          $set: { 'nodes.$.enabled': false },
-          $push: { 'nodes.$.downtimes': { from: new Date() } },
-        },
-      ).exec();
+      if (nodeId) {
+        ProducerModelV2.updateOne(
+          { name, 'nodes._id': nodeId },
+          {
+            $set: { 'nodes.$.enabled': false },
+            $push: { 'nodes.$.downtimes': { from: new Date() } },
+          },
+        ).exec();
+      }
     }
     return {
       checked: {
@@ -151,7 +154,14 @@ const initProducerHandler = async () => {
     } else {
       checkedProducerNumber += 1;
     }
-    const { nodes } = producers[checkedProducerNumber - 1];
+    const { nodes, specialNodeEndpoint, name } = producers[checkedProducerNumber - 1];
+    if (specialNodeEndpoint && specialNodeEndpoint.use) {
+      const { host, port } = specialNodeEndpoint;
+
+      const info = await processNodeAndGetInfo(host, port, name);
+      storage.updateInfo(info);
+      return;
+    }
     const nodesInfo = await Promise.all(nodes.map(async node => {
       const {
         _id,
@@ -166,7 +176,7 @@ const initProducerHandler = async () => {
       for (let i = 0; i < NODE_ENDPOINT_TYPES.length; i += 1) {
         const type = NODE_ENDPOINT_TYPES[i];
         if (type === 'https') {
-          if (https_server_address.length < 1) {
+          if (!https_server_address || https_server_address.length < 1) {
             continue;
           }
           const [host, port] = https_server_address.split(':');
@@ -207,7 +217,13 @@ const initProducerHandler = async () => {
     } else {
       topCheckedProducerNumber += 1;
     }
-    const { nodes } = producers[topCheckedProducerNumber - 1];
+    const { nodes, specialNodeEndpoint, name } = producers[topCheckedProducerNumber - 1];
+    if (specialNodeEndpoint && specialNodeEndpoint.use) {
+      const { host, port } = specialNodeEndpoint;
+      const info = await processNodeAndGetInfo(host, port, name);
+      storage.updateInfo(info);
+      return;
+    }
     if (!nodes || nodes.length < 1) {
       if (producers.length === topCheckedProducerNumber) {
         topCheckedProducerNumber = 0;
@@ -230,7 +246,7 @@ const initProducerHandler = async () => {
       for (let i = 0; i < NODE_ENDPOINT_TYPES.length; i += 1) {
         const type = NODE_ENDPOINT_TYPES[i];
         if (type === 'https') {
-          if (https_server_address.length < 1) {
+          if (!https_server_address || https_server_address.length < 1) {
             continue;
           }
           const [host, port] = https_server_address.split(':');
@@ -258,7 +274,8 @@ const initProducerHandler = async () => {
       }
       return httpInfo;
     }));
-    const info = nodesInfo.find(e => !e.checked.isNodeBroken) || nodesInfo[0];
+
+    const info = nodesInfo.find(e => e.checked.version) || nodesInfo.find(e => !e.checked.isNodeBroken) || nodesInfo[0];
     storage.updateInfo(info);
   };
   setInterval(checkProducers, PRODUCERS_CHECK_INTERVAL);

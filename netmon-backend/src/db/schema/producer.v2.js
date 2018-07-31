@@ -12,6 +12,11 @@ const Producer = new Schema({
   last_claim_time: Number,
   location: String,
   nodes: [Node],
+  specialNodeEndpoint: {
+    host: { type: String, default: null },
+    port: { type: String, default: null },
+    use: { type: Boolean, default: false },
+  },
 }, { collection: 'Producer' });
 
 module.exports = Producer;

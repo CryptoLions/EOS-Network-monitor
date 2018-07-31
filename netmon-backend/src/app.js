@@ -29,7 +29,7 @@ const start = async () => {
     await connectToDb();
     const handlers = await initHandlers();
     await initSocket({ io, handlers });
-    await initEndpoints({ app, handlers });
+    await initEndpoints({ app, handlers, io });
   } catch (e) {
     logError('FAIL');
     console.log(e)

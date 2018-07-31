@@ -74,5 +74,12 @@
   "UPDATE_TRANSACTIONS": {
     "FROM_BLOCK_NUM": 1,
     "TO_BLOCK_NUM": 2016340
-  }
+  },
+  "SOCKET_ROOM": "room",
+  "KEYSTORE": {
+    "RELOAD_PAGE": "reloadPageCommandKey",
+    "MAIN": "Nescafe"
+  },
+  "RELOAD_PAGE_COOLDAWN": 60000 // not more often than once a minute
+
 }

@@ -1,4 +1,4 @@
-/* eslint-disable no-mixed-operators */
+/* eslint-disable no-mixed-operators,no-continue,no-await-in-loop */
 const {
   PRODUCERS_CHECK_INTERVAL,
   GET_INFO_INTERVAL,
@@ -13,6 +13,7 @@ const { createEosApi, castToInt } = require('../../helpers');
 const createStorage = require('./storage');
 
 const CONNECTION_REFUSED_BE_SERVER = 'ECONNREFUSED';
+const NODE_ENDPOINT_TYPES = ['https', 'http'];
 
 const eosApi = createEosApi();
 
@@ -160,16 +161,38 @@ const initProducerHandler = async () => {
         bp_name,
         enabled,
       } = node;
-      if (https_server_address.length > 0) {
-        const [host, port] = https_server_address.split(':');
-        return processNodeAndGetInfo(`https://${host}`, port, bp_name, _id, enabled);
+      let httpsInfo = null;
+      let httpInfo = null;
+      for (let i = 0; i < NODE_ENDPOINT_TYPES.length; i += 1) {
+        const type = NODE_ENDPOINT_TYPES[i];
+        if (type === 'https') {
+          if (https_server_address.length < 1) {
+            continue;
+          }
+          const [host, port] = https_server_address.split(':');
+          httpsInfo = await processNodeAndGetInfo(`https://${host}`, port, bp_name, _id, enabled);
+          if (httpsInfo && httpsInfo.checked.version) {
+            break;
+          }
+        } else if (type === 'http') {
+          const [host, port] = http_server_address.split(':');
+          if (host !== '0.0.0.0' && host !== '') {
+            httpInfo = await processNodeAndGetInfo(`http://${host}`, port, bp_name, _id, enabled);
+          }
+          const [p2phost] = p2p_server_address.split(':');
+          httpInfo = await processNodeAndGetInfo(`http://${p2phost}`, port, bp_name, _id, enabled);
+        }
       }
-      const [host, port] = http_server_address.split(':');
-      if (host !== '0.0.0.0') {
-        return processNodeAndGetInfo(`http://${host}`, port, bp_name, _id, enabled);
+      if (httpsInfo && httpsInfo.checked.version) {
+        return httpsInfo;
       }
-      const [p2phost] = p2p_server_address.split(':');
-      return processNodeAndGetInfo(`http://${p2phost}`, port, bp_name, _id, enabled);
+      if (httpInfo && httpInfo.checked.version) {
+        return httpInfo;
+      }
+      if (httpsInfo && httpsInfo.checked.name) {
+        return httpsInfo;
+      }
+      return httpInfo;
     }));
     const info = nodesInfo.find(e => !e.checked.isNodeBroken) || nodesInfo[0];
     storage.updateInfo(info);
@@ -202,16 +225,38 @@ const initProducerHandler = async () => {
         bp_name,
         enabled,
       } = node;
-      if (https_server_address.length > 0) {
-        const [host, port] = https_server_address.split(':');
-        return processNodeAndGetInfo(`https://${host}`, port, bp_name, _id, enabled);
+      let httpsInfo = null;
+      let httpInfo = null;
+      for (let i = 0; i < NODE_ENDPOINT_TYPES.length; i += 1) {
+        const type = NODE_ENDPOINT_TYPES[i];
+        if (type === 'https') {
+          if (https_server_address.length < 1) {
+            continue;
+          }
+          const [host, port] = https_server_address.split(':');
+          httpsInfo = await processNodeAndGetInfo(`https://${host}`, port, bp_name, _id, enabled);
+          if (httpsInfo && httpsInfo.checked.version) {
+            break;
+          }
+        } else if (type === 'http') {
+          const [host, port] = http_server_address.split(':');
+          if (host !== '0.0.0.0' && host !== '') {
+            httpInfo = await processNodeAndGetInfo(`http://${host}`, port, bp_name, _id, enabled);
+          }
+          const [p2phost] = p2p_server_address.split(':');
+          httpInfo = await processNodeAndGetInfo(`http://${p2phost}`, port, bp_name, _id, enabled);
+        }
       }
-      const [host, port] = http_server_address.split(':');
-      if (host !== '0.0.0.0') {
-        return processNodeAndGetInfo(`http://${host}`, port, bp_name, _id, enabled);
+      if (httpsInfo && httpsInfo.checked.version) {
+        return httpsInfo;
       }
-      const [p2phost] = p2p_server_address.split(':');
-      return processNodeAndGetInfo(`http://${p2phost}`, port, bp_name, _id, enabled);
+      if (httpInfo && httpInfo.checked.version) {
+        return httpInfo;
+      }
+      if (httpsInfo && httpsInfo.checked.name) {
+        return httpsInfo;
+      }
+      return httpInfo;
     }));
     const info = nodesInfo.find(e => !e.checked.isNodeBroken) || nodesInfo[0];
     storage.updateInfo(info);

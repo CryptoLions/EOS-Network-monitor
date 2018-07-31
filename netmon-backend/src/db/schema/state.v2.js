@@ -9,6 +9,9 @@ const Producer = new Schema({
   max_tps_block: { type: Number, default: 0 },
   total_txblocks_count: { type: Number, default: 0 },
   tx_sum: { type: Number, default: 0 },
+  adminData: {
+    frontendPageReloadAt: { type: Date, default: 0 },
+  },
   utils: {
     updateTransactions: {
       lastCheckedBlock: { type: Number, default: 1 },

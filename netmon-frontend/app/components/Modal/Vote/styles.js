@@ -18,14 +18,25 @@ export const Container = styled.div`
   justify-content: space-between;
   width: 100%;
   height: 30px;
+
+  @media (max-width: 500px) {
+    height: auto;
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 export const Input = styled.input`
   width: 100%;
-  height: 100%;
+  height: 30px;
   padding: 0px 10px;
   border: 1px solid black;
   border-right: none;
+
+  @media (max-width: 500px) {
+    border-right: 1px solid black;
+    margin-bottom: 15px;
+  }
 `;
 
 const InputButton = styled.a`
@@ -58,12 +69,15 @@ export const ScatterLink = InputButton.extend`
 `;
 
 export const Footer = styled.div`
-  padding-top: 15px;
+  margin-top: 15px;
+  padding: 10px;
   width: 100%;
+  background-color: #222222;
 `;
 
 export const FooterText = TextSpan.extend`
   font-size: 14px;
+  color: #00ff01;
   padding: 0;
 `;
 

@@ -6,18 +6,18 @@ import types from './types';
 import modalTypes from '../modal/types';
 
 const DEFAULT_COLUMNS_STATE = {
-  ping: true,
+  ping: false,
   name: true,
   answered: true,
-  block: true,
+  blkSeen: true,
   produced: false,
-  block2: false,
+  blkProduced: false,
   version: true,
   address: false,
   http: false,
   p2p: false,
   location: false,
-  blocks: false,
+  numberProduced: false,
   txs: false,
   organisation: false,
   votes: true,
@@ -30,6 +30,8 @@ const initialState = {
     data: null,
   },
   tableColumnState: store.get('tableColumnState') || DEFAULT_COLUMNS_STATE,
+  // Background
+  actualBackgroundNumber: store.get('actualBackgroundNumber') || 0,
 };
 
 export const uiReducer = (state = initialState, { type, payload }) => {
@@ -77,6 +79,13 @@ export const uiReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         modalDataFetchingState: false,
+      };
+
+    // Background
+    case types.SET_ACTUAL_BACKGROUND_NUMBER:
+      return {
+        ...state,
+        actualBackgroundNumber: payload,
       };
 
     default:

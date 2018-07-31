@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import socket from '../../../../init/socket';
 
 // Components
-import TransactionRow from './TransactionRow';
+// import TransactionRow from './TransactionRow';
 
 // Utils
 import renderEnhancer from '../../../../hoc/renderEnhancer';
@@ -16,7 +16,11 @@ import { SvgPlayPause, SvgSpinner } from '../svg';
 
 // Styles
 import { Wrapper, Header, HeaderSpan, Container, TextSpan, GreenSpan } from '../styles';
-import { HeadDiv, OverflowContainer, SmallText } from './styles';
+import {
+  HeadDiv,
+  // OverflowContainer,
+  SmallText,
+} from './styles';
 
 class Transactions extends PureComponent {
   state = {
@@ -33,7 +37,11 @@ class Transactions extends PureComponent {
 
   render() {
     const { isTransactionsSocketOn } = this.state;
-    const { transactionsList = [], transactionsInfo = {}, toggleModal } = this.props;
+    const {
+      transactionsList = [],
+      transactionsInfo = {},
+      // toggleModal
+    } = this.props;
 
     return (
       <Wrapper>

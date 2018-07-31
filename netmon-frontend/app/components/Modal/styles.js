@@ -33,8 +33,8 @@ export const ModalContainer = styled.section`
   margin: 1.75rem auto;
   background-color: white;
   animation: ${modalAppear} 0.5s;
+
   @media (max-width: 500px) {
-    border-radius: 0;
     margin: 0px;
   }
 `;

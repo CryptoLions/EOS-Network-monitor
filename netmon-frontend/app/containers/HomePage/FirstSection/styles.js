@@ -9,6 +9,8 @@ export const SectionOne = styled.div`
 
   @media (max-width: 992px) {
     max-width: 370px;
+    width: 100%;
+    min-width: auto;
     justify-content: center;
     align-items: center;
     margin: 0;

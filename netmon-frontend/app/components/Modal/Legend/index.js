@@ -12,6 +12,7 @@ import {
   ColorsLegendDiv,
   ColorDiv,
   ColorDesc,
+  ColorDescDash,
   Green,
   Red,
   Yellow,
@@ -38,10 +39,6 @@ export const Legend = () => (
           <span>All information comes from quering PUBLIC nodes. Block producing nodes are usually hidden. </span>
           <span>EOS Network Monitor is a tool to check EOS public endpoints and show general info. </span>
           <span>It shows all registerd producers and ftech info about endpoints from bp.json file.</span>
-          <span>
-            {`The monitor checks only the first 60 producer's public endpoints and does not necessarily represent the state of
-        hidden production nodes.`}
-          </span>
         </Content>
         <BottomContent>
           <span>
@@ -58,8 +55,9 @@ export const Legend = () => (
           <Green /> - producing right now.
         </ColorDiv>
         <ColorDiv>
-          <Red /> - No response from public API endpoint&nbsp;
-          <ColorDesc>(Does not necessarily mean that producers node is down).</ColorDesc>
+          <Red />
+          <ColorDescDash>-</ColorDescDash>
+          No response from public API endpoint (Does not necessarily mean that producers node is down).
         </ColorDiv>
         <ColorDiv>
           <Yellow /> - Other version.

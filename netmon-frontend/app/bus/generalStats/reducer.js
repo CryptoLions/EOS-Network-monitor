@@ -19,8 +19,7 @@ export const generalStatsReducer = (state = initialState, { type, payload }) => 
         ...state,
         lastBlockStats: {
           ...state.lastBlockStats,
-          ...payload.data,
-          nextProducer: payload.nextProducer,
+          ...payload,
         },
       };
 

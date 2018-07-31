@@ -5,7 +5,6 @@ import types from './types';
 
 const initialState = {
   producers: [],
-  top21Producer: [],
   selectedProducers: store.get('checkedProducers') || [],
   // Filter input value
   filterInputValue: '',
@@ -16,11 +15,9 @@ export const producersReducer = (state = initialState, { type, payload }) => {
     case types.FETCH_PRODUCERS_SUCCESS:
       return {
         ...state,
-        producers: payload.producers,
-        top21Producer: payload.producers
-          .slice(0, 21)
-          .sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase())),
+        producers: payload.producers.map((producer, index) => ({ ...producer, index })),
       };
+
     case types.PRODUCERS_UPDATE:
       if (!payload.data || !payload.data.length) {
         return state;
@@ -30,7 +27,7 @@ export const producersReducer = (state = initialState, { type, payload }) => {
         ...state,
         producers: state.producers.map(producer => {
           const nextProducerData = payload.data.find(changedProducer => producer.name === changedProducer.name);
-          return nextProducerData || producer;
+          return nextProducerData ? { ...nextProducerData, index: producer.index } : producer;
         }),
       };
 

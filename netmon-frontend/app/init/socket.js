@@ -1,12 +1,16 @@
+// Core
 import io from 'socket.io-client';
 import throttle from 'lodash/throttle';
 
-import { URL, THROTTLE_TIMEOUT } from '../constants';
+// Actions
 import { producerActions } from '../bus/producers/actions';
 import { transactionActions } from '../bus/transactions/actions';
 import { generalStatsActions } from '../bus/generalStats/actions';
 import { modalActions } from '../bus/modal/actions';
 import { uiActions } from '../bus/ui/actions';
+
+// Constants
+import { URL, THROTTLE_TIMEOUT } from '../constants';
 
 class SocketClient {
   init = ({ dispatch, getState }) => {
@@ -18,13 +22,27 @@ class SocketClient {
   };
 
   connect() {
+    this.socket.on('connect', () => {
+      // Producers fetch
+      this.dispatch(producerActions.fetchProducers());
+      // Producers update
+      this.socket.on('table', data => this.dispatch(producerActions.producersUpdate(data)));
+    });
+
+    this.socket.on('disconnect', () => {
+      console.log('disconnect');
+    });
+
+    // Background init
+    this.socket.once('info', data =>
+      this.dispatch(uiActions.setActualBackgroundNumber(Math.floor(data.head_block_num / 5000000)))
+    );
+
     // Transactions
     this.socket.on('transactions', data => this.dispatch(transactionActions.transactionsAdd(data)));
 
     // Reload producers
-    this.socket.on('reload_producers', () => {
-      this.dispatch(producerActions.fetchProducers());
-    });
+    this.socket.on('reload_producers', () => this.dispatch(producerActions.fetchProducers()));
 
     // general stats
     this.socket.on(
@@ -39,9 +57,8 @@ class SocketClient {
 
     this.socket.on('usersonline', data => this.dispatch(generalStatsActions.connectedUsersUpdate(data)));
 
-    this.socket.on('info', data => {
-      this.dispatch(generalStatsActions.lastBlockStatsUpdate(data));
-    });
+    // CurrentBlockInfo
+    this.socket.on('info', data => this.dispatch(generalStatsActions.lastBlockStatsUpdate(data)));
 
     // Modal
     this.socket.on('api', data => {
@@ -53,6 +70,9 @@ class SocketClient {
       this.dispatch(modalActions.soketFetchingTxInfoSuccess(data));
       this.dispatch(uiActions.setModalDataFetchingState(false));
     });
+
+    // Reload page
+    this.socket.on('reload_page', () => window.location.reload());
 
     // Debug
     this.socket.on('reload', () => {
@@ -66,21 +86,13 @@ class SocketClient {
     this.socket.on('error', msg => {
       console.log('error', msg);
     });
-
-    // setTimeout(() => this.dispatch(producerActions.soketErrorNode(1)), 5000);
-    // setTimeout(() => {
-    //   console.log('disconnect');
-    //   this.socket.disconnect();
-    // }, 10000);
   }
 
-  // transactions
+  // transactions toggle
   emitTransactionsSocketOn = () =>
     this.socket.on('transactions', data => this.dispatch(transactionActions.transactionsAdd(data)));
 
   emitTransactionsSocketOff = () => this.socket.off('transactions');
-
-  listenProducerUpdates = () => this.socket.on('table', data => this.dispatch(producerActions.producersUpdate(data)));
 }
 
 export default new SocketClient();

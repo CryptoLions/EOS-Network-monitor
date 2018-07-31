@@ -21,7 +21,7 @@ export const Input = styled.input`
   box-shadow: 0px 2px 5px 0.3px rgba(0, 0, 0, 0.5);
 `;
 
-export const SearchIcon = styled.svg`
+export const SvgIcon = styled.svg`
   position: absolute;
   top: 7px;
   right: 7px;
@@ -29,4 +29,20 @@ export const SearchIcon = styled.svg`
   height: 14px;
   cursor: text;
   pointer-events: none;
+`;
+
+export const SvgCrossIcon = SvgIcon.extend`
+  top: 8px;
+  width: 12px;
+  height: 12px;
+  cursor: pointer;
+  pointer-events: all;
+
+  & polygon {
+    fill: #747474;
+  }
+
+  &:hover polygon {
+    fill: red;
+  }
 `;

@@ -78,6 +78,25 @@ export default class TableData extends PureComponent {
     return <VersionCell />;
   };
 
+  serverAddressHandler = (https, http, p2pHostname) => {
+    const [hostname, port] = (https || http || '').split(':');
+    return (
+      <Tdata>
+        {hostname && port ? (
+          <TextLink
+            href={`${https ? 'https' : 'http'}://${
+              hostname === '0.0.0.0' ? p2pHostname : hostname
+            }:${port}/v1/chain/get_info`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {port}
+          </TextLink>
+        ) : null}
+      </Tdata>
+    );
+  };
+
   toggleProducerSelection = e => {
     const { producer, toggleProducerSelection } = this.props;
 
@@ -93,7 +112,6 @@ export default class TableData extends PureComponent {
 
     const producerUrl = this.getProducerUrl();
     const [p2pHostname, p2pPort] = (node.p2p_server_address || '').split(':');
-    const [hostname, port] = (node.https_server_address || node.http_server_address || '').split(':');
 
     let backgroundColor;
     if (producer.isCurrentNode) backgroundColor = 'rgb(17, 168, 39, 0.7)';
@@ -110,7 +128,7 @@ export default class TableData extends PureComponent {
             {isNodeChecked ? <StyledCheckboxActive /> : <StyledCheckbox />}
           </label>
         </CheckboxCell>
-        <IndexCell>{index + 1}</IndexCell>
+        <IndexCell>{producer.index + 1}</IndexCell>
         {tableColumnState.ping && (
           <PingCell>
             <PingSpan isPingUptated={isPingUptated}>{`${producer.ping || '--'}ms`}</PingSpan>
@@ -127,51 +145,42 @@ export default class TableData extends PureComponent {
         {tableColumnState.answered && (
           <TimeAgoCell>
             <TimeAgoBlock>
-            <TimeAgo value={producer.answeredTimestamp} />
+              <TimeAgo value={producer.answeredTimestamp} />
             </TimeAgoBlock>
           </TimeAgoCell>
         )}
-        {/* {3.Block} */}
-        {tableColumnState.block && <Tdata>{producer.answeredBlock}</Tdata>}
+        {/* {3.Blk seen} */}
+        {tableColumnState.blkSeen && <Tdata>{producer.answeredBlock}</Tdata>}
         {/* {4.Produced} */}
         {tableColumnState.produced && (
           <TimeAgoCell>
             <TimeAgoBlock>
-            <TimeAgo value={producer.producedTimestamp} />
+              <TimeAgo value={producer.producedTimestamp} />
             </TimeAgoBlock>
           </TimeAgoCell>
         )}
-        {/* {5.Block2} */}
-        {tableColumnState.block2 && <Tdata>{producer.producedBlock}</Tdata>}
+        {/* {5.Blk produced} */}
+        {tableColumnState.blkProduced && <Tdata>{producer.producedBlock}</Tdata>}
         {/* {6.Version} */}
         {tableColumnState.version && this.versionColorsHandler()}
         {/* {7.Address} */}
         {tableColumnState.address && <Tdata>{p2pHostname}</Tdata>}
         {/* {8.HTTP} */}
-        {tableColumnState.http && (
-          <Tdata>
-            <TextLink
-              href={`http://${hostname === '0.0.0.0' ? p2pHostname : hostname}:${port}/v1/chain/get_info`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {port}
-            </TextLink>
-          </Tdata>
-        )}
+        {tableColumnState.http &&
+          this.serverAddressHandler(node.https_server_address, node.http_server_address, p2pHostname)}
         {/* {9.P2P} */}
         {tableColumnState.p2p && <Tdata>{p2pPort}</Tdata>}
         {/* {10.Location} */}
         {tableColumnState.location && <Tdata>{node.location}</Tdata>}
-        {/* {11.Blocks} */}
-        {tableColumnState.blocks && <Tdata>{producer.produced}</Tdata>}
+        {/* {11.# produced} */}
+        {tableColumnState.numberProduced && <Tdata>{producer.produced}</Tdata>}
         {/* {12.TXs} */}
         {tableColumnState.txs && <Tdata>{producer.tx_count}</Tdata>}
         {/* {13.Organisation} */}
         {tableColumnState.organisation && (
           <OrganisationCell>
             <TextLink href={producerUrl} target="_blank" rel="noopener noreferrer">
-              {producerUrl.replace(/https:|http:|www.|\//gi, '')}
+              {node.organisation}
             </TextLink>
           </OrganisationCell>
         )}

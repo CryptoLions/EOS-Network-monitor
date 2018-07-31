@@ -21,10 +21,8 @@ export const Heading = styled.span`
 `;
 
 export const Content = styled.div`
-  align-items: center;
-  text-align: center;
   flex-direction: column;
-  padding: 0px 10%;
+  padding: 0;
 `;
 
 export const BottomContent = styled.div`
@@ -37,10 +35,8 @@ export const BottomContent = styled.div`
 export const ColorsLegendDiv = styled.div``;
 
 export const ColorDiv = styled.div`
-  height: 30px;
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
 `;
 
 export const ColorDesc = styled.span`
@@ -48,10 +44,13 @@ export const ColorDesc = styled.span`
   padding: 10px 0;
 `;
 
+export const ColorDescDash = styled.span`
+  margin-right: 5px;
+`;
+
 // Colors
 export const Color = styled.span`
-  display: block;
-  width: 30px;
+  min-width: 30px;
   height: 30px;
   margin-right: 5px;
 `;

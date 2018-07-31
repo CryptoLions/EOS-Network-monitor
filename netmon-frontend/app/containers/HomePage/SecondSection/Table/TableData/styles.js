@@ -30,7 +30,7 @@ export const IndexCell = Cell.extend`
 
 export const VotesCell = Cell.extend`
   width: 135px;
-  min-width: 135px;
+  min-width: 140px;
 `;
 
 export const OrganisationCell = Cell.extend`

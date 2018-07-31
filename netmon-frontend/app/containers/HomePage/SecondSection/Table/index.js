@@ -21,7 +21,6 @@ import { selectTableColumnState } from '../../../../bus/ui/selectors';
 
 // Utils
 import renderEnhancer from '../../../../hoc/renderEnhancer';
-import socket from '../../../../init/socket';
 
 // Styles
 import { TableContainer, TableTag, Filler, NoDataDiv } from './styles';
@@ -40,7 +39,6 @@ const mapStateToProps = createStructuredSelector({
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(
     {
-      fetchProducers: producerActions.fetchProducers,
       toggleProducerSelection: producerActions.toggleProducerSelection,
       toggleModal: uiActions.toggleModal,
     },
@@ -53,14 +51,6 @@ const mapDispatchToProps = dispatch => ({
   mapDispatchToProps
 )
 class Table extends PureComponent {
-  async componentDidMount() {
-    const {
-      actions: { fetchProducers },
-    } = this.props;
-    await fetchProducers();
-    socket.listenProducerUpdates();
-  }
-
   componentWillReceiveProps(nextProps) {
     if (nextProps.selectedProducers.length !== this.props.selectedProducers.length)
       store.set('checkedProducers', nextProps.selectedProducers);
@@ -116,7 +106,6 @@ class Table extends PureComponent {
                   <Fragment key={producer.name}>
                     {index === 21 && !filterInputValue && <Filler />}
                     <TableData
-                      index={index}
                       producer={producer}
                       isNodeChecked={selectedProducers.some(item => item === producer.name)}
                       tableColumnState={tableColumnState}

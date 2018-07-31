@@ -45,19 +45,29 @@ export default class TableColumnMenu extends Component {
     tableMenuState: false,
   };
 
+  componentDidUpdate() {
+    if (this.state.tableMenuState) {
+      document.addEventListener('click', this.handleToggleTableMenu);
+    } else {
+      document.removeEventListener('click', this.handleToggleTableMenu);
+    }
+  }
+
+  stopPropagation = e => {
+    e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
+  };
+
   handleSelectTableColumns = e => this.props.actions.setTableColumnState(e.target.getAttribute('name'));
 
   handleToggleTableMenu = () => this.setState(({ tableMenuState }) => ({ tableMenuState: !tableMenuState }));
 
-  resetColumnsVisibility = () => {
-    this.props.actions.resetColumnsVisibility();
-  };
+  resetColumnsVisibility = () => this.props.actions.resetColumnsVisibility();
 
   render() {
     const { tableMenuState } = this.state;
-
     return (
-      <Wrapper>
+      <Wrapper onClick={this.stopPropagation}>
         <SvgMenuIcon handleToggleTableMenu={this.handleToggleTableMenu} />
         <Fragment>
           {tableMenuState && (

@@ -38,7 +38,7 @@ export default class CurrentBlockInfo extends PureComponent {
                   Produced by: <GreenSpan>{lastBlockStats.head_block_producer}</GreenSpan>
                 </TextSpan>
                 <div>
-                  Next: <RedSpan>{lastBlockStats.nextProducer}</RedSpan>
+                  Next: <RedSpan>{lastBlockStats.next_producer}</RedSpan>
                 </div>
               </FooterContainer>
             </Fragment>

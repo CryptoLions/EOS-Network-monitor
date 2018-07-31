@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
 // Svg
-import { SearchIconSvg } from './svg';
+import { IconSvg } from './svg';
 
 // Styles
 import { FilterContainer, Input } from './styles';
@@ -13,11 +13,14 @@ export default class FilterInput extends PureComponent {
 
   onChange = e => this.props.setFilterInputValue(e.target.value);
 
+  clearFilterInput = () => this.props.setFilterInputValue('');
+
   isInputOnFocusToggle = () => this.setState(({ isOnFocus }) => ({ isOnFocus: !isOnFocus }));
 
   render() {
     const { isOnFocus } = this.state;
     const { filterInputValue } = this.props;
+
     return (
       <FilterContainer>
         <Input
@@ -26,7 +29,11 @@ export default class FilterInput extends PureComponent {
           onBlur={this.isInputOnFocusToggle}
           onFocus={this.isInputOnFocusToggle}
         />
-        <SearchIconSvg isOnFocus={isOnFocus} />
+        <IconSvg
+          isOnFocus={isOnFocus}
+          filterIsEmpty={!filterInputValue.length}
+          clearFilterInput={this.clearFilterInput}
+        />
       </FilterContainer>
     );
   }

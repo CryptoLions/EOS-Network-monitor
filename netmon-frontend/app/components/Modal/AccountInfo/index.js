@@ -115,62 +115,109 @@ export default class AccountInfo extends PureComponent {
                   <TextSpan>{typeof accountInfo.balance === 'undefined' ? '--' : accountInfo.balance}</TextSpan>
                 </DataBlock>
                 <DataBlock>
-                  <TextSpanBold>Account info</TextSpanBold>
-                  <div>Created: {convertUtcToLocal(accountInfo.created) || '--'}</div>
-                  <div>Last code Update: {convertUtcToLocal(accountInfo.last_code_update) || '--'}</div>
+                  <div>
+                    <TextSpanBold>Created:</TextSpanBold>
+                    {convertUtcToLocal(accountInfo.created) || '--'}
+                  </div>
+                  <div>
+                    <TextSpanBold>Last code Update:</TextSpanBold>
+                    {convertUtcToLocal(accountInfo.last_code_update) || '--'}
+                  </div>
                 </DataBlock>
                 <DataBlock>
                   {accountInfo.permissions[0].required_auth.keys[0] && (
-                    <div>Active Key: {accountInfo.permissions[0].required_auth.keys[0].key || '--'}</div>
+                    <div>
+                      <TextSpanBold>Active Key:</TextSpanBold>
+                      {accountInfo.permissions[0].required_auth.keys[0].key || '--'}
+                    </div>
                   )}
                   {accountInfo.permissions[1].required_auth.keys[0] && (
-                    <div>Owner Key: {accountInfo.permissions[1].required_auth.keys[0].key || '--'}</div>
+                    <div>
+                      <TextSpanBold>Owner Key:</TextSpanBold>
+                      {accountInfo.permissions[1].required_auth.keys[0].key || '--'}
+                    </div>
                   )}
                 </DataBlock>
                 <DataBlock>
                   <div>
-                    RAM used {accountInfo.ram_usage || '--'} bytes / quota:{' '}
+                    <TextSpanBold>RAM used:</TextSpanBold> {accountInfo.ram_usage || '--'} bytes / quota:{' '}
                     {accountInfo.total_resources.ram_bytes || '--'} bytes
                   </div>
                 </DataBlock>
                 <DataBlock>
-                  <div>NET bandwidth:</div>
                   <div>
-                    staked:{' '}
+                    <TextSpanBold>NET bandwidth:</TextSpanBold>
+                  </div>
+                  <div>
+                    <TextSpanBold>staked:</TextSpanBold>
                     {(accountInfo.self_delegated_bandwidth && accountInfo.self_delegated_bandwidth.net_weight) || '--'}
                   </div>
-                  <div>delegated: {accountInfo.total_resources.net_weight || '--'}</div>
                   <div>
-                    current: {accountInfo.net_limit.used || '--'} / available: {accountInfo.net_limit.available || '--'}{' '}
-                    bytes
+                    <TextSpanBold>delegated:</TextSpanBold>
+                    {accountInfo.total_resources.net_weight || '--'}
                   </div>
-                  <div>max: {accountInfo.net_limit.max || '--'} bytes</div>
+                  <div>
+                    <TextSpanBold>current:</TextSpanBold>
+                    {accountInfo.net_limit.used || '--'} / <TextSpanBold>available:</TextSpanBold>
+                    {accountInfo.net_limit.available || '--'} bytes
+                  </div>
+                  <div>
+                    <TextSpanBold>max:</TextSpanBold>
+                    {accountInfo.net_limit.max || '--'} bytes
+                  </div>
                 </DataBlock>
                 <DataBlock>
-                  <div>CPU bandwidth:</div>
                   <div>
-                    staked:{' '}
+                    <TextSpanBold>CPU bandwidth:</TextSpanBold>
+                  </div>
+                  <div>
+                    <TextSpanBold>staked:</TextSpanBold>
                     {(accountInfo.self_delegated_bandwidth && accountInfo.self_delegated_bandwidth.cpu_weight) || '--'}
                   </div>
-                  <div>delegated: {accountInfo.total_resources.cpu_weight || '--'}</div>
                   <div>
-                    current: {accountInfo.cpu_limit.used || '--'} / available: {accountInfo.cpu_limit.available || '--'}{' '}
-                    time
+                    <TextSpanBold>delegated:</TextSpanBold> {accountInfo.total_resources.cpu_weight || '--'}
                   </div>
-                  <div>max: {accountInfo.cpu_limit.max || '--'} time</div>
+                  <div>
+                    <TextSpanBold>current:</TextSpanBold> {accountInfo.cpu_limit.used || '--'} /{' '}
+                    <TextSpanBold>available:</TextSpanBold> {accountInfo.cpu_limit.available || '--'} time
+                  </div>
+                  <div>
+                    <TextSpanBold>max:</TextSpanBold> {accountInfo.cpu_limit.max || '--'} time
+                  </div>
                 </DataBlock>
                 {!!accountInfo.voter_info && (
                   <DataBlock>
-                    <div>Voter Info: {accountInfo.voter_info.owner || '--'}</div>
-                    <div>Proxy: {accountInfo.voter_info.proxy || '--'}</div>
-                    <div>Producers: {accountInfo.voter_info.producers.length || '--'}</div>
-                    <div>Staked: {accountInfo.voter_info.staked || '--'}</div>
-                    <div>Last vote weight: {accountInfo.voter_info.last_vote_weight || '--'}</div>
-                    <div>Proxie vote weight: {accountInfo.voter_info.proxied_vote_weight || '--'}</div>
-                    <div>Is proxy: {accountInfo.voter_info.is_proxy || 0}</div>
-                    <div>Deferred trx id: {accountInfo.voter_info.deferred_trx_id || '--'}</div>
-                    <div>Last unstake time: {accountInfo.voter_info.last_unstake_time || '--'}</div>
-                    <div>Unstaking: {accountInfo.unstaking || '--'}</div>
+                    <div>
+                      <TextSpanBold>Voter Info:</TextSpanBold> {accountInfo.voter_info.owner || '--'}
+                    </div>
+                    <div>
+                      <TextSpanBold>Proxy:</TextSpanBold> {accountInfo.voter_info.proxy || '--'}
+                    </div>
+                    <div>
+                      <TextSpanBold>Producers:</TextSpanBold> {accountInfo.voter_info.producers.length || '--'}
+                    </div>
+                    <div>
+                      <TextSpanBold>Staked:</TextSpanBold> {accountInfo.voter_info.staked || '--'}
+                    </div>
+                    <div>
+                      <TextSpanBold>Last vote weight:</TextSpanBold> {accountInfo.voter_info.last_vote_weight || '--'}
+                    </div>
+                    <div>
+                      <TextSpanBold>Proxie vote weight:</TextSpanBold>{' '}
+                      {accountInfo.voter_info.proxied_vote_weight || '--'}
+                    </div>
+                    <div>
+                      <TextSpanBold>Is proxy:</TextSpanBold> {accountInfo.voter_info.is_proxy || 0}
+                    </div>
+                    <div>
+                      <TextSpanBold>Deferred trx id:</TextSpanBold> {accountInfo.voter_info.deferred_trx_id || '--'}
+                    </div>
+                    <div>
+                      <TextSpanBold>Last unstake time:</TextSpanBold> {accountInfo.voter_info.last_unstake_time || '--'}
+                    </div>
+                    <div>
+                      <TextSpanBold>Unstaking:</TextSpanBold> {accountInfo.unstaking || '--'}
+                    </div>
                   </DataBlock>
                 )}
               </InfoContainer>

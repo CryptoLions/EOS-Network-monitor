@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const TableContainer = styled.div`
   overflow-x: scroll;
   width: 770px;
+  min-height: 75vh;
   ::-webkit-scrollbar {
     display: none;
   }

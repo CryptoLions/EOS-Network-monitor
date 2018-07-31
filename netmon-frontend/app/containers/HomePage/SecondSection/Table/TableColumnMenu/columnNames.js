@@ -12,16 +12,16 @@ export default [
     renderName: 'Answered',
   },
   {
-    columnName: 'block',
-    renderName: 'Block',
+    columnName: 'blkSeen',
+    renderName: 'Blk seen',
   },
   {
     columnName: 'produced',
     renderName: 'Produced',
   },
   {
-    columnName: 'block2',
-    renderName: 'Block 2',
+    columnName: 'blkProduced',
+    renderName: 'Blk produced',
   },
   {
     columnName: 'version',
@@ -44,8 +44,8 @@ export default [
     renderName: 'Location',
   },
   {
-    columnName: 'blocks',
-    renderName: 'Blocks',
+    columnName: 'numberProduced',
+    renderName: '# produced',
   },
   {
     columnName: 'txs',

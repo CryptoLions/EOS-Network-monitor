@@ -38,7 +38,6 @@ class Transactions extends PureComponent {
   render() {
     const { isTransactionsSocketOn } = this.state;
     const {
-      transactionsList = [],
       transactionsInfo = {},
       // toggleModal
     } = this.props;
@@ -53,7 +52,7 @@ class Transactions extends PureComponent {
           />
         </Header>
         <Container>
-          {transactionsList.length ? (
+          {transactionsInfo.totalBlockCount ? (
             <Fragment>
               <HeadDiv>
                 {/* <TextSpan>
@@ -90,7 +89,7 @@ class Transactions extends PureComponent {
 }
 
 Transactions.propTypes = {
-  transactionsList: PropTypes.array,
+  // transactionsList: PropTypes.array,
   transactionsInfo: PropTypes.object,
   toggleModal: PropTypes.func,
 };

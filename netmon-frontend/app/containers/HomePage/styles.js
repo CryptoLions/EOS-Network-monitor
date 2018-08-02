@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const MainContainer = styled.div`
-  overflow-x: scroll;
+  overflow-x: auto;
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -16,7 +16,6 @@ export const MainContainer = styled.div`
 `;
 
 export const Footer = styled.footer`
-  position: fixed;
   bottom: 0;
   display: flex;
   justify-content: center;

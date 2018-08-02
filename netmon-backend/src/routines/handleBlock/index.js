@@ -129,8 +129,8 @@ const handleBlock = async () => {
       { name: block.producer },
       { $inc: { produced: 1, tx_count: block.transactions.length } },
     ).exec();
-    // const data = await extractData(block);
-    // await saveBlockData(data);
+    const data = await extractData(block);
+    await saveBlockData(data);
     console.timeEnd(`handleBlock ${lastHandledBlock}`);
 
     await StateModelV2.update({ id: 1 }, { $inc: { lastHandledBlock: 1 } });

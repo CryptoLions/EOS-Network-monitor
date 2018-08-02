@@ -21,7 +21,7 @@ const blockStorage = {
   replacedNumber: 0, // its needed for calculating avg aps and tps
 };
 
-const getActionsCount = (block) => {
+const getActionsCount = block => {
   if (block.transactions.length < 1) {
     return 0;
   }
@@ -31,18 +31,16 @@ const getActionsCount = (block) => {
   );
 };
 
-const avg = (arr) => {
+const avg = arr => {
   const sum = arr.reduce((acc, val) => acc + val, 0);
   return (sum / arr.length).toFixed();
 };
 
 const composeData = ({ block, max_tps, max_aps, max_tps_block }) => {
-  const live_tps = block.transactions.length + (blockStorage.previous.transactions
-    ? blockStorage.previous.transactions.length
-    : 0);
-  const live_aps = getActionsCount(block) + (blockStorage.previous.transactions
-    ? getActionsCount(blockStorage.previous)
-    : 0);
+  const live_tps =
+    block.transactions.length + (blockStorage.previous.transactions ? blockStorage.previous.transactions.length : 0);
+  const live_aps =
+    getActionsCount(block) + (blockStorage.previous.transactions ? getActionsCount(blockStorage.previous) : 0);
 
   blockStorage.last_ten_live_aps[blockStorage.replacedNumber] = live_aps;
   blockStorage.last_ten_live_tps[blockStorage.replacedNumber] = live_tps;
@@ -60,52 +58,53 @@ const composeData = ({ block, max_tps, max_aps, max_tps_block }) => {
   };
 };
 
-const initProducerHandler = async () => {
-  const listeners = [];
+// initial state
+let info = { number: 0, block: {}, info: {} };
+const listeners = [];
 
-  // initial state
-  let info = { number: 0, block: {}, info: {} };
+const notify = () => {
+  listeners.forEach(listener => {
+    listener(info);
+  });
+};
 
-  const notify = () => {
-    listeners.forEach(listener => {
-      listener(info);
-    });
-  };
+const getInfo = async () => {
+  try {
+    const state = await StateModelV2.findOne({ id: 1 }).exec();
+    if (!state) {
+      return;
+    }
 
-  const getInfo = async () => {
-    try {
-      const state = await StateModelV2.findOne({ id: 1 }).exec();
-      if (!state) {
-        return;
-      }
-      const nextInfo = await getBlockInfo();
-      if (castToInt(info.number) >= castToInt(nextInfo.number)) {
-        return;
-      }
-      blockStorage.previous = {
-        ...info.block,
-      };
-      info = {
+    const nextInfo = await getBlockInfo();
+    if (castToInt(info.number) >= castToInt(nextInfo.number)) {
+      return;
+    }
+    blockStorage.previous = {
+      ...info.block,
+    };
+    info = {
+      ...nextInfo,
+      block: composeData({
         ...nextInfo,
-        block: composeData({
-          ...nextInfo,
-          max_aps: state.max_aps,
-          max_tps: state.max_tps,
-          max_tps_block: state.max_tps_block,
-        }),
-      };
-    } catch (e) {
-      logError('FAIL');
-      logError(e);
-    }
+        max_aps: state.max_aps,
+        max_tps: state.max_tps,
+        max_tps_block: state.max_tps_block,
+      }),
+    };
+  } catch (e) {
+    logError('FAIL');
+    logError(e);
+  }
 
-    if (ON_INFO_CHANGE_INTERVAL === 0) {
-      notify();
-    }
-  };
+  if (ON_INFO_CHANGE_INTERVAL === 0) {
+    notify();
+  }
+};
+
+const initProducerHandler = async () => {
   setInterval(getInfo, GET_INFO_INTERVAL);
 
-  if (ON_INFO_CHANGE_INTERVAL !== 0) {
+  if (ON_INFO_CHANGE_INTERVAL) {
     setInterval(notify, ON_INFO_CHANGE_INTERVAL);
   }
 

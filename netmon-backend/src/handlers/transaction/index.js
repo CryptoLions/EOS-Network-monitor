@@ -1,5 +1,7 @@
 /* eslint-disable no-param-reassign,no-mixed-operators */
-const { LISTENERS: { ON_TRANSACTIONS_ADD_INTERVAL } } = require('config');
+const {
+  LISTENERS: { ON_TRANSACTIONS_ADD_INTERVAL },
+} = require('config');
 
 const { TransactionModelV2, StateModelV2 } = require('../../db');
 const { castToInt } = require('../../helpers');
@@ -8,8 +10,8 @@ const getBlocksCountInfo = async () => {
   const state = await StateModelV2.findOne({ id: 1 });
   // return state && state.total_txblocks_count || 0;
   return {
-    notEmptyBlocksCount: state && state.total_txblocks_count || 0,
-    totalBlockCount: state && state.lastHandledBlock || 0,
+    notEmptyBlocksCount: (state && state.total_txblocks_count) || 0,
+    totalBlockCount: (state && state.lastHandledBlock) || 0,
   };
 };
 
@@ -28,22 +30,24 @@ const getTransactions = ({ tsStart, tsEnd, actions }) => {
   return TransactionModelV2.aggregate(pipeline);
 };
 
-
 const initHandler = () => {
   const listeners = [];
 
-  const notify = () => {
+  const notify = async () => {
+    // const transactions = await getTransactions({ tsStart: Date.now() - ON_TRANSACTIONS_ADD_INTERVAL });
+    const totalTransactionsCount = await TransactionModelV2.estimatedDocumentCount({});
+    const { notEmptyBlocksCount, totalBlockCount } = await getBlocksCountInfo();
     listeners.forEach(async listener => {
       listener({
-        transactions: await getTransactions({ tsStart: Date.now() - ON_TRANSACTIONS_ADD_INTERVAL }),
-        totalTransactionsCount: await TransactionModelV2.countDocuments({}),
-        ...(await getBlocksCountInfo()),
+        transactions: [],
+        totalTransactionsCount,
+        notEmptyBlocksCount,
+        totalBlockCount,
       });
     });
   };
 
   setInterval(notify, ON_TRANSACTIONS_ADD_INTERVAL);
-
 
   return {
     onUpdate(listener) {

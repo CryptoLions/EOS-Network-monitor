@@ -9,7 +9,7 @@ const init = ({ io, handlers }) => {
     info: infoHandler,
     producerListOrder: producerListOrderHandler,
   } = handlers;
-  userCountHandler.onUpdate((userCount) => {
+  userCountHandler.onUpdate(userCount => {
     io.to(SOCKET_ROOM).emit('usersonline', userCount);
   });
   tableHandler.onUpdate(table => {
@@ -19,7 +19,6 @@ const init = ({ io, handlers }) => {
     io.to(SOCKET_ROOM).emit('totalstaked', totalStacked);
   });
   producerListOrderHandler.onUpdate(() => {
-    console.log('reload_producers');
     io.to(SOCKET_ROOM).emit('reload_producers');
   });
   transactionHandler.onUpdate(({ transactions, totalTransactionsCount, notEmptyBlocksCount, totalBlockCount }) => {

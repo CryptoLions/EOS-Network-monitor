@@ -32,13 +32,13 @@ const start = async () => {
     await initEndpoints({ app, handlers, io });
   } catch (e) {
     logError('FAIL');
-    console.log(e)
+    console.log(e);
     return;
   }
-  http.listen(SERVER.PORT, (err) => {
+  http.listen(SERVER.PORT, err => {
     if (err) {
       logError('FAIL');
-      console.log(err)
+      console.log(err);
       return;
     }
     logInfo(`SERVER IS NOW RUNNING ON ${SERVER.HOST}:${SERVER.PORT}.`);

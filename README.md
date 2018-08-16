@@ -15,6 +15,9 @@ curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
 sudo apt-get install -y nodejs  
 sudo apt-get install mongodb  
 ```
+
+Backend readme: https://github.com/CryptoLions/EOS-Network-monitor/tree/master/netmon-backend  
+Frontend readme: https://github.com/CryptoLions/EOS-Network-monitor/tree/master/netmon-frontend  
  
 # Creators  
 WebSite: http://cryptolions.io/    

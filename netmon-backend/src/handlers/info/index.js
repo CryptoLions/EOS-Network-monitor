@@ -4,16 +4,16 @@ const {
   LAST_BLOCKS_NUMBER_FOR_CALCULATING_AVG_APS_TPS,
 } = require('config');
 
-const { createEosApi, createLogger, castToInt } = require('../../helpers');
+const { eosApi, createLogger, castToInt } = require('../../helpers');
 const { StateModelV2 } = require('../../db');
 const getBlockInfo = require('./getBlockInfo');
 
-const eosApi = createEosApi();
 const { error: logError } = createLogger('INFO_HANDLER');
 
 const blockStorage = {
   max_tps: 0,
   max_tps_block: 0,
+  max_aps_block: 0,
   max_aps: 0,
   previous: {},
   last_ten_live_tps: [], // its needed for calculating avg aps and tps
@@ -36,7 +36,7 @@ const avg = arr => {
   return (sum / arr.length).toFixed();
 };
 
-const composeData = ({ block, max_tps, max_aps, max_tps_block }) => {
+const composeData = ({ block, max_tps, max_aps, max_tps_block, max_aps_block }) => {
   const live_tps =
     block.transactions.length + (blockStorage.previous.transactions ? blockStorage.previous.transactions.length : 0);
   const live_aps =
@@ -89,6 +89,7 @@ const getInfo = async () => {
         max_aps: state.max_aps,
         max_tps: state.max_tps,
         max_tps_block: state.max_tps_block,
+        max_aps_block: state.max_aps_block,
       }),
     };
   } catch (e) {

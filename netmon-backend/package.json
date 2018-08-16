@@ -5,12 +5,18 @@
   "scripts": {
     "start-app": "node ./src/app",
     "start-routine": "node ./src/routines/index",
-    "updateTransactionsWithPM2": "pm2 start ./src/utils/updateTransactions/index.js --name updateTransactions",
-    "updateTransactions": "node ./src/utils/updateTransactions/index.js",
-    "start": "concurrently --names \"APP,ROUTINE\" \"yarn start-app\" \"yarn start-routine\""
+    "updateTransactionsWithPM2": "pm2 start ./src/utils/updateTransactions/start.js --name updateTransactions",
+    "updateTransactions": "node ./src/utils/updateTransactions/start.js",
+    "updateTpsAps": "node ./src/utils/updateTpsAps/start.js",
+    "updateTotalTransactionsCount": "node ./src/utils/updateTotalTransactionsCount/start.js",
+    "cleanAccountCollectionFromMentionedIn": "node ./src/utils/cleanAccountCollectionFromMentionedIn/start.js",
+    "start": "concurrently --names \"APP,ROUTINE\" \"yarn start-app\" \"yarn start-routine\"",
+    "migrateTransactionToAccount": "pm2 start ./src/migrations/fillTransactionToAccountCollection.js --name tansactionToAccountMigration",
+    "updateTransactionToAccount": "node ./src/utils/updateTransactionToAccountCollection/start.js"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
+    "bugsnag": "^2.4.3",
     "compression": "^1.7.2",
     "concurrently": "^3.6.0",
     "config": "^1.30.0",
@@ -21,12 +27,14 @@
     "express": "^4.15.2",
     "hoek": "^5.0.3",
     "lodash": "^4.17.10",
+    "moment": "^2.22.2",
     "mongodb": "^3.0.5",
     "mongoose": "^5.2.4",
     "request": "^2.85.0",
     "request-promise-native": "^1.0.5",
     "sleep": "^5.1.1",
     "socket.io": "^2.1.0",
+    "url-parse": "^1.4.3",
     "winston": "^3.0.0"
   },
   "devDependencies": {

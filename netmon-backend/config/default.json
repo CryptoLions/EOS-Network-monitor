@@ -73,13 +73,16 @@
   "START_BLOCKS_HANDLING_FROM": 1, // if 0 -> start from last block
   "UPDATE_TRANSACTIONS": {
     "FROM_BLOCK_NUM": 1,
-    "TO_BLOCK_NUM": 2016340
+    "TO_BLOCK_NUM": 1,
+    "DEFAULT_VALUE": -1
   },
+
   "SOCKET_ROOM": "room",
   "KEYSTORE": {
-    "RELOAD_PAGE": "reloadPageCommandKey",
-    "MAIN": "Nescafe"
+    "RELOAD_PAGE": "reloadPageKey",
+    "MAIN": "test"
   },
-  "RELOAD_PAGE_COOLDAWN": 60000 // not more often than once a minute
-
+  "APPROXIMATELY_BLOCKS_PRODUCED_PER_DAY": 172800, // 2 * blocks * 60 sec * 60 m * 24 h
+  "RELOAD_PAGE_COOLDAWN": 60000, // not more often than once a minute
+  "BUGSNAG_API_KEY": "xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 }

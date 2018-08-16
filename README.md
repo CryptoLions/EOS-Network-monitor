@@ -8,8 +8,6 @@ to allow access to monitor
   
 Monitor example: http://eosnetworkmonitor.io  
 
-# How to install and Use  
-Will be update shortly   
 
 Installing Nodejs v10  and MongoDB  
 ```

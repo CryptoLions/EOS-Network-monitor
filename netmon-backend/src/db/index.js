@@ -6,6 +6,7 @@ const TransactionSchemaV2 = require('./schema/transaction.v2');
 const ProducerSchemaV2 = require('./schema/producer.v2');
 const StateSchemaV2 = require('./schema/state.v2');
 const TransactionToAccountSchemaV2 = require('./schema/transactionToAccount.v2');
+const TransactionLastHourSchemaV2 = require('./schema/transactionLastHour.v2');
 
 const connect = () => {
   const mongooseOptions = {
@@ -31,4 +32,5 @@ module.exports = {
   AccountModelV2: mongoose.model('Account', AccountSchemaV2),
   StateModelV2: mongoose.model('State', StateSchemaV2),
   TransactionToAccountV2: mongoose.model('TransactionToAccount', TransactionToAccountSchemaV2),
+  TransactionLastHourModelV2: mongoose.model('TransactionLastHour', TransactionLastHourSchemaV2),
 };

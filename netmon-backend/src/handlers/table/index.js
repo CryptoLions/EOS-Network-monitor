@@ -9,25 +9,26 @@ const {
 
 const { ProducerModelV2 } = require('../../db');
 
-const { createEosApi, castToInt } = require('../../helpers');
+const { createEosApi, eosApi, castToInt, createLogger } = require('../../helpers');
 const createStorage = require('./storage');
 
-const CONNECTION_REFUSED_BE_SERVER = 'ECONNREFUSED';
-const NODE_ENDPOINT_TYPES = ['https', 'http'];
+const { info: logInfo, error: logError } = createLogger();
 
-const eosApi = createEosApi();
+const CONNECTION_REFUSED_BY_SERVER = 'ECONNREFUSED';
+const SERVER_NOT_FOUND = 'ENOTFOUND';
 
-const calculateEosFromVotes = (votes) => {
+const CHECK_URLS = ['https_server_address', 'http_server_address', 'p2p_server_address'];
+
+const calculateEosFromVotes = votes => {
   const date = Date.now() / 1000 - TIMESTAMP_EPOCH;
   const weight = parseInt(date / (86400 * 7), 10) / 52; // 86400 = seconds per day 24*3600
-  return castToInt(votes) / (2 ** weight) / 10000;
+  return castToInt(votes) / 2 ** weight / 10000;
 };
 
 const getProducersInfo = async () => {
   const { total_producer_vote_weight } = await eosApi.getProducers({ json: true, limit: 1 });
   const onePercent = castToInt(total_producer_vote_weight) / 100;
-  const producersFromDb = await ProducerModelV2
-    .find({ total_votes: { $ne: null } })
+  const producersFromDb = await ProducerModelV2.find({ total_votes: { $ne: null } })
     .sort({ total_votes: -1 })
     .exec();
   return producersFromDb.map(p => ({
@@ -43,6 +44,7 @@ const getProducersInfo = async () => {
     total_votes: p.total_votes,
     votesPercentage: p.total_votes / onePercent,
     votesInEOS: calculateEosFromVotes(p.total_votes),
+    rewards_per_day: p.rewards_per_day,
   }));
 };
 
@@ -50,6 +52,7 @@ const processNodeAndGetInfo = async (host, port, name, nodeId, wasEnabled) => {
   const localEosApi = createEosApi({ host, port });
   const startTs = Date.now();
   let info;
+
   try {
     info = await localEosApi.getInfo({});
     if (!wasEnabled && nodeId) {
@@ -62,12 +65,15 @@ const processNodeAndGetInfo = async (host, port, name, nodeId, wasEnabled) => {
       ).exec();
     }
   } catch ({ message }) {
-    if (message.indexOf(CONNECTION_REFUSED_BE_SERVER) > 0) {
+    if (
+      message.indexOf(CONNECTION_REFUSED_BY_SERVER) > 0
+      || message.indexOf(SERVER_NOT_FOUND) > 0
+    ) {
       if (!wasEnabled) {
-        return { checked: { name, isNodeBroken: true, requestTS: startTs } };
+        return { checked: { name, isNodeBroken: true, requestTS: startTs, isUpdated: true } };
       }
       if (nodeId) {
-        ProducerModelV2.updateOne(
+        await ProducerModelV2.updateOne(
           { name, 'nodes._id': nodeId },
           {
             $set: { 'nodes.$.enabled': false },
@@ -88,16 +94,13 @@ const processNodeAndGetInfo = async (host, port, name, nodeId, wasEnabled) => {
   }
   const nowTs = Date.now();
   const ping = nowTs - startTs;
-  const answeredTimestamp = nowTs;
   const version = info.server_version;
   return {
     head_block_num: info.head_block_num,
     checked: {
       name,
       ping,
-      answeredTimestamp,
       isNodeBroken: false,
-      isCurrentNode: false,
       version,
       answeredBlock: info.head_block_num,
       isNode: true,
@@ -107,188 +110,149 @@ const processNodeAndGetInfo = async (host, port, name, nodeId, wasEnabled) => {
     },
     producer: {
       name: info.head_block_producer,
-      isCurrentNode: true,
       isNodeBroken: false,
       producedBlock: info.head_block_num,
-      producedTimestamp: nowTs,
+      producedTimestamp: Date.parse(info.head_block_time),
       isNode: true,
       isUpdated: true,
     },
   };
 };
-const sort = (rows) => {
+const sort = rows => {
   const result = [...rows].filter(e => e.totalVotes);
-  result.sort((a, b) => castToInt(b.totalVotes) - (a.totalVotes));
+  result.sort((a, b) => castToInt(b.totalVotes) - a.totalVotes);
   return result;
 };
 
+const getFirstGoodNodeInfo = async nodes => {
+  let serverInfo = null;
+  for (let i = 0; i < nodes.length; i += 1) {
+    const node = nodes[i];
+    const { _id, bp_name, enabled } = node;
+
+    for (let j = 0; j < CHECK_URLS.length; j += 1) {
+      const type = CHECK_URLS[j];
+      const protocol = type.startsWith('https') ? 'https' : 'http';
+      const address = node[type];
+
+      if (!address) {
+        continue;
+      }
+
+      const [host, port] = (address || '').split(':');
+
+      if (!!host && host !== '0.0.0.0') {
+        serverInfo = await processNodeAndGetInfo(`${protocol}://${host}`, port, bp_name, _id, enabled);
+      }
+
+      if (serverInfo && serverInfo.checked && serverInfo.checked.version) {
+        break;
+      }
+    }
+    if (serverInfo && serverInfo.checked && serverInfo.checked.version) {
+      break;
+    }
+  }
+  return serverInfo;
+};
+
 const initProducerHandler = async () => {
-  const listeners = [];
+  const tableOnUpdateListeners = [];
+  const orderOnChangeListeners = [];
   const storage = createStorage();
-  let checkedProducerNumber = 0;
-  let topCheckedProducerNumber = 0;
+  const serialNumber = {
+    top: 0,
+    other: 0,
+  };
+
+  const previousProducersOrder = [];
+  const setCurrentInfo = ({ info }) => {
+    storage.updateGeneralInfo(info);
+  };
 
   const notify = () => {
     const updated = storage.getUpdated();
     if (updated.length < 1) {
       return;
     }
-    listeners.forEach(listener => {
+    tableOnUpdateListeners.forEach(listener => {
       listener(updated);
     });
   };
 
   const checkProducers = async () => {
-    storage.updateProducers(await getProducersInfo());
+    try {
+      const producers = await getProducersInfo();
+      const nextProducersOrder = producers.map(p => p.name);
+      storage.updateProducers(producers);
+      const orderIsChanged = nextProducersOrder.find((e, i) => e !== previousProducersOrder[i]);
+      if (orderIsChanged) {
+        previousProducersOrder.length = 0;
+        previousProducersOrder.push(...nextProducersOrder);
+        orderOnChangeListeners.forEach(listener => {
+          listener();
+        });
+      }
+    } catch (e) {
+      logInfo('Data about producers not received');
+      logError(e);
+    }
   };
-  const checkInfo = async () => {
-    const producers = await storage
-      .getAll()
-      .slice(21)
-      .filter(e => e.isNode);
-    if (producers.length < 1) {
+
+  const checkInfo = producersType => async () => {
+    const allProducers = storage.getAll();
+    const slicedProducers = producersType === 'top' ? allProducers.slice(0, 21) : allProducers.slice(21);
+    const producers = slicedProducers.filter(e => e.isNode);
+
+    if (!producers.length) {
       return;
     }
-    if (producers.length <= checkedProducerNumber) {
-      checkedProducerNumber = 1;
-    } else {
-      checkedProducerNumber += 1;
-    }
-    const { nodes, specialNodeEndpoint, name } = producers[checkedProducerNumber - 1];
+
+    serialNumber[producersType] =
+      producers.length === serialNumber[producersType] ? 1 : serialNumber[producersType] + 1;
+
+    const { nodes, specialNodeEndpoint, name } = producers[serialNumber[producersType] - 1];
+
     if (specialNodeEndpoint && specialNodeEndpoint.use) {
       const { host, port } = specialNodeEndpoint;
+      try {
+        const info = await processNodeAndGetInfo(host, port, name);
+        storage.updateNodeInfo(info);
+        return;
+      } catch (e) {
+        logInfo(`Special endpoint of ${name} does not work`);
+        logError(e);
+      }
+    }
 
-      const info = await processNodeAndGetInfo(host, port, name);
-      storage.updateInfo(info);
+    if (!nodes || !nodes.length) {
       return;
     }
-    const nodesInfo = await Promise.all(nodes.map(async node => {
-      const {
-        _id,
-        http_server_address = '',
-        https_server_address = '',
-        p2p_server_address = '',
-        bp_name,
-        enabled,
-      } = node;
-      let httpsInfo = null;
-      let httpInfo = null;
-      for (let i = 0; i < NODE_ENDPOINT_TYPES.length; i += 1) {
-        const type = NODE_ENDPOINT_TYPES[i];
-        if (type === 'https') {
-          if (!https_server_address || https_server_address.length < 1) {
-            continue;
-          }
-          const [host, port] = https_server_address.split(':');
-          httpsInfo = await processNodeAndGetInfo(`https://${host}`, port, bp_name, _id, enabled);
-          if (httpsInfo && httpsInfo.checked.version) {
-            break;
-          }
-        } else if (type === 'http') {
-          const [host, port] = http_server_address.split(':');
-          if (host !== '0.0.0.0' && host !== '') {
-            httpInfo = await processNodeAndGetInfo(`http://${host}`, port, bp_name, _id, enabled);
-          }
-          const [p2phost] = p2p_server_address.split(':');
-          httpInfo = await processNodeAndGetInfo(`http://${p2phost}`, port, bp_name, _id, enabled);
-        }
-      }
-      if (httpsInfo && httpsInfo.checked.version) {
-        return httpsInfo;
-      }
-      if (httpInfo && httpInfo.checked.version) {
-        return httpInfo;
-      }
-      if (httpsInfo && httpsInfo.checked.name) {
-        return httpsInfo;
-      }
-      return httpInfo;
-    }));
-    const info = nodesInfo.find(e => !e.checked.isNodeBroken) || nodesInfo[0];
-    storage.updateInfo(info);
+    try {
+      const info = await getFirstGoodNodeInfo(nodes);
+      storage.updateNodeInfo(info);
+    } catch (e) {
+      logInfo(`Info of ${name} not received`);
+      logError(e);
+    }
   };
-  const checkTopInfo = async () => {
-    const producers = await storage.getAll().slice(0, 21);
-    if (producers.length < 1) {
-      return;
-    }
-    if (producers.length <= topCheckedProducerNumber) {
-      topCheckedProducerNumber = 1;
-    } else {
-      topCheckedProducerNumber += 1;
-    }
-    const { nodes, specialNodeEndpoint, name } = producers[topCheckedProducerNumber - 1];
-    if (specialNodeEndpoint && specialNodeEndpoint.use) {
-      const { host, port } = specialNodeEndpoint;
-      const info = await processNodeAndGetInfo(host, port, name);
-      storage.updateInfo(info);
-      return;
-    }
-    if (!nodes || nodes.length < 1) {
-      if (producers.length === topCheckedProducerNumber) {
-        topCheckedProducerNumber = 0;
-      } else {
-        topCheckedProducerNumber += 1;
-      }
-      return;
-    }
-    const nodesInfo = await Promise.all(nodes.map(async node => {
-      const {
-        _id,
-        http_server_address = '',
-        https_server_address = '',
-        p2p_server_address = '',
-        bp_name,
-        enabled,
-      } = node;
-      let httpsInfo = null;
-      let httpInfo = null;
-      for (let i = 0; i < NODE_ENDPOINT_TYPES.length; i += 1) {
-        const type = NODE_ENDPOINT_TYPES[i];
-        if (type === 'https') {
-          if (!https_server_address || https_server_address.length < 1) {
-            continue;
-          }
-          const [host, port] = https_server_address.split(':');
-          httpsInfo = await processNodeAndGetInfo(`https://${host}`, port, bp_name, _id, enabled);
-          if (httpsInfo && httpsInfo.checked.version) {
-            break;
-          }
-        } else if (type === 'http') {
-          const [host, port] = http_server_address.split(':');
-          if (host !== '0.0.0.0' && host !== '') {
-            httpInfo = await processNodeAndGetInfo(`http://${host}`, port, bp_name, _id, enabled);
-          }
-          const [p2phost] = p2p_server_address.split(':');
-          httpInfo = await processNodeAndGetInfo(`http://${p2phost}`, port, bp_name, _id, enabled);
-        }
-      }
-      if (httpsInfo && httpsInfo.checked.version) {
-        return httpsInfo;
-      }
-      if (httpInfo && httpInfo.checked.version) {
-        return httpInfo;
-      }
-      if (httpsInfo && httpsInfo.checked.name) {
-        return httpsInfo;
-      }
-      return httpInfo;
-    }));
 
-    const info = nodesInfo.find(e => e.checked.version) || nodesInfo.find(e => !e.checked.isNodeBroken) || nodesInfo[0];
-    storage.updateInfo(info);
-  };
   setInterval(checkProducers, PRODUCERS_CHECK_INTERVAL);
-  setInterval(checkInfo, GET_INFO_INTERVAL);
-  setInterval(checkTopInfo, GET_INFO_TOP21_INTERVAL);
+  setInterval(checkInfo('other'), GET_INFO_INTERVAL);
+  setInterval(checkInfo('top'), GET_INFO_TOP21_INTERVAL);
+
   if (ON_PRODUCERS_INFO_CHANGE_INTERVAL !== 0) {
     setInterval(notify, ON_PRODUCERS_INFO_CHANGE_INTERVAL);
   }
 
   return {
     onUpdate(listener) {
-      listeners.push(listener);
+      tableOnUpdateListeners.push(listener);
     },
+    onOrderChange(listener) {
+      orderOnChangeListeners.push(listener);
+    },
+    setCurrentInfo,
     getAll() {
       return sort(storage.getAll());
     },

@@ -1,11 +1,10 @@
-/* eslint-disable no-param-reassign */
-const removeLastSlashIfExist = url => url && (url.substr(url.length - 1, 1) === '/'
-  ? url.substr(0, url.length - 1)
-  : url);
+const parse = require('url-parse');
 
-const removeHttpAndHttpsIfExist = url => url && url
-  .replace('https://', '')
-  .replace('http://', '');
+/* eslint-disable no-param-reassign */
+const removeLastSlashIfExist = url =>
+  url && (url.substr(url.length - 1, 1) === '/' ? url.substr(0, url.length - 1) : url);
+
+const addProtocol = (url = '') => (url.startsWith('http') ? url : `http://${url}`);
 
 const correctBpUrl = url => {
   if (!url || url.length < 1) {
@@ -18,35 +17,31 @@ const correctBpUrl = url => {
 };
 
 const correctP2PUrl = url => {
-  url = removeHttpAndHttpsIfExist(url);
-  url = removeLastSlashIfExist(url);
-  if (url && url.length > 0 && url.indexOf(':') < 6) {
-    if (url.indexOf('https') >= 0) {
-      url += ':443';
-    } else {
-      url += ':80';
-    }
+  const parsed = parse(addProtocol(url));
+  if (!parsed.host) {
+    return null;
   }
-  return url;
+  if (parsed.port) {
+    return parsed.host;
+  }
+
+  return `${parsed.host}${parsed.protocol === 'http:' ? '80' : ':443'}`;
 };
 
 const correctSslUrl = url => {
-  url = removeHttpAndHttpsIfExist(url);
-  url = removeLastSlashIfExist(url);
-  if (url && url.length > 0 && url.indexOf(':') < 6) {
-    url += ':443';
-    return url;
+  const parsed = parse(addProtocol(url));
+  if (!parsed.host) {
+    return null;
   }
-  return null;
+  return `${parsed.host}${parsed.port ? '' : ':443'}`;
 };
 
 const correctApiUrl = url => {
-  url = removeHttpAndHttpsIfExist(url);
-  url = removeLastSlashIfExist(url);
-  if (url && url.length > 0 && url.indexOf(':') < 6) {
-    url += ':80';
+  const parsed = parse(addProtocol(url));
+  if (!parsed.host) {
+    return null;
   }
-  return url;
+  return `${parsed.host}${parsed.port ? '' : ':80'}`;
 };
 
 module.exports = {

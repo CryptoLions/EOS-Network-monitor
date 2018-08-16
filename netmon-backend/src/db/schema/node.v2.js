@@ -3,7 +3,7 @@ const { Schema } = require('mongoose');
 const Node = new Schema({
   bp_name: { type: String, index: true },
   bp: { type: Boolean },
-  enabled: { type: Boolean },
+  enabled: { type: Boolean, default: true },
   http_server_address: { type: String },
   https_server_address: { type: String },
   location: { type: String },

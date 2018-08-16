@@ -1,28 +1,26 @@
-const { LOG_CONSOLE } = require('config');
-const { createLogger, format, transports } = require('winston');
+const { LOG_CONSOLE, BUGSNAG_API_KEY } = require('config');
+const bugsnag = require('bugsnag');
 
-const logFormat = format.printf(info => `${info.timestamp} [${info.label}] ${info.level}: ${info.message}`);
+bugsnag.register(BUGSNAG_API_KEY, { appVersion: 1 });
 
-const createLoggerWrapper = (label) => {
-  const logger = createLogger({
-    level: 'info',
-    format: format.combine(
-      format.label({ label }),
-      format.timestamp(),
-      logFormat,
-    ),
-    transports: [
-      new transports.File({ filename: '../../logs/error.log', level: 'error' }),
-      new transports.File({ filename: '../../logs/combined.log' }),
-    ],
-  });
-  if (LOG_CONSOLE) {
-    logger.add(new transports.Console({
-      format: format.simple(),
-    }));
-  }
-  return logger;
-};
+const createLoggerWrapper = () => ({
+  info: (data, { send = false } = {}) => {
+    if (send) {
+      bugsnag.notify(data, { severity: 'info' });
+    }
+    if (LOG_CONSOLE) {
+      console.log(data);
+    }
+  },
+  error: (data, { send = true } = {}) => {
+    if (send) {
+      bugsnag.notify(data, { severity: 'error' });
+    }
+    if (LOG_CONSOLE) {
+      console.error(data);
+    }
+  },
+});
 
 module.exports = {
   createLogger: createLoggerWrapper,

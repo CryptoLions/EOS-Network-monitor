@@ -21,24 +21,25 @@ const init = ({ app, handlers }) => {
     res.status(200).send(account);
   });
   app.get(`${API_PREFIX}/accounts/:name/history/`, async (req, res) => {
-    console.log('app.get');
     const { name } = req.params;
     const { skip = 0, limit = 10 } = req.query;
-    console.log('select from TransactionToAccount');
-    console.time('select from TransactionToAccount');
-    const mentionedIn = await TransactionToAccountV2.find({ account: name })
+    const mentionedIn = await TransactionToAccountV2
+      .find({ account: name })
       .select('txid')
+      .sort({ block: -1 })
+      .limit(castToInt(limit))
+      .skip(castToInt(skip))
       .exec();
+    const count = await TransactionToAccountV2
+      .find({ account: name })
+      .countDocuments();
     const txids = mentionedIn.map(item => item.txid);
-    console.timeEnd('select from TransactionToAccount');
 
     if (!mentionedIn.length) {
       res.send([]);
       return;
     }
 
-    console.log('select from TransactionModelV2');
-    console.time('select from TransactionModelV2');
     const history = await TransactionModelV2.aggregate([
       { $match: { txid: { $in: txids } } },
       {
@@ -57,14 +58,10 @@ const init = ({ app, handlers }) => {
           createdAt: { $first: '$createdAt' },
         },
       },
-      { $sort: { date: -1 } },
-      { $skip: castToInt(skip) },
-      { $limit: castToInt(limit) },
     ]);
-    console.timeEnd('select from TransactionModelV2');
     const correctedHistory = history.filter(e => Object.keys(e).length > 0).slice(0, limit);
     res
-      .set('count', txids.length)
+      .set('count', count)
       .status(200)
       .send(correctedHistory);
   });

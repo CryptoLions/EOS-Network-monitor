@@ -1,6 +1,4 @@
-const { createEosApi } = require('../../helpers');
-
-const eosApi = createEosApi();
+const { eosApi } = require('../../helpers');
 
 const findNextProducer = (list, current) => {
   const currentIndex = list.indexOf(current);
@@ -8,7 +6,7 @@ const findNextProducer = (list, current) => {
   return list[nextIndex];
 };
 
-const getBlockInfo = async (blockNum) => {
+const getBlockInfo = async blockNum => {
   if (blockNum) {
     return eosApi.getBlock(blockNum);
   }

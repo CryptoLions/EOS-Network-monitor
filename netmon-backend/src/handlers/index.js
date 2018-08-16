@@ -4,7 +4,6 @@ const initTransactionHandler = require('./transaction');
 const initTotalStackedHandler = require('./totalStacked');
 const initInfoHandler = require('./info');
 const initAccountHandler = require('./account');
-const initProducerListOrderHandler = require('./producerListOrder');
 
 const init = async () => {
   const userCount = await initUserCountHandler();
@@ -13,8 +12,8 @@ const init = async () => {
   const totalStacked = await initTotalStackedHandler();
   const info = await initInfoHandler();
   const account = await initAccountHandler();
-  const producerListOrder = await initProducerListOrderHandler();
 
+  info.onUpdate(infoData => table.setCurrentInfo(infoData));
   return {
     userCount,
     table,
@@ -22,7 +21,6 @@ const init = async () => {
     transaction,
     info,
     account,
-    producerListOrder,
   };
 };
 

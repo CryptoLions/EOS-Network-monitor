@@ -8,18 +8,21 @@
 # Git Hub: https://github.com/CryptoLions/EOS-Testnet-monitor
 #
 ###############################################################################  */
-
-const { eosApi, createLogger } = require('../../helpers');
-const handleData = require('./handleData');
+const { TransactionLastHourModelV2 } = require('../../db');
+const { createLogger } = require('../../helpers');
 
 const { info: logInfo, error: logError } = createLogger();
 
+const ONE_HOUR = 1000 * 60 * 60;
+
 module.exports = async () => {
   try {
-    const producersSystem = await eosApi.getProducers({ json: true, limit: 1000 });
-    await handleData(producersSystem.rows);
-    logInfo('producers info updated');
+    await TransactionLastHourModelV2.remove({
+      createdAt: { $lte: new Date(Date.now() - ONE_HOUR) },
+    }).exec();
+    logInfo('TransactionLastHour collection is cleaned');
   } catch (e) {
+    logInfo('TransactionLastHour collection is not cleaned');
     logError(e);
   }
 };

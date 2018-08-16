@@ -1,11 +1,13 @@
-const { LISTENERS: { ON_TOTAL_STACKED_CHANGE_INTERVAL }, TOTAL_STACKED_CHECK_INTERVAL } = require('config');
-const { createEosApi } = require('../../helpers');
-
-const eosApi = createEosApi();
+const {
+  LISTENERS: { ON_TOTAL_STACKED_CHANGE_INTERVAL },
+  TOTAL_STACKED_CHECK_INTERVAL,
+} = require('config');
+const { eosApi } = require('../../helpers');
 
 const getTotalStacked = async () => {
-  const { rows: [{ total_activated_stake }] } =
-    await eosApi.getTableRows({ json: true, scope: 'eosio', code: 'eosio', table: 'global' });
+  const {
+    rows: [{ total_activated_stake }],
+  } = await eosApi.getTableRows({ json: true, scope: 'eosio', code: 'eosio', table: 'global' });
 
   return total_activated_stake;
 };

@@ -1,9 +1,4 @@
-const {
-  correctBpUrl,
-  correctApiUrl,
-  correctP2PUrl,
-  correctSslUrl,
-} = require('./urlCorrector');
+const { correctBpUrl, correctApiUrl, correctP2PUrl, correctSslUrl } = require('./urlCorrector');
 
 const { createLogger } = require('./logger');
 
@@ -20,6 +15,7 @@ module.exports = {
   correctSslUrl,
   createLogger,
   createEosApi,
+  eosApi: createEosApi(),
   exec,
   castToInt,
 };

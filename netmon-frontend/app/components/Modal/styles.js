@@ -93,6 +93,7 @@ export const GetButton = styled.button`
   color: #28a745;
   background-color: #fff;
   border: 1px solid #28a745;
+  margin-left: -1px;
   &:hover {
     color: #fff;
     background-color: #28a745;

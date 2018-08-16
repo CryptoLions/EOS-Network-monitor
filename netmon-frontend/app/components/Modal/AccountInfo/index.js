@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { bindActionCreators } from 'redux';
 import store from 'store';
+import { translate } from 'react-i18next';
 
 // Components
 import LoadingLine from '../../LoadingLine';
@@ -55,6 +56,7 @@ const mapDispatchToProps = dispatch => ({
   mapStateToProps,
   mapDispatchToProps
 )
+@translate()
 export default class AccountInfo extends PureComponent {
   state = {
     producerName: this.props.accountName || store.get('modal_accountInfo') || 'eoshuobipool',
@@ -83,6 +85,7 @@ export default class AccountInfo extends PureComponent {
   render() {
     const { producerName } = this.state;
     const {
+      t,
       modalDataFetchingState,
       accountInfo,
       actions: { toggleModal },
@@ -92,16 +95,22 @@ export default class AccountInfo extends PureComponent {
       <Fragment>
         <Header>
           <HeadBox>
-            <HeadText>ACCOUNT INFO</HeadText>
+            <HeadText>{t('i18nModal.i18nAccountInfo.title')}</HeadText>
           </HeadBox>
           <HeadContainer>
             <InputsDiv>
-              <Input value={producerName} placeholder="Account Name" onChange={this.onAccountNameChange} />
-              <GetButton onClick={this.getData}>Get</GetButton>
+              <Input
+                value={producerName}
+                placeholder={t('i18nModal.i18nAccountInfo.placeholder')}
+                onChange={this.onAccountNameChange}
+              />
+              <GetButton onClick={this.getData}>{t('i18nModal.i18nAccountInfo.getButton')}</GetButton>
             </InputsDiv>
             <span>
-              Get accounts transactions history.{' '}
-              <Link onClick={() => toggleModal('accountHistory', producerName)}>History</Link>
+              {t('i18nModal.i18nAccountInfo.getAccountsTransactionsHistory')}.{' '}
+              <Link onClick={() => toggleModal('accountHistory', producerName)}>
+                {t('i18nModal.i18nAccountInfo.historyLink')}
+              </Link>
             </span>
           </HeadContainer>
         </Header>
@@ -111,112 +120,128 @@ export default class AccountInfo extends PureComponent {
             !!Object.keys(accountInfo).length && (
               <InfoContainer>
                 <DataBlock>
-                  <TextSpanBold>Balance:</TextSpanBold>
+                  <TextSpanBold>{t('i18nModal.i18nAccountInfo.balance')}:</TextSpanBold>
                   <TextSpan>{typeof accountInfo.balance === 'undefined' ? '--' : accountInfo.balance}</TextSpan>
                 </DataBlock>
                 <DataBlock>
                   <div>
-                    <TextSpanBold>Created:</TextSpanBold>
+                    <TextSpanBold>{t('i18nModal.i18nAccountInfo.created')}:</TextSpanBold>
                     {convertUtcToLocal(accountInfo.created) || '--'}
                   </div>
                   <div>
-                    <TextSpanBold>Last code Update:</TextSpanBold>
+                    <TextSpanBold>{t('i18nModal.i18nAccountInfo.lastCodeUpdate')}:</TextSpanBold>
                     {convertUtcToLocal(accountInfo.last_code_update) || '--'}
                   </div>
                 </DataBlock>
                 <DataBlock>
                   {accountInfo.permissions[0].required_auth.keys[0] && (
                     <div>
-                      <TextSpanBold>Active Key:</TextSpanBold>
+                      <TextSpanBold>{t('i18nModal.i18nAccountInfo.activeKey')}:</TextSpanBold>
                       {accountInfo.permissions[0].required_auth.keys[0].key || '--'}
                     </div>
                   )}
                   {accountInfo.permissions[1].required_auth.keys[0] && (
                     <div>
-                      <TextSpanBold>Owner Key:</TextSpanBold>
+                      <TextSpanBold>{t('i18nModal.i18nAccountInfo.ownerKey')}:</TextSpanBold>
                       {accountInfo.permissions[1].required_auth.keys[0].key || '--'}
                     </div>
                   )}
                 </DataBlock>
                 <DataBlock>
                   <div>
-                    <TextSpanBold>RAM used:</TextSpanBold> {accountInfo.ram_usage || '--'} bytes / quota:{' '}
-                    {accountInfo.total_resources.ram_bytes || '--'} bytes
+                    <TextSpanBold>{t('i18nModal.i18nAccountInfo.ramUsed')}:</TextSpanBold>{' '}
+                    {accountInfo.ram_usage || '--'} {t('i18nModal.i18nAccountInfo.bytes')} /{' '}
+                    {t('i18nModal.i18nAccountInfo.quota')}: {accountInfo.total_resources.ram_bytes || '--'}{' '}
+                    {t('i18nModal.i18nAccountInfo.bytes')}
                   </div>
                 </DataBlock>
                 <DataBlock>
                   <div>
-                    <TextSpanBold>NET bandwidth:</TextSpanBold>
+                    <TextSpanBold>{t('i18nModal.i18nAccountInfo.netBandwidth')}:</TextSpanBold>
                   </div>
                   <div>
-                    <TextSpanBold>staked:</TextSpanBold>
+                    <TextSpanBold>{t('i18nModal.i18nAccountInfo.staked')}:</TextSpanBold>
                     {(accountInfo.self_delegated_bandwidth && accountInfo.self_delegated_bandwidth.net_weight) || '--'}
                   </div>
                   <div>
-                    <TextSpanBold>delegated:</TextSpanBold>
+                    <TextSpanBold>{t('i18nModal.i18nAccountInfo.delegated')}:</TextSpanBold>
                     {accountInfo.total_resources.net_weight || '--'}
                   </div>
                   <div>
-                    <TextSpanBold>current:</TextSpanBold>
-                    {accountInfo.net_limit.used || '--'} / <TextSpanBold>available:</TextSpanBold>
-                    {accountInfo.net_limit.available || '--'} bytes
+                    <TextSpanBold>{t('i18nModal.i18nAccountInfo.current')}:</TextSpanBold>
+                    {accountInfo.net_limit.used || '--'} /{' '}
+                    <TextSpanBold>{t('i18nModal.i18nAccountInfo.available')}:</TextSpanBold>
+                    {accountInfo.net_limit.available || '--'} {t('i18nModal.i18nAccountInfo.bytes')}
                   </div>
                   <div>
-                    <TextSpanBold>max:</TextSpanBold>
-                    {accountInfo.net_limit.max || '--'} bytes
+                    <TextSpanBold>{t('i18nModal.i18nAccountInfo.max')}:</TextSpanBold>
+                    {accountInfo.net_limit.max || '--'} {t('i18nModal.i18nAccountInfo.bytes')}
                   </div>
                 </DataBlock>
                 <DataBlock>
                   <div>
-                    <TextSpanBold>CPU bandwidth:</TextSpanBold>
+                    <TextSpanBold>{t('i18nModal.i18nAccountInfo.cpuBandwidth')}:</TextSpanBold>
                   </div>
                   <div>
-                    <TextSpanBold>staked:</TextSpanBold>
+                    <TextSpanBold>{t('i18nModal.i18nAccountInfo.staked')}:</TextSpanBold>
                     {(accountInfo.self_delegated_bandwidth && accountInfo.self_delegated_bandwidth.cpu_weight) || '--'}
                   </div>
                   <div>
-                    <TextSpanBold>delegated:</TextSpanBold> {accountInfo.total_resources.cpu_weight || '--'}
+                    <TextSpanBold>{t('i18nModal.i18nAccountInfo.delegated')}:</TextSpanBold>{' '}
+                    {accountInfo.total_resources.cpu_weight || '--'}
                   </div>
                   <div>
-                    <TextSpanBold>current:</TextSpanBold> {accountInfo.cpu_limit.used || '--'} /{' '}
-                    <TextSpanBold>available:</TextSpanBold> {accountInfo.cpu_limit.available || '--'} time
+                    <TextSpanBold>{t('i18nModal.i18nAccountInfo.current')}:</TextSpanBold>{' '}
+                    {accountInfo.cpu_limit.used || '--'} /{' '}
+                    <TextSpanBold>{t('i18nModal.i18nAccountInfo.available')}:</TextSpanBold>{' '}
+                    {accountInfo.cpu_limit.available || '--'} {t('i18nModal.i18nAccountInfo.time')}
                   </div>
                   <div>
-                    <TextSpanBold>max:</TextSpanBold> {accountInfo.cpu_limit.max || '--'} time
+                    <TextSpanBold>{t('i18nModal.i18nAccountInfo.max')}:</TextSpanBold>{' '}
+                    {accountInfo.cpu_limit.max || '--'} {t('i18nModal.i18nAccountInfo.time')}
                   </div>
                 </DataBlock>
                 {!!accountInfo.voter_info && (
                   <DataBlock>
                     <div>
-                      <TextSpanBold>Voter Info:</TextSpanBold> {accountInfo.voter_info.owner || '--'}
+                      <TextSpanBold>{t('i18nModal.i18nAccountInfo.voterInfo')}:</TextSpanBold>{' '}
+                      {accountInfo.voter_info.owner || '--'}
                     </div>
                     <div>
-                      <TextSpanBold>Proxy:</TextSpanBold> {accountInfo.voter_info.proxy || '--'}
+                      <TextSpanBold>{t('i18nModal.i18nAccountInfo.proxy')}:</TextSpanBold>{' '}
+                      {accountInfo.voter_info.proxy || '--'}
                     </div>
                     <div>
-                      <TextSpanBold>Producers:</TextSpanBold> {accountInfo.voter_info.producers.length || '--'}
+                      <TextSpanBold>{t('i18nModal.i18nAccountInfo.producers')}:</TextSpanBold>{' '}
+                      {accountInfo.voter_info.producers.length || '--'}
                     </div>
                     <div>
-                      <TextSpanBold>Staked:</TextSpanBold> {accountInfo.voter_info.staked || '--'}
+                      <TextSpanBold>{t('i18nModal.i18nAccountInfo.stakedLB')}:</TextSpanBold>{' '}
+                      {accountInfo.voter_info.staked || '--'}
                     </div>
                     <div>
-                      <TextSpanBold>Last vote weight:</TextSpanBold> {accountInfo.voter_info.last_vote_weight || '--'}
+                      <TextSpanBold>{t('i18nModal.i18nAccountInfo.lastVoteWeight')}:</TextSpanBold>{' '}
+                      {accountInfo.voter_info.last_vote_weight || '--'}
                     </div>
                     <div>
-                      <TextSpanBold>Proxie vote weight:</TextSpanBold>{' '}
+                      <TextSpanBold>{t('i18nModal.i18nAccountInfo.proxieVoteWeight')}:</TextSpanBold>{' '}
                       {accountInfo.voter_info.proxied_vote_weight || '--'}
                     </div>
                     <div>
-                      <TextSpanBold>Is proxy:</TextSpanBold> {accountInfo.voter_info.is_proxy || 0}
+                      <TextSpanBold>{t('i18nModal.i18nAccountInfo.isProxy')}:</TextSpanBold>{' '}
+                      {accountInfo.voter_info.is_proxy || 0}
                     </div>
                     <div>
-                      <TextSpanBold>Deferred trx id:</TextSpanBold> {accountInfo.voter_info.deferred_trx_id || '--'}
+                      <TextSpanBold>{t('i18nModal.i18nAccountInfo.deferredTrxId')}:</TextSpanBold>{' '}
+                      {accountInfo.voter_info.deferred_trx_id || '--'}
                     </div>
                     <div>
-                      <TextSpanBold>Last unstake time:</TextSpanBold> {accountInfo.voter_info.last_unstake_time || '--'}
+                      <TextSpanBold>{t('i18nModal.i18nAccountInfo.lastUnstakeTime')}:</TextSpanBold>{' '}
+                      {accountInfo.voter_info.last_unstake_time || '--'}
                     </div>
                     <div>
-                      <TextSpanBold>Unstaking:</TextSpanBold> {accountInfo.unstaking || '--'}
+                      <TextSpanBold>{t('i18nModal.i18nAccountInfo.unstaking')}:</TextSpanBold>{' '}
+                      {accountInfo.unstaking || '--'}
                     </div>
                   </DataBlock>
                 )}
@@ -229,6 +254,7 @@ export default class AccountInfo extends PureComponent {
 }
 
 AccountInfo.propTypes = {
+  t: PropTypes.func,
   modalDataFetchingState: PropTypes.bool,
   actions: PropTypes.object,
   accountInfo: PropTypes.object,

@@ -1,5 +1,7 @@
 // Core
-import React, { Fragment } from 'react';
+import React, { PureComponent, Fragment } from 'react';
+import PropTypes from 'prop-types';
+import { translate } from 'react-i18next';
 
 // Styles
 import { Header, HeadBox, HeadText } from '../styles';
@@ -12,6 +14,7 @@ import {
   ColorsLegendDiv,
   ColorDiv,
   ColorDesc,
+  TextSpan,
   ColorDescDash,
   Green,
   Red,
@@ -23,75 +26,85 @@ import {
   NoteNumber,
   Link,
   Bold,
+  GreyText,
 } from './styles';
 
-export const Legend = () => (
-  <Fragment>
-    <Header>
-      <HeadBox>
-        <HeadText>LEGEND</HeadText>
-      </HeadBox>
-    </Header>
-    <LegendContainer>
-      <AboutDiv>
-        <Heading>ABOUT</Heading>
-        <Content>
-          <span>All information comes from quering PUBLIC nodes. Block producing nodes are usually hidden. </span>
-          <span>EOS Network Monitor is a tool to check EOS public endpoints and show general info. </span>
-          <span>It shows all registerd producers and ftech info about endpoints from bp.json file.</span>
-        </Content>
-        <BottomContent>
-          <span>
-            <Bold>TPS</Bold> - Transaction per second
-          </span>
-          <span>
-            <Bold>APS</Bold> - Actions in transaction per second
-          </span>
-        </BottomContent>
-      </AboutDiv>
-      <ColorsLegendDiv>
-        <Heading>COLORS LEGEND</Heading>
-        <ColorDiv>
-          <Green /> - producing right now.
-        </ColorDiv>
-        <ColorDiv>
-          <Red />
-          <ColorDescDash>-</ColorDescDash>
-          No response from public API endpoint (Does not necessarily mean that producers node is down).
-        </ColorDiv>
-        <ColorDiv>
-          <Yellow /> - Other version.
-        </ColorDiv>
-        <ColorDesc>
-          {`Version information is obtained from querying public nodes. Block producing nodes are usually hidden. There may
-        be legitimate reasons for "off version" public nodes, like sidestepping a known bug, but these are rare.`}
-        </ColorDesc>
-        <ColorDiv>
-          <Purple /> - Unsynced.
-        </ColorDiv>
-        <ColorDesc>
-          {`This does NOT necessarily mean there's a fork or a difference in consensus. It could be that the node is
-        resynchronizing and will soon by synced again`}
-        </ColorDesc>
-        <ColorDiv>
-          <Grey /> - err bp.json **.
-        </ColorDiv>
-        <ColorDesc>
-          {`BPs marked in grey have incorrect or missing bp.json file. We do a period check. Also, we're only checking the
-        top 60. `}
-          <Link href="https://github.com/eosrio/bp-info-standard">More info</Link>
-        </ColorDesc>
-      </ColorsLegendDiv>
-      <NoteDiv>
-        <Note>
-          <NoteNumber>NOTE 1:</NoteNumber> Many BPs use some load balancer with many nodes behind it. For this reason,
-          even subsequent querries sometimes return different information.
-        </Note>
-        <Note>
-          <NoteNumber>NOTE 2:</NoteNumber> We pull the list of node producers from `cleos system list producers`. We do
-          this every several seconds.
-        </Note>
-      </NoteDiv>
-    </LegendContainer>
-  </Fragment>
-);
+@translate()
+export default class Legend extends PureComponent {
+  render() {
+    const { t } = this.props;
+
+    return (
+      <Fragment>
+        <Header>
+          <HeadBox>
+            <HeadText>{t('i18nModal.i18nLegend.title')}</HeadText>
+          </HeadBox>
+        </Header>
+        <LegendContainer>
+          <AboutDiv>
+            <Heading>{t('i18nModal.i18nLegend.about')}</Heading>
+            <Content>
+              <span>{t('i18nModal.i18nLegend.content.0')}. </span>
+              <span>{t('i18nModal.i18nLegend.content.1')}. </span>
+              <span>{t('i18nModal.i18nLegend.content.2')}.</span>
+            </Content>
+            <BottomContent>
+              <span>
+                <Bold>{t('i18nModal.i18nLegend.tps.0')}</Bold> - {t('i18nModal.i18nLegend.tps.1')}
+              </span>
+              <span>
+                <Bold>{t('i18nModal.i18nLegend.aps.0')}</Bold> - {t('i18nModal.i18nLegend.aps.1')}
+              </span>
+            </BottomContent>
+          </AboutDiv>
+          <ColorsLegendDiv>
+            <Heading>{t('i18nModal.i18nLegend.colorsLegend')}</Heading>
+            <ColorDiv>
+              <Green /> - {t('i18nModal.i18nLegend.producingRightNow')}.
+            </ColorDiv>
+            <ColorDiv>
+              <Red />
+              <ColorDescDash>-</ColorDescDash>
+              {t('i18nModal.i18nLegend.noResponse')}.
+            </ColorDiv>
+            <ColorDiv>
+              <Yellow /> - {t('i18nModal.i18nLegend.otherVersion')}.
+            </ColorDiv>
+            <ColorDesc>{t('i18nModal.i18nLegend.versionInformation')}</ColorDesc>
+            <ColorDiv>
+              <Purple /> - {t('i18nModal.i18nLegend.unsynced')}.
+            </ColorDiv>
+            <ColorDesc>{t('i18nModal.i18nLegend.thisDoesNot')}</ColorDesc>
+            <ColorDiv>
+              <Grey /> - Error with bp.json.
+            </ColorDiv>
+            <ColorDesc>
+              {t('i18nModal.i18nLegend.bps')}
+              {', '}
+              <Link href="https://github.com/eosrio/bp-info-standard">{t('i18nModal.i18nLegend.moreinfo')}</Link>
+            </ColorDesc>
+            <Heading>{t('i18nModal.i18nLegend.pingColorExplanation')}</Heading>
+            <TextSpan>
+              <GreyText>{t('i18nModal.i18nLegend.greyName')}</GreyText>
+              {t('i18nModal.i18nLegend.greyPing')}
+            </TextSpan>
+            <div>{t('i18nModal.i18nLegend.blackPing')}</div>
+          </ColorsLegendDiv>
+          <NoteDiv>
+            <Note>
+              <NoteNumber>{t('i18nModal.i18nLegend.note1')}:</NoteNumber> {t('i18nModal.i18nLegend.ManyBp')}.
+            </Note>
+            <Note>
+              <NoteNumber>{t('i18nModal.i18nLegend.note2')}:</NoteNumber> {t('i18nModal.i18nLegend.wePull')}.
+            </Note>
+          </NoteDiv>
+        </LegendContainer>
+      </Fragment>
+    );
+  }
+}
+
+Legend.propTypes = {
+  t: PropTypes.func,
+};

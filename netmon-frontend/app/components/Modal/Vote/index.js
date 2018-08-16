@@ -5,6 +5,7 @@ import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 import eos from 'eosjs';
 import store from 'store';
+import { translate } from 'react-i18next';
 
 // Selectors & Utils
 import { selectCheckedProducers } from '../../../bus/producers/selectors';
@@ -38,6 +39,7 @@ const EOSnetwork = {
 };
 
 @connect(mapStateToProps)
+@translate()
 export default class Vote extends PureComponent {
   state = {
     scatterInited: false,
@@ -140,50 +142,59 @@ export default class Vote extends PureComponent {
 
   render() {
     const { accountName, scatterInited } = this.state;
-    const { selectedProducers } = this.props;
+    const { t, selectedProducers } = this.props;
 
     return (
       <Fragment>
         <Header>
           <HeadBox>
-            <HeadText>VOTE</HeadText>
+            <HeadText>{t('i18nModal.i18nVote.title')}</HeadText>
           </HeadBox>
         </Header>
         <MainContainer>
           <TextSpan>
-            By proceeding you agree to abide by the{' '}
+            {t('i18nModal.i18nVote.byProceedingYouAgreeToAbideByThe')}{' '}
             <Link href="#" target="_blank">
-              EOS Constitution
-            </Link>.
+              {t('i18nModal.i18nVote.eosConstitution')}
+            </Link>
+            .
           </TextSpan>
           <TextSpan>
-            This feature was created to help with voting. It creates a cleos command based on checked producers, and
-            uses{' '}
+            {t('i18nModal.i18nVote.thisFeatureWas')}{' '}
             <Link href="https://github.com/CryptoLions/EOS-MainNet/blob/master/cleos.sh" target="_blank">
               cleos.sh
-            </Link>, our cleos wrapper (which just configures ports and addresses).
+            </Link>
+            , {t('i18nModal.i18nVote.ourCleosWrapper')}.
           </TextSpan>
           <TextSpan>
-            <Bold>{`Selected producers: ${selectedProducers.join(', ')}`}</Bold>
+            <Bold>{`${t('i18nModal.i18nVote.selectedProducers')}: ${selectedProducers.join(', ')}`}</Bold>
           </TextSpan>
           {this.renderMessage()}
           <Container>
-            <Input value={accountName} placeholder="Your account name..." onChange={this.onAccountNameChange} />
+            <Input
+              value={accountName}
+              placeholder={t('i18nModal.i18nVote.placeholder')}
+              onChange={this.onAccountNameChange}
+            />
             {!window.scatter && (
               <InstallLink href="https://get-scatter.com/" target="_blank">
-                Install Scatter
+                {t('i18nModal.i18nVote.installScatter')}
               </InstallLink>
             )}
-            {!!window.scatter && !!scatterInited && <ScatterLink onClick={this.voteScatter}>Vote</ScatterLink>}
-            {!!window.scatter && !scatterInited && <ScatterLink onClick={this.initScatter}>Init Scatter</ScatterLink>}
+            {!!window.scatter &&
+              !!scatterInited && <ScatterLink onClick={this.voteScatter}>{t('i18nModal.i18nVote.vote')}</ScatterLink>}
+            {!!window.scatter &&
+              !scatterInited && (
+                <ScatterLink onClick={this.initScatter}>{t('i18nModal.i18nVote.initScatter')}</ScatterLink>
+              )}
           </Container>
           <Footer>
             {selectedProducers.length !== 0 ? (
               <FooterText>
-                ./cleos.sh system voteproducer prods {accountName} {selectedProducers.join(' ')} -p {accountName}
+                {t('i18nModal.i18nVote.voteProducerProds')} {accountName} {selectedProducers.join(' ')} -p {accountName}
               </FooterText>
             ) : (
-              <FooterText>Check at least one producer (check box)</FooterText>
+              <FooterText>{t('i18nModal.i18nVote.checkAtLeastOne')}</FooterText>
             )}
           </Footer>
         </MainContainer>
@@ -193,5 +204,6 @@ export default class Vote extends PureComponent {
 }
 
 Vote.propTypes = {
+  t: PropTypes.func,
   selectedProducers: PropTypes.array,
 };

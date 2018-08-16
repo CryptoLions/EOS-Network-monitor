@@ -1,40 +1,51 @@
 // Core
-import React from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import { translate } from 'react-i18next';
 
 // Styles
 import { TableHead, Tdata, ColumnMenuTdata } from './styles';
 import TableColumnMenu from '../TableColumnMenu';
 
-export const TableHeading = ({ tableColumnState }) => (
-  <TableHead>
-    <tr>
-      <Tdata />
-      <Tdata />
-      {tableColumnState.ping && <Tdata>Ping</Tdata>}
-      {tableColumnState.name && <Tdata>Name</Tdata>}
-      {tableColumnState.answered && <Tdata>Answered</Tdata>}
-      {tableColumnState.blkSeen && <Tdata>Blk seen</Tdata>}
-      {tableColumnState.produced && <Tdata>Produced</Tdata>}
-      {tableColumnState.blkProduced && <Tdata>Blk produced</Tdata>}
-      {tableColumnState.version && <Tdata>Version</Tdata>}
-      {tableColumnState.address && <Tdata>Address</Tdata>}
-      {tableColumnState.http && <Tdata>HTTP</Tdata>}
-      {tableColumnState.p2p && <Tdata>P2P</Tdata>}
-      {tableColumnState.location && <Tdata>Location</Tdata>}
-      {tableColumnState.numberProduced && (
-        <Tdata title="total blocks in blockchain produced by this name"># produced</Tdata>
-      )}
-      {tableColumnState.txs && <Tdata title="Processed transactions producer">TXs</Tdata>}
-      {tableColumnState.organisation && <Tdata>Organisation</Tdata>}
-      {tableColumnState.votes && <Tdata>Votes</Tdata>}
-      <ColumnMenuTdata>
-        <TableColumnMenu />
-      </ColumnMenuTdata>
-    </tr>
-  </TableHead>
-);
-
+@translate()
+export default class TableHeading extends PureComponent {
+  render() {
+    const { t, tableColumnState } = this.props;
+    return (
+      <TableHead>
+        <tr>
+          <Tdata />
+          <Tdata />
+          {tableColumnState.ping && <Tdata>{t('i18nSecondSection.i18nTableColumnNames.ping')}</Tdata>}
+          {tableColumnState.name && <Tdata>{t('i18nSecondSection.i18nTableColumnNames.name')}</Tdata>}
+          {tableColumnState.answered && <Tdata>{t('i18nSecondSection.i18nTableColumnNames.answered')}</Tdata>}
+          {tableColumnState.blkSeen && <Tdata>{t('i18nSecondSection.i18nTableColumnNames.blkSeen')}</Tdata>}
+          {tableColumnState.produced && <Tdata>{t('i18nSecondSection.i18nTableColumnNames.produced')}</Tdata>}
+          {tableColumnState.blkProduced && <Tdata>{t('i18nSecondSection.i18nTableColumnNames.blkProduced')}</Tdata>}
+          {tableColumnState.version && <Tdata>{t('i18nSecondSection.i18nTableColumnNames.version')}</Tdata>}
+          {tableColumnState.address && <Tdata>{t('i18nSecondSection.i18nTableColumnNames.address')}</Tdata>}
+          {tableColumnState.http && <Tdata>{t('i18nSecondSection.i18nTableColumnNames.http')}</Tdata>}
+          {tableColumnState.p2p && <Tdata>{t('i18nSecondSection.i18nTableColumnNames.p2p')}</Tdata>}
+          {tableColumnState.location && <Tdata>{t('i18nSecondSection.i18nTableColumnNames.location')}</Tdata>}
+          {tableColumnState.numberProduced && (
+            <Tdata title="total blocks in blockchain produced by this name">
+              {t('i18nSecondSection.i18nTableColumnNames.numberProduced')}
+            </Tdata>
+          )}
+          {tableColumnState.txs && (
+            <Tdata title="Processed transactions producer">{t('i18nSecondSection.i18nTableColumnNames.txs')}</Tdata>
+          )}
+          {tableColumnState.organisation && <Tdata>{t('i18nSecondSection.i18nTableColumnNames.organisation')}</Tdata>}
+          {tableColumnState.votes && <Tdata>{t('i18nSecondSection.i18nTableColumnNames.votes')}</Tdata>}
+          <ColumnMenuTdata>
+            <TableColumnMenu />
+          </ColumnMenuTdata>
+        </tr>
+      </TableHead>
+    );
+  }
+}
 TableHeading.propTypes = {
+  t: PropTypes.func,
   tableColumnState: PropTypes.object,
 };

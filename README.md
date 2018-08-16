@@ -1,4 +1,4 @@
-# EOS Testnet monitor 2.0
+# EOS Network monitor 2.0
 Simple tool to monitor EOS testnet nodes.
  
 

@@ -8,7 +8,7 @@ import AccountHistory from './AccountHistory';
 import BlockInfo from './BlockInfo';
 import Vote from './Vote';
 import Transactions from './Transactions';
-import { Legend } from './Legend';
+import Legend from './Legend';
 
 // Styles
 import { ModalWrapper, ModalContainer, Cross } from './styles';

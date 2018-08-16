@@ -20,6 +20,40 @@ export const PaginationButton = Button.extend`
   }
 `;
 
+export const PageInputsDiv = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+export const PageInput = styled.input`
+  height: 38px;
+  max-width: 80px;
+  padding: 0px 10px;
+  border: 1px solid rgb(0, 0, 0, 0.2);
+  margin-left: 5px;
+
+  @media (max-width: 500px) {
+    max-width: 70px;
+  }
+`;
+
+export const InputButton = styled.button`
+  height: 38px;
+  width: 60px;
+  color: #28a745;
+  margin-left: -1px;
+  background-color: #fff;
+  border: 1px solid #28a745;
+  &:hover {
+    color: #fff;
+    background-color: #28a745;
+  }
+
+  @media (max-width: 500px) {
+    max-width: 50px;
+  }
+`;
+
 export const GreenItemContainer = styled.div`
   color: green;
 `;

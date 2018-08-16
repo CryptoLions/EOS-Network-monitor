@@ -1,6 +1,7 @@
 // Core
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import { translate } from 'react-i18next';
 
 // Utils
 import { formatNumber } from '../../../../utils/intUtils';
@@ -12,24 +13,25 @@ import { SvgSpinner } from '../svg';
 import { Wrapper, Header, HeaderSpan, TextSpan, GreenSpan } from '../styles';
 import { Container, GreenLink } from './styles';
 
+@translate()
 export default class GeneralInfo extends PureComponent {
   render() {
-    const { tpsApsStats, connectedUsers, toggleModal } = this.props;
+    const { t, tpsApsStats, connectedUsers, toggleModal } = this.props;
 
     return (
       <Wrapper>
         <Header>
-          <HeaderSpan>General info</HeaderSpan>
+          <HeaderSpan>{t('i18nFirstSection.i18nGeneralInfo.title')}</HeaderSpan>
         </Header>
         <Container>
           {tpsApsStats.stackedTotal ? (
             <Fragment>
               <TextSpan>
-                Staked total:{' '}
+                {t('i18nFirstSection.i18nGeneralInfo.stakedTotal')}:{' '}
                 <GreenSpan>{tpsApsStats.stackedTotal && formatNumber(tpsApsStats.stackedTotal)} EOS</GreenSpan>
               </TextSpan>
               <TextSpan>
-                TPS Live/All time high:{' '}
+                {t('i18nFirstSection.i18nGeneralInfo.tps')}:{' '}
                 <GreenSpan>
                   {tpsApsStats.liveTps} /{' '}
                   <GreenLink onClick={() => toggleModal('blockInfo', tpsApsStats.maxTpsBlock)}>
@@ -38,13 +40,13 @@ export default class GeneralInfo extends PureComponent {
                 </GreenSpan>
               </TextSpan>
               <TextSpan>
-                APS Live/All time high:{' '}
+                {t('i18nFirstSection.i18nGeneralInfo.aps')}:{' '}
                 <GreenSpan>
                   {tpsApsStats.liveAps} / {tpsApsStats.maxAps}
                 </GreenSpan>
               </TextSpan>
               <TextSpan>
-                Connected Users: <GreenSpan>{connectedUsers}</GreenSpan>
+                {t('i18nFirstSection.i18nGeneralInfo.connectedUsers')}: <GreenSpan>{connectedUsers}</GreenSpan>
               </TextSpan>
             </Fragment>
           ) : (
@@ -57,6 +59,7 @@ export default class GeneralInfo extends PureComponent {
 }
 
 GeneralInfo.propTypes = {
+  t: PropTypes.func,
   tpsApsStats: PropTypes.object,
   connectedUsers: PropTypes.number,
   toggleModal: PropTypes.func,

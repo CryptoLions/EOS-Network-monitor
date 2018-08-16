@@ -1,9 +1,17 @@
 import styled from 'styled-components';
 
 export const SectionTwo = styled.section`
-  width: 770px;
+  width: 68vw;
   display: flex;
   flex-direction: column;
+
+  @media (max-width: 1920px) {
+    width: 58vw;
+  }
+
+  @media (max-width: 1280px) {
+    width: 770px;
+  }
 
   @media (max-width: 992px) {
     width: 100%;

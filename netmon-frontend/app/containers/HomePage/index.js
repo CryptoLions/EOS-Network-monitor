@@ -10,6 +10,8 @@ import Modal from '../../components/Modal';
 import NavigationMenu from './NavigationMenu';
 import FirstSection from './FirstSection';
 import SecondSection from './SecondSection';
+import Footer from '../../components/Footer';
+import Notifications from '../../components/Notifications';
 
 // Actions
 import { uiActions } from '../../bus/ui/actions';
@@ -17,11 +19,8 @@ import { uiActions } from '../../bus/ui/actions';
 // Selectors
 import { selectModal } from '../../bus/ui/selectors';
 
-// Image
-import lion from '../../assets/images/lion.png';
-
 // Styles
-import { MainContainer, Footer, Lion, FooterSpan, Link } from './styles';
+import { MainContainer } from './styles';
 
 const mapStateToProps = createStructuredSelector({
   // modal
@@ -55,24 +54,14 @@ export default class HomePage extends PureComponent {
 
     return (
       <Fragment>
+        <Notifications />
         {modal && modal.type && <Modal toggleModal={toggleModal} modal={modal} />}
         <NavigationMenu toggleModal={toggleModal} />
         <MainContainer>
           <FirstSection />
           <SecondSection />
         </MainContainer>
-        <Footer>
-          <FooterSpan>
-            <Lion src={lion} alt="Lion" /> 2018 Created by{' '}
-            <Link href="https://cryptolions.io" target="__blank">
-              CryptoLions.io
-            </Link>{' '}
-            (<Link href="https://github.com/CryptoLions/EOS-Testnet-monitor" target="__blank">
-              GitHub
-            </Link>{' '}
-            v2.0.{process.env.VERSION_NUMBER})
-          </FooterSpan>
-        </Footer>
+        <Footer path="easteregg" />
       </Fragment>
     );
   }

@@ -8,8 +8,8 @@ import store from 'store';
 import isEqual from 'lodash/isEqual';
 
 // Components
-import { TableHeading } from './TableHeading';
-import TableData from './TableData';
+import TableHeading from './TableHeading';
+import TableRow from './TableRow';
 
 // Actions
 import { uiActions } from '../../../../bus/ui/actions';
@@ -51,23 +51,38 @@ const mapDispatchToProps = dispatch => ({
   mapDispatchToProps
 )
 class Table extends PureComponent {
+  state = {
+    colsNumber: null,
+  };
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.selectedProducers.length !== this.props.selectedProducers.length)
       store.set('checkedProducers', nextProps.selectedProducers);
 
+    if (!this.state.colsNumber) {
+      this.getColSpan(nextProps.tableColumnState);
+    }
+
     if (!isEqual(nextProps.tableColumnState, this.props.tableColumnState)) {
       store.set('tableColumnState', nextProps.tableColumnState);
       this.visibleColumnsChanged = true;
+      this.getColSpan(nextProps.tableColumnState);
     }
   }
 
   componentDidUpdate() {
     if (this.visibleColumnsChanged) {
-      console.log(this.table.offsetWidth - this.tableContainer.offsetWidth);
       this.tableContainer.scrollLeft = this.table.offsetWidth - this.tableContainer.offsetWidth;
       this.visibleColumnsChanged = false;
     }
   }
+
+  getColSpan = tableColumnState => {
+    const cols = Object.values(tableColumnState).filter(item => item);
+    this.setState({
+      colsNumber: cols.length,
+    });
+  };
 
   filterHandler = producers => {
     if (!this.props.filterInputValue) return producers;
@@ -84,8 +99,10 @@ class Table extends PureComponent {
       selectedProducers,
       filterInputValue,
     } = this.props;
+    const { colsNumber } = this.state;
 
     const filteredProducers = this.filterHandler(producers);
+
     return (
       <Fragment>
         {/* @TODO redesign */}
@@ -105,12 +122,13 @@ class Table extends PureComponent {
                 filteredProducers.map((producer, index) => (
                   <Fragment key={producer.name}>
                     {index === 21 && !filterInputValue && <Filler />}
-                    <TableData
+                    <TableRow
                       producer={producer}
                       isNodeChecked={selectedProducers.some(item => item === producer.name)}
                       tableColumnState={tableColumnState}
                       toggleModal={toggleModal}
                       toggleProducerSelection={toggleProducerSelection}
+                      colsNumber={colsNumber}
                     />
                   </Fragment>
                 ))}

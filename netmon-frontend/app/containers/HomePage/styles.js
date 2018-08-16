@@ -3,43 +3,19 @@ import styled from 'styled-components';
 export const MainContainer = styled.div`
   overflow-x: auto;
   display: flex;
-  justify-content: space-between;
-  width: 100%;
+  justify-content: center;
   height: 100%;
-  max-width: 1170px;
+  width: 90vw;
+
+  @media (max-width: 1280px) {
+    width: 100%;
+    max-width: 1170px;
+    justify-content: space-between;
+  }
 
   @media (max-width: 992px) {
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
   }
-`;
-
-export const Footer = styled.footer`
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  background-color: #000;
-  padding: 12px 0;
-
-  @media (max-width: 768px) {
-    padding: 5px 0;
-  }
-`;
-
-export const Lion = styled.img`
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
-`;
-
-export const FooterSpan = styled.span`
-  text-align: center;
-  color: #fff;
-`;
-
-export const Link = styled.a`
-  color: white;
 `;

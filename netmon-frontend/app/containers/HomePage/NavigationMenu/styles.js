@@ -1,5 +1,4 @@
-import styled from 'styled-components';
-import segoeUISemiBold from '../../../assets/fonts/segoeUISemiBold.ttf';
+import styled, { keyframes } from 'styled-components';
 
 const link = styled.a`
   text-decoration: none;
@@ -13,14 +12,37 @@ export const Container = styled.div`
   padding: 20px 0;
 
   @media (max-width: 768px) {
-    padding: 5px 0;
+    padding: 0 0 5px 0;
+  }
+`;
+
+export const Header = styled.div`
+  @media (max-width: 768px) {
+    display: flex;
+    align-items: center;
+  }
+`;
+
+export const NavMenuButton = styled.svg`
+  display: none;
+  width: 15px;
+  height: 15px;
+  margin: 5px 10px 0 0;
+  cursor: pointer;
+  & path {
+    fill: #747474;
+  }
+
+  &:hover path {
+    fill: #548afd;
+  }
+  @media (max-width: 768px) {
+    display: block;
   }
 `;
 
 export const Headlink = link.extend`
   padding-bottom: 10px;
-  font-family: 'Segoe UI';
-  src: url(${segoeUISemiBold}) format('ttf');
   color: #028012;
   font-size: 50px;
   line-height: 50px;
@@ -34,8 +56,30 @@ export const Headlink = link.extend`
   @media (max-width: 768px) {
     font-size: 22px;
     line-height: normal;
-    padding: 0;
+    padding: 5px 0 0 0;
   }
+`;
+
+// Menu animation
+const blurBgAnimation = keyframes`
+  from { background-color: rgb(0, 0, 0, 0); }
+  to { background-color: rgb(0, 0, 0, 0.5); }
+`;
+
+const navMenuAppear = keyframes`
+  from { left: -250px; }
+  to { left: 0; }
+`;
+
+export const BlurBG = styled.div`
+  position: fixed;
+  top: 0;
+  z-index: 1;
+  filter: blur(5px);
+  width: 100%;
+  height: 100%;
+  background-color: rgb(0, 0, 0, 0.5);
+  animation: ${blurBgAnimation} 0.3s;
 `;
 
 export const NavMenu = styled.section`
@@ -45,7 +89,20 @@ export const NavMenu = styled.section`
   font-size: 20px;
 
   @media (max-width: 768px) {
-    font-size: 18px;
+    display: ${({ isNavMenuActive }) => (isNavMenuActive ? 'flex' : 'none')};
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100%;
+    padding-left: 30px;
+    z-index: 2;
+    background-color: rgb(44, 168, 78);
+
+    flex-wrap: nowrap;
+    justify-content: center;
+    flex-direction: column;
+    animation: ${navMenuAppear} 0.3s;
   }
 `;
 
@@ -57,6 +114,19 @@ export const BlueLink = link.extend`
     text-decoration: underline;
     color: #005dc1;
   }
+
+  @media (max-width: 768px) {
+    color: #fff;
+    padding: 10px 0;
+
+    &:active {
+      color: #005dc1;
+    }
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
 `;
 
 export const Border = styled.span`
@@ -67,6 +137,6 @@ export const Border = styled.span`
   }
 
   @media (max-width: 768px) {
-    padding: 0 10px;
+    display: none;
   }
 `;

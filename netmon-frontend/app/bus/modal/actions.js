@@ -8,7 +8,6 @@ export const modalActions = Object.freeze({
 
     const response = await fetch(`${URL}/api/v1/accounts/${producerName}`);
     const data = await response.json();
-
     return dispatch({
       type: types.FETCHING_ACCOUNT_INFO_SUCCESS,
       payload: data,
@@ -17,13 +16,11 @@ export const modalActions = Object.freeze({
 
   fetchAccountHistory: (producerName, page) => async dispatch => {
     dispatch({ type: types.FETCHING_ACCOUNT_HISTORY });
-
     const response = await fetch(
       `${URL}/api/v1/accounts/${producerName}/history?skip=${HISTORY_ITEMS_PER_PAGE *
         page}&limit=${HISTORY_ITEMS_PER_PAGE}`
     );
     const data = await response.json();
-
     return dispatch({
       type: types.FETCHING_ACCOUNT_HISTORY_SUCCESS,
       payload: data,

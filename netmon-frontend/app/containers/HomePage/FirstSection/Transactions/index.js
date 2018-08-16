@@ -1,12 +1,13 @@
 // Core
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import { translate } from 'react-i18next';
 
 // Socket
 import socket from '../../../../init/socket';
 
 // Components
-// import TransactionRow from './TransactionRow';
+import TransactionRow from './TransactionRow';
 
 // Utils
 import renderEnhancer from '../../../../hoc/renderEnhancer';
@@ -16,12 +17,9 @@ import { SvgPlayPause, SvgSpinner } from '../svg';
 
 // Styles
 import { Wrapper, Header, HeaderSpan, Container, TextSpan, GreenSpan } from '../styles';
-import {
-  HeadDiv,
-  // OverflowContainer,
-  SmallText,
-} from './styles';
+import { HeadDiv, OverflowContainer } from './styles';
 
+@translate()
 class Transactions extends PureComponent {
   state = {
     isTransactionsSocketOn: true,
@@ -37,15 +35,12 @@ class Transactions extends PureComponent {
 
   render() {
     const { isTransactionsSocketOn } = this.state;
-    const {
-      transactionsInfo = {},
-      // toggleModal
-    } = this.props;
+    const { t, transactionsInfo = {}, toggleModal, transactionsList } = this.props;
 
     return (
       <Wrapper>
         <Header>
-          <HeaderSpan>Transactions</HeaderSpan>
+          <HeaderSpan>{t('i18nFirstSection.i18nTransactions.title')}</HeaderSpan>
           <SvgPlayPause
             toggleTransactionsSocketOn={this.toggleTransactionsSocketOn}
             isTransactionsSocketOn={isTransactionsSocketOn}
@@ -55,29 +50,29 @@ class Transactions extends PureComponent {
           {transactionsInfo.totalBlockCount ? (
             <Fragment>
               <HeadDiv>
-                {/* <TextSpan>
-                  Total: <GreenSpan>{transactionsInfo.totalTransactionsCount}</GreenSpan>
+                <TextSpan>
+                  {t('i18nFirstSection.i18nTransactions.total')}:{' '}
+                  <GreenSpan>{transactionsInfo.totalTransactionsCount}</GreenSpan>{' '}
+                  {t('i18nFirstSection.i18nTransactions.transactions')}
                 </TextSpan>
                 <TextSpan>
-                  Transactions: <GreenSpan>{`in ${transactionsInfo.notEmptyBlocksCount} Blocks`}</GreenSpan>
-                </TextSpan> */}
-                <TextSpan>
-                  Synced up to block #: <GreenSpan>{transactionsInfo.totalBlockCount}</GreenSpan>
+                  in <GreenSpan>{transactionsInfo.notEmptyBlocksCount}</GreenSpan> blocks
                 </TextSpan>
-                <SmallText>Transactions will appear after synchronization...</SmallText>
+                <TextSpan>
+                  {t('i18nFirstSection.i18nTransactions.blockNumber')}:{' '}
+                  <GreenSpan>{transactionsInfo.totalBlockCount}</GreenSpan>
+                </TextSpan>
               </HeadDiv>
-              {/* <OverflowContainer>
-                {transactionsList
-                  .slice(0, 10)
-                  .map((transaction, i) => (
-                    <TransactionRow
-                      transaction={transaction}
-                      key={transaction.txid}
-                      iteration={i}
-                      toggleModal={toggleModal}
-                    />
-                  ))}
-              </OverflowContainer> */}
+              <OverflowContainer>
+                {transactionsList.slice(0, 10).map((transaction, i) => (
+                  <TransactionRow
+                    transaction={transaction}
+                    key={transaction.txid}
+                    iteration={i}
+                    toggleModal={toggleModal}
+                  />
+                ))}
+              </OverflowContainer>
             </Fragment>
           ) : (
             <SvgSpinner />
@@ -89,7 +84,8 @@ class Transactions extends PureComponent {
 }
 
 Transactions.propTypes = {
-  // transactionsList: PropTypes.array,
+  t: PropTypes.func,
+  transactionsList: PropTypes.array,
   transactionsInfo: PropTypes.object,
   toggleModal: PropTypes.func,
 };

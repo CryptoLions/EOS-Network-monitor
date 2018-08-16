@@ -18,3 +18,10 @@ export const RedSpan = GreenSpan.extend`
 export const FooterContainer = styled.div`
   width: 100%;
 `;
+
+export const DifferenceSpan = styled.span`
+  position: relative;
+  bottom: 7px;
+  font-size: 14px;
+  color: #84878b;
+`;

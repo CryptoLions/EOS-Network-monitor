@@ -44,6 +44,15 @@ export const ColorDesc = styled.span`
   padding: 10px 0;
 `;
 
+export const TextSpan = styled.span`
+  display: block;
+  padding-bottom: 10px;
+`;
+
+export const GreyText = styled.span`
+  color: rgb(211, 211, 211);
+`;
+
 export const ColorDescDash = styled.span`
   margin-right: 5px;
 `;
@@ -68,11 +77,11 @@ export const Yellow = Color.extend`
 `;
 
 export const Purple = Color.extend`
-  background-color: rgb(199, 165, 239, 0.7);
+  background-color: rgb(159, 100, 227);
 `;
 
 export const Grey = Color.extend`
-  background-color: rgb(170, 175, 183, 0.7);
+  background-color: rgb(211, 211, 211);
 `;
 
 // Note div

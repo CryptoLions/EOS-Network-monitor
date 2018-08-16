@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import store from 'store';
+import { translate } from 'react-i18next';
 
 // Components
 import LoadingLine from '../../LoadingLine';
@@ -45,6 +46,7 @@ const mapDispatchToProps = dispach => ({
   mapStateToProps,
   mapDispatchToProps
 )
+@translate()
 export default class Transactions extends PureComponent {
   state = {
     txId:
@@ -77,6 +79,7 @@ export default class Transactions extends PureComponent {
   render() {
     const { txId } = this.state;
     const {
+      t,
       modalDataFetchingState,
       txIdData,
       actions: { toggleModal },
@@ -86,14 +89,18 @@ export default class Transactions extends PureComponent {
       <Fragment>
         <Header>
           <HeadBox>
-            <HeadText>TRANSACTION</HeadText>
+            <HeadText>{t('i18nModal.i18nTransactions.title')}</HeadText>
           </HeadBox>
           <HeadContainer>
             <InputsDiv>
-              <TransactionsInput value={txId} placeholder="TX id" onChange={this.onTXidChange} />
-              <GetButton onClick={this.getData}>Get</GetButton>
+              <TransactionsInput
+                value={txId}
+                placeholder={t('i18nModal.i18nTransactions.placeholder')}
+                onChange={this.onTXidChange}
+              />
+              <GetButton onClick={this.getData}>{t('i18nModal.i18nTransactions.getButton')}</GetButton>
             </InputsDiv>
-            <span>Find a Transaction</span>
+            <span>{t('i18nModal.i18nTransactions.findTransaction')}</span>
           </HeadContainer>
         </Header>
         <LoadingLine state={modalDataFetchingState} />
@@ -102,29 +109,30 @@ export default class Transactions extends PureComponent {
             !!Object.keys(txIdData).length && (
               <Fragment>
                 <div>
-                  <span>Block:</span>
+                  <span>{t('i18nModal.i18nTransactions.block')}:</span>
                   <Link onClick={() => toggleModal('blockInfo', txIdData.msgObject.c1)}>
                     {` #${txIdData.msgObject.c1}`}
                   </Link>
                 </div>
                 <div>
-                  <span>TXid:</span>{' '}
+                  <span>{t('i18nModal.i18nTransactions.txId')}:</span>{' '}
                   <Link onClick={() => toggleModal('transactions', txIdData.txid)}>{txIdData.txid}</Link>
                 </div>
                 <div>
-                  <span>Date:</span> <span>{convertUtcToLocal(txIdData.date)}</span>
+                  <span>{t('i18nModal.i18nTransactions.date')}:</span> <span>{convertUtcToLocal(txIdData.date)}</span>
                 </div>
                 <div>
-                  <span>Action:</span> <span>{stripHtml(txIdData.msgObject.c2, 'a')}</span>
+                  <span>{t('i18nModal.i18nTransactions.action')}:</span>{' '}
+                  <span>{stripHtml(txIdData.msgObject.c2, 'a')}</span>
                 </div>
                 <div>
-                  <span>From:</span>{' '}
+                  <span>{t('i18nModal.i18nTransactions.from')}:</span>{' '}
                   <Link onClick={() => toggleModal('accountInfo', stripHtml(txIdData.msgObject.c3, 'a'))}>
                     {stripHtml(txIdData.msgObject.c3, 'a')}
                   </Link>
                 </div>
                 <div>
-                  <span>Info:</span>{' '}
+                  <span>{t('i18nModal.i18nTransactions.info')}:</span>{' '}
                   <span>
                     {txIdData.msgObject.c4 !== '->' &&
                       txIdData.msgObject.c4 !== '>' &&
@@ -147,6 +155,7 @@ export default class Transactions extends PureComponent {
 }
 
 Transactions.propTypes = {
+  t: PropTypes.func,
   modalDataFetchingState: PropTypes.bool,
   txId: PropTypes.string,
   txIdData: PropTypes.object,

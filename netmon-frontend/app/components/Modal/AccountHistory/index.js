@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { bindActionCreators } from 'redux';
 import store from 'store';
+import { translate } from 'react-i18next';
 
 // Components
 import LoadingLine from '../../LoadingLine';
@@ -36,7 +37,7 @@ import {
   TextSpan,
   TextSpanBold,
 } from '../styles';
-import { PaginationButton, PaginationWrapper, TransactionBlock } from './styles';
+import { PaginationButton, PaginationWrapper, TransactionBlock, PageInput, InputButton, PageInputsDiv } from './styles';
 
 const mapStateToProps = createStructuredSelector({
   modalDataFetchingState: selectModalDataFetchingState(),
@@ -57,6 +58,7 @@ const mapDispatchToProps = dispatch => ({
   mapStateToProps,
   mapDispatchToProps
 )
+@translate()
 export default class AccountHistory extends PureComponent {
   state = {
     producerName: this.props.accountName || store.get('modal_accountHistory') || 'eoshuobipool',
@@ -74,6 +76,12 @@ export default class AccountHistory extends PureComponent {
 
   onAccountNameChange = e => this.setState({ producerName: e.target.value });
 
+  onPageChange = e => {
+    if (e.target.value > 0) {
+      this.setState({ page: e.target.value - 1 });
+    }
+  };
+
   getData = () => {
     const { producerName, page } = this.state;
     const { modalDataFetchingState, actions } = this.props;
@@ -90,6 +98,7 @@ export default class AccountHistory extends PureComponent {
   render() {
     const { producerName, page } = this.state;
     const {
+      t,
       modalDataFetchingState,
       accountHistory,
       actions: { toggleModal },
@@ -99,16 +108,22 @@ export default class AccountHistory extends PureComponent {
       <Fragment>
         <Header>
           <HeadBox>
-            <HeadText>ACCOUNT HISTORY</HeadText>
+            <HeadText>{t('i18nModal.i18nAccountHistory.title')}</HeadText>
           </HeadBox>
           <HeadContainer>
             <InputsDiv>
-              <Input value={producerName} placeholder="Account Name" onChange={this.onAccountNameChange} />
-              <GetButton onClick={this.getData}>Get</GetButton>
+              <Input
+                value={producerName}
+                placeholder={t('i18nModal.i18nAccountHistory.placeholder')}
+                onChange={this.onAccountNameChange}
+              />
+              <GetButton onClick={this.getData}>{t('i18nModal.i18nAccountHistory.getButton')}</GetButton>
             </InputsDiv>
             <span>
-              Get information about account and balance.{' '}
-              <Link onClick={() => toggleModal('accountInfo', producerName)}>Account info</Link>
+              {t('i18nModal.i18nAccountHistory.GetInformationAboutAccountAndBalance')}.{' '}
+              <Link onClick={() => toggleModal('accountInfo', producerName)}>
+                {t('i18nModal.i18nAccountHistory.accountInfoLink')}
+              </Link>
             </span>
           </HeadContainer>
         </Header>
@@ -119,11 +134,15 @@ export default class AccountHistory extends PureComponent {
               onClick={this.changePage(-1)}
               disabled={!producerName || modalDataFetchingState || page === 0}
             >
-              Prev
+              {t('i18nModal.i18nAccountHistory.prev')}
             </PaginationButton>
-            <div>Page: {page + 1}</div>
+            <PageInputsDiv>
+              {t('i18nModal.i18nAccountHistory.page')}:{' '}
+              <PageInput type="number" value={page + 1} onChange={this.onPageChange} />
+              <InputButton onClick={this.getData}>{t('i18nModal.i18nAccountHistory.getButton')}</InputButton>
+            </PageInputsDiv>
             <PaginationButton onClick={this.changePage(1)} disabled={!producerName || modalDataFetchingState}>
-              Next
+              {t('i18nModal.i18nAccountHistory.next')}
             </PaginationButton>
           </PaginationWrapper>
 
@@ -132,29 +151,29 @@ export default class AccountHistory extends PureComponent {
             accountHistory.map((item, i) => (
               <TransactionBlock key={`accountHistory-${i}`}>
                 <div>
-                  <TextSpanBold>Block:</TextSpanBold>
+                  <TextSpanBold>{t('i18nModal.i18nAccountHistory.block')}:</TextSpanBold>
                   <Link onClick={() => toggleModal('blockInfo', item.msgObject.c1)}>{`#${item.msgObject.c1}`}</Link>
                 </div>
                 <div>
-                  <TextSpanBold>TXid:</TextSpanBold>
+                  <TextSpanBold>{t('i18nModal.i18nAccountHistory.txId')}:</TextSpanBold>
                   <Link onClick={() => toggleModal('transactions', item.txid)}>{item.txid}</Link>
                 </div>
                 <div>
-                  <TextSpanBold>Date:</TextSpanBold>
+                  <TextSpanBold>{t('i18nModal.i18nAccountHistory.date')}:</TextSpanBold>
                   <TextSpan>{convertUtcToLocal(item.date)}</TextSpan>
                 </div>
                 <div>
-                  <TextSpanBold>Action:</TextSpanBold>
+                  <TextSpanBold>{t('i18nModal.i18nAccountHistory.action')}:</TextSpanBold>
                   <TextSpan>{stripHtml(item.msgObject.c2)}</TextSpan>
                 </div>
                 <div>
-                  <TextSpanBold>From:</TextSpanBold>
+                  <TextSpanBold>{t('i18nModal.i18nAccountHistory.from')}:</TextSpanBold>
                   <Link onClick={() => toggleModal('accountInfo', stripHtml(item.msgObject.c3))}>
                     {stripHtml(item.msgObject.c3)}
                   </Link>
                 </div>
                 <div>
-                  <TextSpanBold>Info:</TextSpanBold>
+                  <TextSpanBold>{t('i18nModal.i18nAccountHistory.info')}:</TextSpanBold>
                   {item.msgObject.c4 !== '->' &&
                     item.msgObject.c4 !== '>' &&
                     stringHandler(stripHtml(item.msgObject.c4), this.toggleAccountInfoModal)}
@@ -174,6 +193,7 @@ export default class AccountHistory extends PureComponent {
 }
 
 AccountHistory.propTypes = {
+  t: PropTypes.func,
   modalDataFetchingState: PropTypes.bool,
   accountName: PropTypes.string,
   actions: PropTypes.object,

@@ -1,11 +1,15 @@
 import styled, { keyframes } from 'styled-components';
 
 export const SectionOne = styled.div`
-  min-width: 370px;
+  width: 370px;
   padding-top: 40px;
   margin-right: 30px;
   display: inherit;
   flex-direction: column;
+
+  @media (max-width: 1280px) {
+    min-width: 370px;
+  }
 
   @media (max-width: 992px) {
     max-width: 370px;

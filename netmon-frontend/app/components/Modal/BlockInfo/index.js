@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { bindActionCreators } from 'redux';
 import store from 'store';
+import { translate } from 'react-i18next';
 
 // Components
 import LoadingLine from '../../LoadingLine';
@@ -38,6 +39,7 @@ const mapDispatchToProps = dispach => ({
   mapStateToProps,
   mapDispatchToProps
 )
+@translate()
 export default class BlockInfoModal extends PureComponent {
   state = {
     blockId: this.props.data || store.get('modal_blockInfo') || 1,
@@ -64,18 +66,18 @@ export default class BlockInfoModal extends PureComponent {
 
   render() {
     const { blockId } = this.state;
-    const { modalDataFetchingState, blockInfo } = this.props;
+    const { t, modalDataFetchingState, blockInfo } = this.props;
 
     return (
       <Fragment>
         <Header>
           <HeadBox>
-            <HeadText>BLOCK INFO</HeadText>
+            <HeadText>{t('i18nModal.i18nBlockInfo.title')}</HeadText>
           </HeadBox>
           <HeadContainerBI>
             <ApiInput value="'/v1/chain/get_block'" name="apiPath" readOnly />
-            <ApiInput value={blockId} placeholder="Block id" name="apiData" onChange={this.onFieldChange} />
-            <GetButton onClick={this.getData}>Get</GetButton>
+            <ApiInput value={blockId} placeholder="Block id" name="blockId" onChange={this.onFieldChange} />
+            <GetButton onClick={this.getData}>{t('i18nModal.i18nBlockInfo.getButton')}</GetButton>
           </HeadContainerBI>
         </Header>
         <LoadingLine state={modalDataFetchingState} />
@@ -86,8 +88,9 @@ export default class BlockInfoModal extends PureComponent {
 }
 
 BlockInfoModal.propTypes = {
+  t: PropTypes.func,
   modalDataFetchingState: PropTypes.bool,
   actions: PropTypes.object,
-  data: PropTypes.object,
+  data: PropTypes.number,
   blockInfo: PropTypes.object,
 };

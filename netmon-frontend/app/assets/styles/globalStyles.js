@@ -1,31 +1,11 @@
 import { injectGlobal } from 'styled-components';
 import color from './colors';
-import SourceSanProRegularWoff from '../fonts/sourcesanspro-regular.woff';
-import SourceSanProRegularWoff2 from '../fonts/sourcesanspro-regular.woff2';
-import SourceSanProLightWoff from '../fonts/SourceSansProLight.woff';
-import SourceSanProLightWoff2 from '../fonts/SourceSansProLight.woff2';
 import CustomWoff from '../fonts/Custom.woff';
 import CustomWoff2 from '../fonts/Custom.woff2';
 import CustomSvg from '../fonts/Custom.svg';
 
 /* eslint no-unused-expressions: 0 */
 injectGlobal`
-  @font-face {
-    font-family: 'Source Sans Pro';
-    src: url(${SourceSanProRegularWoff2}) format('woff2'),
-         url(${SourceSanProRegularWoff}) format('woff');
-    font-weight: normal;
-    font-style: normal;
-  }
-
-  @font-face {
-    font-family: 'Source Sans Pro';
-    src: url(${SourceSanProLightWoff}) format('woff2'),
-         url(${SourceSanProLightWoff2}) format('woff');
-    font-weight: 100;
-    font-style: normal;
-  }
-
   [data-icons8]:before { content: attr(data-icons8); }
 
   .icons8, [data-icons8]:before,
@@ -187,11 +167,7 @@ injectGlobal`
   }
 
   body {
-    font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  }
-
-  body.fontLoaded {
-    font-family: 'Source Sans Pro', 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
 
   #app {
@@ -202,19 +178,16 @@ injectGlobal`
 
   p,
   label {
-    font-family: 'Source Sans Pro', Georgia, Times, 'Times New Roman', serif;
     line-height: 1.5em;
   }
 
   button {
-    font-family: 'Source Sans Pro';
     cursor: pointer;
     border: none;
   }
 
   ::placeholder {
     color: ${color.secondarySilver};
-    font-family: 'Source Sans Pro';
     font-size: 1.125rem;
     font-weight: normal;
   }

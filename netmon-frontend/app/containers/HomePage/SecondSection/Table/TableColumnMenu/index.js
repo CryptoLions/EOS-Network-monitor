@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { translate } from 'react-i18next';
+import store from 'store';
 /* eslint jsx-a11y/label-has-for:0 */
 
 // Selectors
@@ -18,9 +20,6 @@ import { SvgMenuIcon } from './svg';
 // Styles
 import { Wrapper, Container, Cross, HeadText, Item, ColumnName, HintText, Bold, ResetLink } from './styles';
 import { Checkbox, StyledCheckbox, StyledCheckboxActive } from '../styles';
-
-// Data
-import columnNames from './columnNames';
 
 const mapStateToProps = createStructuredSelector({
   tableColumnState: selectTableColumnState(),
@@ -40,6 +39,7 @@ const mapDispatchToProps = dispach => ({
   mapStateToProps,
   mapDispatchToProps
 )
+@translate()
 export default class TableColumnMenu extends Component {
   state = {
     tableMenuState: false,
@@ -66,6 +66,13 @@ export default class TableColumnMenu extends Component {
 
   render() {
     const { tableMenuState } = this.state;
+    const {
+      t,
+      i18n: {
+        options: { resources },
+      },
+    } = this.props;
+
     return (
       <Wrapper onClick={this.stopPropagation}>
         <SvgMenuIcon handleToggleTableMenu={this.handleToggleTableMenu} />
@@ -73,25 +80,32 @@ export default class TableColumnMenu extends Component {
           {tableMenuState && (
             <Container>
               <Cross onClick={this.handleToggleTableMenu} />
-              <HeadText>Columns</HeadText>
+              <HeadText>{t('i18nSecondSection.i18nTableColumnMenu.title')}</HeadText>
               <HintText>
-                Hint: <Bold>Shift + scroll</Bold> to scroll table horizontally
+                {t('i18nSecondSection.i18nTableColumnMenu.hintText.0')}:{' '}
+                <Bold>{t('i18nSecondSection.i18nTableColumnMenu.hintText.1')}</Bold>{' '}
+                {t('i18nSecondSection.i18nTableColumnMenu.hintText.2')}
               </HintText>
-              {columnNames.map(({ columnName, renderName }) => (
-                <Item key={columnName}>
+              {Object.entries(
+                resources[store.get('eosMonitor_currentLanguage') || 'en'].translations.i18nSecondSection
+                  .i18nTableColumnNames
+              ).map(columnName => (
+                <Item key={columnName[0]}>
                   <Checkbox
-                    name={columnName}
+                    name={columnName[0]}
                     type="checkbox"
-                    checked={this.props.tableColumnState[columnName]}
+                    checked={this.props.tableColumnState[columnName[0]]}
                     onChange={this.handleSelectTableColumns}
                   />
-                  {this.props.tableColumnState[columnName] ? <StyledCheckboxActive /> : <StyledCheckbox />}
-                  <ColumnName name={columnName} isChecked={this.props.tableColumnState[columnName]}>
-                    {renderName}
+                  {this.props.tableColumnState[columnName[0]] ? <StyledCheckboxActive /> : <StyledCheckbox />}
+                  <ColumnName name={columnName[0]} isChecked={this.props.tableColumnState[columnName[0]]}>
+                    {columnName[1]}
                   </ColumnName>
                 </Item>
               ))}
-              <ResetLink onClick={this.resetColumnsVisibility}>Reset</ResetLink>
+              <ResetLink onClick={this.resetColumnsVisibility}>
+                {t('i18nSecondSection.i18nTableColumnMenu.reset')}
+              </ResetLink>
             </Container>
           )}
         </Fragment>
@@ -101,6 +115,8 @@ export default class TableColumnMenu extends Component {
 }
 
 TableColumnMenu.propTypes = {
+  t: PropTypes.func,
+  i18n: PropTypes.object,
   tableColumnState: PropTypes.object,
   actions: PropTypes.object,
 };

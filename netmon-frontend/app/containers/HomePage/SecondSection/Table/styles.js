@@ -2,10 +2,14 @@ import styled from 'styled-components';
 
 export const TableContainer = styled.div`
   overflow-x: scroll;
-  width: 770px;
+  width: 100%;
   min-height: 75vh;
   ::-webkit-scrollbar {
     display: none;
+  }
+
+  @media (max-width: 1280px) {
+    max-width: 770px;
   }
 
   @media (max-width: 992px) {

@@ -55,6 +55,7 @@ const composeData = ({ block, max_tps, max_aps, max_tps_block, max_aps_block }) 
     max_tps,
     max_aps,
     max_tps_block,
+    max_aps_block,
   };
 };
 

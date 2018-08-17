@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "description": "CryptoLions.io",
   "scripts": {
-    "start-app": "node ./src/app",
+    "start-app": "node --max-old-space-size=8192 ./src/app",
     "start-routine": "node ./src/routines/index",
     "updateTransactionsWithPM2": "pm2 start ./src/utils/updateTransactions/start.js --name updateTransactions",
     "updateTransactions": "node ./src/utils/updateTransactions/start.js",

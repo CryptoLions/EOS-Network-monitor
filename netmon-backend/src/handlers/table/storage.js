@@ -83,6 +83,7 @@ const createStorage = () => {
           nodes: p.nodes,
           specialNodeEndpoint: p.specialNodeEndpoint,
           rewards_per_day: p.rewards_per_day,
+          lastGoodAnsweredTime: p.lastGoodAnsweredTime,
         }))
         .filter(p => !BLACK_PRODUCERS_LIST.find(b => b.key === p.key));
       if (storage.length === 0) {

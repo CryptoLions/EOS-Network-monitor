@@ -13,6 +13,7 @@ const Producer = new Schema({
   unpaid_blocks: Number,
   last_claim_time: Number,
   location: String,
+  lastGoodAnsweredTime: Date,
   nodes: [Node],
   specialNodeEndpoint: {
     host: { type: String, default: null },

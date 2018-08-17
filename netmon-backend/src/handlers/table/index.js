@@ -45,6 +45,7 @@ const getProducersInfo = async () => {
     votesPercentage: p.total_votes / onePercent,
     votesInEOS: calculateEosFromVotes(p.total_votes),
     rewards_per_day: p.rewards_per_day,
+    lastGoodAnsweredTime: p.lastGoodAnsweredTime,
   }));
 };
 
@@ -95,6 +96,7 @@ const processNodeAndGetInfo = async (host, port, name, nodeId, wasEnabled) => {
   const nowTs = Date.now();
   const ping = nowTs - startTs;
   const version = info.server_version;
+  ProducerModelV2.updateOne({ name }, { lastGoodAnsweredTime: new Date() }).exec();
   return {
     head_block_num: info.head_block_num,
     checked: {

@@ -58,6 +58,7 @@ const init = ({ app, handlers }) => {
           createdAt: { $first: '$createdAt' },
         },
       },
+      { $sort: { block: -1 } },
     ]);
     const correctedHistory = history.filter(e => Object.keys(e).length > 0).slice(0, limit);
     res

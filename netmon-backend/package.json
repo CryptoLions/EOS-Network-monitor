@@ -11,6 +11,7 @@
     "updateTotalTransactionsCount": "node ./src/utils/updateTotalTransactionsCount/start.js",
     "cleanAccountCollectionFromMentionedIn": "node ./src/utils/cleanAccountCollectionFromMentionedIn/start.js",
     "start": "concurrently --names \"APP,ROUTINE\" \"yarn start-app\" \"yarn start-routine\"",
+    "pm2-start": "pm2 start ecosystem.config.js --env production",
     "migrateTransactionToAccount": "pm2 start ./src/migrations/fillTransactionToAccountCollection.js --name tansactionToAccountMigration",
     "updateTransactionToAccount": "node ./src/utils/updateTransactionToAccountCollection/start.js"
   },

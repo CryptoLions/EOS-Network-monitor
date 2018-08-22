@@ -1,14 +1,16 @@
 const {
   GET_INFO_INTERVAL,
+  GET_GENERAL_ADDITIONAL_INFO_INTERVAL,
   LISTENERS: { ON_INFO_CHANGE_INTERVAL },
   LAST_BLOCKS_NUMBER_FOR_CALCULATING_AVG_APS_TPS,
 } = require('config');
 
 const { eosApi, createLogger, castToInt } = require('../../helpers');
 const { StateModelV2 } = require('../../db');
+const getActionsCount = require('../../routines/handleBlock/getActionsCount');
 const getBlockInfo = require('./getBlockInfo');
 
-const { error: logError } = createLogger('INFO_HANDLER');
+const { info: logInfo } = createLogger('INFO_HANDLER');
 
 const blockStorage = {
   max_tps: 0,
@@ -19,16 +21,6 @@ const blockStorage = {
   last_ten_live_tps: [], // its needed for calculating avg aps and tps
   last_ten_live_aps: [], // its needed for calculating avg aps and tps
   replacedNumber: 0, // its needed for calculating avg aps and tps
-};
-
-const getActionsCount = block => {
-  if (block.transactions.length < 1) {
-    return 0;
-  }
-  return block.transactions.reduce(
-    (result, transaction) => result + (transaction.trx.transaction ? transaction.trx.transaction.actions.length : 0),
-    0,
-  );
 };
 
 const avg = arr => {
@@ -84,6 +76,7 @@ const getInfo = async () => {
       ...info.block,
     };
     info = {
+      ...info,
       ...nextInfo,
       block: composeData({
         ...nextInfo,
@@ -94,8 +87,7 @@ const getInfo = async () => {
       }),
     };
   } catch (e) {
-    logError('FAIL');
-    logError(e);
+    logInfo(e);
   }
 
   if (ON_INFO_CHANGE_INTERVAL === 0) {
@@ -103,8 +95,26 @@ const getInfo = async () => {
   }
 };
 
-const initProducerHandler = async () => {
+const getAdditionalInfo = async () => {
+  const { rows: [tableInfo] } =
+    await eosApi.getTableRows({ json: true, scope: 'eosio', code: 'eosio', table: 'global' });
+  const { core_liquid_balance: coreLiquidBalance } = await eosApi.getAccount({ account_name: 'eosio.ramfee' });
+  const [savingTotalBalance] = await eosApi.getCurrencyBalance('eosio.token', 'eosio.saving');
+  const additionalInfo = {
+    maxRamSize: tableInfo.max_ram_size,
+    totalUnpaidBlocks: tableInfo.total_unpaid_blocks,
+    coreLiquidBalance,
+    savingTotalBalance,
+  };
+  info = {
+    ...info,
+    additionalInfo,
+  };
+};
+
+const initInfoHandler = async () => {
   setInterval(getInfo, GET_INFO_INTERVAL);
+  setInterval(getAdditionalInfo, GET_GENERAL_ADDITIONAL_INFO_INTERVAL);
 
   if (ON_INFO_CHANGE_INTERVAL) {
     setInterval(notify, ON_INFO_CHANGE_INTERVAL);
@@ -120,4 +130,4 @@ const initProducerHandler = async () => {
   };
 };
 
-module.exports = initProducerHandler;
+module.exports = initInfoHandler;

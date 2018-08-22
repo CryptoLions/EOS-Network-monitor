@@ -8,6 +8,7 @@ const { StateModelV2 } = require('../../db');
 const extractData = require('../../routines/handleBlock/extractData');
 const findMaxInfo = require('../../routines/handleBlock/findMaxInfo');
 const saveBlockData = require('../../routines/handleBlock/saveBlockData');
+const { SECOND } = require('../../constants');
 
 const { info: logInfo } = createLogger();
 
@@ -47,6 +48,7 @@ const startHandleBlock = async () => {
       await StateModelV2.update({ id: 1 }, { $inc: { 'utils.updateTransactions.lastCheckedBlock': 1 } });
       const block = await eosApi.getBlock(lastCheckedBlock + 1);
       const max = findMaxInfo({ current: block, previous, max_aps, max_tps });
+      block.producedInSeconds = (Date.parse(block.timestamp) - Date.parse(previous.timestamp)) / SECOND;
       previous = block;
       if (max) {
         StateModelV2.update({ id: 1 }, { $set: max }).exec();

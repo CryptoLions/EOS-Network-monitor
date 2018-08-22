@@ -3,11 +3,9 @@ const { APPROXIMATELY_BLOCKS_PRODUCED_PER_DAY } = require('config');
 
 const { ProducerModelV2, StateModelV2 } = require('../../db');
 const { castToInt, createEosApi } = require('../../helpers');
+const { BLOCK_REWARDS_PART, VOTE_REWARDS_PART } = require('../../constants');
 
 const api = createEosApi();
-
-const BLOCK_REWARDS_PART = 0.25;
-const VOTE_REWARDS_PART = 0.75;
 
 const setRewardsToZero = async () => {
   await ProducerModelV2.updateMany({}, { $set: { rewards_per_day: 0, produced_per_day: 0 } }).exec();

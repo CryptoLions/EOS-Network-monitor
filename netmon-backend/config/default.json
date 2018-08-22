@@ -5,17 +5,24 @@
   },
   "NODE": {
     "HOST": "http://bp.cryptolions.io",
-    "PORT": "8888"
+    "PORT": "8888",
+    "ALLOWABLE_MAX_PING": 150 // in ms. When ping is greater than this value, the node will be changed
   },
+  "RESERVE_NODES": [
+    {
+      "HOST": "http://api.eossweden.se",
+      "PORT": "80"
+    }
+  ],
   "MONGODB": {
     "ADDRESS": "mongodb://localhost:27017/",
     "DB_NAME": "MainNet",
     "AUTH_IS_REQUIRED": false,
     "AUTH_SOURCE": "admin",
-    "USER": "user",
-    "PASSWORD": "pass"
+    "USER": "eosdev23",
+    "PASSWORD": "eosdev23"
   },
-  "EOS": { // EOSAPI
+  "EOS": {
     "GET_INFO_API_PATH": "/v1/chain/get_info", // api_get_info
     "GET_BLOCK_API_PATH": "/v1/chain/get_block", // api_get_block
     "ACCOUNT_CREATOR": "eosio", // "lion",
@@ -23,15 +30,17 @@
     "FAUCET_SUME_TOKEN1": "100.0000 EOS",
     "FAUCET_SUME_TOKEN2": "100.0000 JUNGLE"
   },
-  "TELEGRAM": { // TELEGRAM_API
+  "TELEGRAM": {
+    // TELEGRAM_API
     "ENABLED": false,
-    "ID": "XXXXXXXXXXXXXXXXXXXXX",  //telegrem bot ID
-    "CHECK_ATTEMPTS_NUMBER": 3,  // How many error loops before send
-    "INTERVAL_BETWEEN_MESSAGES": 900,  //900sec = 15minutes
+    "ID": "XXXXXXXXXXXXXXXXXXXXX", //telegrem bot ID
+    "CHECK_ATTEMPTS_NUMBER": 3, // How many error loops before send
+    "INTERVAL_BETWEEN_MESSAGES": 900, //900sec = 15minutes
     "URL": "https://api.telegram.org/bot"
   },
   "LOG_CONSOLE": false,
   "GET_INFO_INTERVAL": 250, // Interval between node checking
+  "GET_GENERAL_ADDITIONAL_INFO_INTERVAL": 5000,
   "GET_INFO_TOP21_INTERVAL": 500, // Interval between node checking
   "BLOCK_CHECK_INTERVAL": 50, // Interval between block parsing
   "PRODUCERS_CHECK_INTERVAL": 2000,
@@ -61,10 +70,9 @@
     "ON_INFO_CHANGE_INTERVAL": 0, // in ms, if 0 calls listener when block info change
     "ON_PRODUCERS_INFO_CHANGE_INTERVAL": 1000, // in ms, if 0 calls listener when table info change
     "ON_TOTAL_STACKED_CHANGE_INTERVAL": 1000, // in ms, if 0 calls listener when total stacked info change
-    "ON_TRANSACTIONS_ADD_INTERVAL": 400 // must be greater than 0
+    "ON_TRANSACTIONS_ADD_INTERVAL": 1000 // must be greater than 0
   },
   "API_PREFIX": "/api/v1",
-  "API_PREFIX_V2": "/api/v2",
   "BLACK_PRODUCERS_LIST": [{ "key": "EOS1111111111111111111111111111111114T1Anm" }],
   "TIMESTAMP_EPOCH": 946684800,
   "MAX_TRANSACTIONS_PER_CONNECT_BY_SOCKET": 50,
@@ -72,17 +80,17 @@
   "LAST_BLOCKS_NUMBER_FOR_CALCULATING_AVG_APS_TPS": 20,
   "START_BLOCKS_HANDLING_FROM": 1, // if 0 -> start from last block
   "UPDATE_TRANSACTIONS": {
-    "FROM_BLOCK_NUM": 1,
-    "TO_BLOCK_NUM": 1,
+    "FROM_BLOCK_NUM": 9582205,
+    "TO_BLOCK_NUM": 10026035,
     "DEFAULT_VALUE": -1
   },
-
   "SOCKET_ROOM": "room",
   "KEYSTORE": {
-    "RELOAD_PAGE": "reloadPageKey",
-    "MAIN": "test"
+    "RELOAD_PAGE": "reloadPageCommandKey",
+    "MAIN": "Nescafe"
   },
   "APPROXIMATELY_BLOCKS_PRODUCED_PER_DAY": 172800, // 2 * blocks * 60 sec * 60 m * 24 h
   "RELOAD_PAGE_COOLDAWN": 60000, // not more often than once a minute
-  "BUGSNAG_API_KEY": "xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  "BUGSNAG_API_KEY": "498d2d11464881acc5c63e05481d1535",
+  "SAVE_TABLE_INTERVAL": 10000 // in ms
 }

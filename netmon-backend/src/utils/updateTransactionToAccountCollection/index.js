@@ -2,10 +2,9 @@
 /* eslint no-mixed-operators:0 no-empty:0 */
 const { TransactionModelV2, TransactionToAccountV2 } = require('../../db');
 const { createLogger } = require('../../helpers');
+const { BULK_WRITE_LIMIT } = require('../../constants');
 
 const { info: logInfo } = createLogger();
-
-const BULK_WRITE_LIMIT = 100000;
 
 const start = async () => {
   const startTs = Date.now();

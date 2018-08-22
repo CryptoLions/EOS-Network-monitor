@@ -8,8 +8,10 @@ const {
 const extractData = require('./extractData');
 const findMaxInfo = require('./findMaxInfo');
 const saveBlockData = require('./saveBlockData');
+const processMissedBlocks = require('./processMissedBlocks');
+const { SECOND } = require('../../constants');
 
-const { info: logInfo, error: logError } = createLogger();
+const { info: logInfo } = createLogger();
 
 let previous = {};
 const handleBlock = async () => {
@@ -17,8 +19,15 @@ const handleBlock = async () => {
     const { lastHandledBlock, max_tps, max_aps } = await StateModelV2.findOne({ id: 1 });
     const timeMark = Date.now();
 
+    const { last_irreversible_block_num } = await eosApi.getInfo();
+    if (last_irreversible_block_num <= lastHandledBlock) {
+      setTimeout(handleBlock, 500);
+      return;
+    }
     const block = await eosApi.getBlock(lastHandledBlock + 1);
+    processMissedBlocks({ current: block, previous });
     const max = findMaxInfo({ current: block, previous, max_aps, max_tps });
+    block.producedInSeconds = (Date.parse(block.timestamp) - Date.parse(previous.timestamp)) / SECOND;
     previous = block;
     if (max) {
       await StateModelV2.update({ id: 1 }, { $set: max }).exec();
@@ -29,18 +38,11 @@ const handleBlock = async () => {
     ).exec();
 
     const data = await extractData(block);
-    try {
-      await saveBlockData(data);
-      logInfo(`handleBlock ${lastHandledBlock} ${Date.now() - timeMark} ms`);
+    await saveBlockData(data);
+    logInfo(`handleBlock ${lastHandledBlock} ${Date.now() - timeMark} ms`);
 
-      await StateModelV2.update({ id: 1 }, { $inc: { lastHandledBlock: 1 } });
-
-      handleBlock();
-    } catch (e) {
-      logInfo(`Block data ${lastHandledBlock + 1} not saved`);
-      logError(e);
-      handleBlock();
-    }
+    await StateModelV2.update({ id: 1 }, { $inc: { lastHandledBlock: 1 } });
+    handleBlock();
   } catch (e) {
     if (e.status === 500 && e.statusText === 'Internal Server Error') {
       // Block is not produced yet

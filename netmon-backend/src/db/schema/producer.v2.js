@@ -14,6 +14,10 @@ const Producer = new Schema({
   last_claim_time: Number,
   location: String,
   lastGoodAnsweredTime: Date,
+  isSiteAvailable: Boolean,
+  missedBlocks: { type: Number, default: 0 },
+  lastLoopHeadBlockNumber: Number,
+  blocksLeftInLastLoop: { type: Number, default: 0 },
   nodes: [Node],
   specialNodeEndpoint: {
     host: { type: String, default: null },

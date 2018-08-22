@@ -1,5 +1,4 @@
-const { BUGSNAG_API_KEY } = require('config');
-
+const { BUGSNAG_API_KEY, WHITE_LIST, ENABLE_CORS_SUPPORT, SERVER } = require('config');
 const express = require('express');
 const createSocketIO = require('socket.io');
 const { Server } = require('http');
@@ -8,8 +7,6 @@ const compression = require('compression');
 const bugsnag = require('bugsnag');
 
 bugsnag.register(BUGSNAG_API_KEY, { appVersion: 1 });
-
-const { WHITE_LIST, ENABLE_CORS_SUPPORT, SERVER } = require('config');
 
 const { connect: connectToDb } = require('./db');
 const initHandlers = require('./handlers');

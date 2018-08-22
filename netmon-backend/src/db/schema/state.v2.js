@@ -14,6 +14,7 @@ const Producer = new Schema({
   totalTransactionsCount: { type: Number, default: 0 },
   lastRewardsSetToZeroAt: { type: Date, default: new Date(0) },
   produced_per_day: { type: Number, default: 0 },
+  table: {},
   adminData: {
     frontendPageReloadAt: { type: Date, default: 0 },
   },

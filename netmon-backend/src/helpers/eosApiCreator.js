@@ -17,10 +17,13 @@ module.exports = ({ host = NODE.HOST, port = NODE.PORT } = {}) => {
 
   const changeNode = () => {
     currentNodeIndex += 1;
-    if (currentNodeIndex === nodes.length) {
+    if (currentNodeIndex >= nodes.length) {
       currentNodeIndex = 0;
     }
     const currentNode = nodes[currentNodeIndex];
+    if (!currentNode) {
+      return;
+    }
     eos = EosApi({ httpEndpoint: `${currentNode.HOST}:${currentNode.PORT}`, logger });
     logInfo(`Node was changed on ${currentNode.HOST}:${currentNode.PORT}`);
   };
@@ -63,16 +66,25 @@ module.exports = ({ host = NODE.HOST, port = NODE.PORT } = {}) => {
     }
     return res;
   };
-  return {
-    ...eos,
-    getBlock: async (args) => {
-      const startTs = Date.now();
+  const getBlock = async (args) => {
+    const startTs = Date.now();
+    try {
       const res = await eos.getBlock(args);
       if ((Date.now() - startTs) > NODE.ALLOWABLE_MAX_PING) {
         changeNode();
       }
       return res;
-    },
+    } catch (e) {
+      if (isVariable) {
+        changeNode();
+        return getBlock(args);
+      }
+      return getBlock(args);
+    }
+  };
+  return {
+    ...eos,
+    getBlock,
     getInfo,
   };
 };

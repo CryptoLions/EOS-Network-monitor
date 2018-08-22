@@ -4,20 +4,29 @@ const {
   GET_INFO_INTERVAL,
   GET_INFO_TOP21_INTERVAL,
   TIMESTAMP_EPOCH,
+  SAVE_TABLE_INTERVAL,
   LISTENERS: { ON_PRODUCERS_INFO_CHANGE_INTERVAL },
 } = require('config');
 
-const { ProducerModelV2 } = require('../../db');
+const { ProducerModelV2, StateModelV2 } = require('../../db');
 
 const { createEosApi, eosApi, castToInt, createLogger } = require('../../helpers');
+const { SERVER_NOT_FOUND, CHECK_URLS, CONNECTION_REFUSED_BY_SERVER } = require('../../constants');
 const createStorage = require('./storage');
 
 const { info: logInfo, error: logError } = createLogger();
 
-const CONNECTION_REFUSED_BY_SERVER = 'ECONNREFUSED';
-const SERVER_NOT_FOUND = 'ENOTFOUND';
+const saveTable = storage => async () => {
+  const table = storage.getAll();
+  StateModelV2.updateOne({ id: 1 }, { table }).exec();
+};
 
-const CHECK_URLS = ['https_server_address', 'http_server_address', 'p2p_server_address'];
+const restoreTable = async storage => {
+  const state = await StateModelV2.findOne({ id: 1 }).select('table');
+  if (state && state.table) {
+    storage.replaceAll(state.table);
+  }
+};
 
 const calculateEosFromVotes = votes => {
   const date = Date.now() / 1000 - TIMESTAMP_EPOCH;
@@ -46,6 +55,8 @@ const getProducersInfo = async () => {
     votesInEOS: calculateEosFromVotes(p.total_votes),
     rewards_per_day: p.rewards_per_day,
     lastGoodAnsweredTime: p.lastGoodAnsweredTime,
+    isSiteAvailable: p.isSiteAvailable,
+    missedBlocks: p.missedBlocks,
   }));
 };
 
@@ -211,9 +222,13 @@ const initProducerHandler = async () => {
     }
 
     serialNumber[producersType] =
-      producers.length === serialNumber[producersType] ? 1 : serialNumber[producersType] + 1;
+      producers.length <= serialNumber[producersType] ? 1 : serialNumber[producersType] + 1;
 
-    const { nodes, specialNodeEndpoint, name } = producers[serialNumber[producersType] - 1];
+    const producer = producers[serialNumber[producersType] - 1];
+    if (!producer) {
+      return;
+    }
+    const { nodes, specialNodeEndpoint, name } = producer;
 
     if (specialNodeEndpoint && specialNodeEndpoint.use) {
       const { host, port } = specialNodeEndpoint;
@@ -222,8 +237,7 @@ const initProducerHandler = async () => {
         storage.updateNodeInfo(info);
         return;
       } catch (e) {
-        logInfo(`Special endpoint of ${name} does not work`);
-        logError(e);
+        logError(`Special endpoint of ${name} does not work`);
       }
     }
 
@@ -235,13 +249,15 @@ const initProducerHandler = async () => {
       storage.updateNodeInfo(info);
     } catch (e) {
       logInfo(`Info of ${name} not received`);
-      logError(e);
     }
   };
+
+  await restoreTable(storage);
 
   setInterval(checkProducers, PRODUCERS_CHECK_INTERVAL);
   setInterval(checkInfo('other'), GET_INFO_INTERVAL);
   setInterval(checkInfo('top'), GET_INFO_TOP21_INTERVAL);
+  setInterval(saveTable(storage), SAVE_TABLE_INTERVAL);
 
   if (ON_PRODUCERS_INFO_CHANGE_INTERVAL !== 0) {
     setInterval(notify, ON_PRODUCERS_INFO_CHANGE_INTERVAL);

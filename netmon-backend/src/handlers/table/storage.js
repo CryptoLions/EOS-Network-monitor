@@ -84,6 +84,8 @@ const createStorage = () => {
           specialNodeEndpoint: p.specialNodeEndpoint,
           rewards_per_day: p.rewards_per_day,
           lastGoodAnsweredTime: p.lastGoodAnsweredTime,
+          isSiteAvailable: p.isSiteAvailable,
+          missedBlocks: p.missedBlocks,
         }))
         .filter(p => !BLACK_PRODUCERS_LIST.find(b => b.key === p.key));
       if (storage.length === 0) {
@@ -156,6 +158,9 @@ const createStorage = () => {
       const res = Object.values(updated);
       updated = {};
       return res;
+    },
+    replaceAll(table) {
+      storage = table;
     },
   };
 };

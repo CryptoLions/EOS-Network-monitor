@@ -1,15 +1,14 @@
-const getActionsCount = block => {
-  if (block.transactions.length < 1) {
-    return 0;
-  }
-  return block.transactions.reduce(
-    (result, transaction) => result + (transaction.trx.transaction ? transaction.trx.transaction.actions.length : 0),
-    0,
-  );
-};
+/* eslint-disable no-param-reassign */
+const getActionsCount = require('./getActionsCount');
+const { createEosApi } = require('../../helpers');
+const { SECOND } = require('../../constants');
 
-const findMaxInfo = ({ current = { transactions: [] }, previous = {}, max_tps = 0, max_aps = 0 }) => {
-  const SECOND = 1000;
+const eosApi = createEosApi();
+
+const findMaxInfo = async ({ current = { transactions: [] }, previous, max_tps = 0, max_aps = 0 }) => {
+  if (!previous) {
+    previous = await eosApi.getBlock(current.block_num - 1);
+  }
   const currentTs = Date.parse(current.timestamp);
   const previousTs = Date.parse(previous.timestamp);
   if (currentTs === previousTs) {
@@ -17,14 +16,25 @@ const findMaxInfo = ({ current = { transactions: [] }, previous = {}, max_tps = 
   }
   let live_tps;
   let live_aps;
+  // the block was produced in one second or more
   if (currentTs - previousTs >= SECOND) {
-    live_tps = current.transactions.length;
-    live_aps = getActionsCount(current);
+    const transactionsNumber = current.transactions.length;
+    const actionsNumber = getActionsCount(current);
+    const producedInSeconds = (currentTs - previousTs) / SECOND;
+    live_tps = transactionsNumber / producedInSeconds;
+    live_aps = actionsNumber / producedInSeconds;
   } else {
-    live_tps = current.transactions.length + (previous.transactions ? previous.transactions.length : 0);
-    live_aps = getActionsCount(current) + (previous.transactions ? getActionsCount(previous) : 0);
-  }
+    // the block was produced in half of second
+    // find number of transactions for 0.5 sec for previous block
+    if (!previous.producedInSeconds) {
+      const beforePrevious = await eosApi.getBlock(previous.block_num - 1);
+      previous.producedInSeconds = (Date.parse(previous.timestamp) - Date.parse(beforePrevious.timestamp)) / SECOND;
+    }
+    const previousTransactionsNumber = current.transactions.length;
 
+    live_tps = current.transactions.length + (previousTransactionsNumber / previous.producedInSeconds / 2);
+    live_aps = getActionsCount(current) + (getActionsCount(previous) / previous.producedInSeconds / 2);
+  }
   const res = {};
   if (live_tps > max_tps) {
     res.max_tps = live_tps;
@@ -32,7 +42,6 @@ const findMaxInfo = ({ current = { transactions: [] }, previous = {}, max_tps = 
   }
   if (live_aps > max_aps) {
     res.max_aps = live_aps;
-    res.max_aps_block = current.block_num;
   }
   if (res.max_aps || res.max_tps) {
     return res;

@@ -7,3 +7,6 @@ export const selectTpsApsStats = () => createSelector(selectGeneralStats(), ({ t
 export const selectConnectedUsers = () => createSelector(selectGeneralStats(), ({ connectedUsers }) => connectedUsers);
 
 export const selectLastBlockStats = () => createSelector(selectGeneralStats(), ({ lastBlockStats }) => lastBlockStats);
+
+export const selectHeadBlockNum = () =>
+  createSelector(selectGeneralStats(), ({ lastBlockStats }) => lastBlockStats.head_block_num);

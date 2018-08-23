@@ -1,3 +1,5 @@
+import EosApi from 'eosjs-api';
+
 export const URL = 'http://eosnetworkmonitor.io:3000';
 // export const URL = 'http://51.15.208.65:3010';
 // export const URL = 'http://localhost:3002';
@@ -12,3 +14,8 @@ export const API_KEY = 'AIzaSyBJrgbdsOfzPMKQFcsnXJHtbwxlVglXkVw';
 export const TRANSACTIONS_LIMIT = 50;
 
 export const HISTORY_ITEMS_PER_PAGE = 10;
+
+// Eos API
+export const EOS = EosApi({
+  httpEndpoint: 'http://bp.cryptolions.io:8888',
+});

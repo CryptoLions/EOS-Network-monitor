@@ -6,7 +6,7 @@ import store from 'store';
 import svg from './svg/alarm.svg';
 
 // Styles
-import { Container, Notification, ImgSvg, TextSpan, TextSpanBold, Cross } from './styles';
+import { Container, Notification, TextSpan, StyledLink, Cross } from './styles';
 
 const NOTIFICATION_ID = 3;
 
@@ -26,11 +26,13 @@ export default class Notifications extends PureComponent {
       NOTIFICATION_ID > closedNotificationId && (
         <Container>
           <Notification>
-            <ImgSvg src={svg} alt="nice" />
+            {/* <ImgSvg src={svg} alt="nice" />{' '} */}
             <TextSpan>
-              <TextSpanBold>NOTE:</TextSpanBold>
-              EOS Network Monitor 2.0 is Syncing. Some data (like tps/aps all time high) will be updated as we sync with
-              the chain.
+              {/* <TextSpanBold>Note:</TextSpanBold>{' '} */}
+              New version:{' '}
+              <StyledLink href="https://github.com/CryptoLions/EOS-Network-monitor/" target="__blank">
+                v2.0.20180823
+              </StyledLink>
             </TextSpan>
           </Notification>
           <Cross onClick={this.hideNotification} />

@@ -42,7 +42,10 @@ export default class GeneralInfo extends PureComponent {
               <TextSpan>
                 {t('i18nFirstSection.i18nGeneralInfo.aps')}:{' '}
                 <GreenSpan>
-                  {tpsApsStats.liveAps} / {tpsApsStats.maxAps}
+                  {tpsApsStats.liveAps} /{' '}
+                  <GreenLink onClick={() => toggleModal('blockInfo', tpsApsStats.maxApsBlock)}>
+                    {tpsApsStats.maxAps}
+                  </GreenLink>
                 </GreenSpan>
               </TextSpan>
               <TextSpan>

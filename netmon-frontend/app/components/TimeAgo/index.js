@@ -1,6 +1,8 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+
+import { StyledSpan } from './styles';
 
 class TimeAgo extends Component {
   constructor(props) {
@@ -40,8 +42,9 @@ class TimeAgo extends Component {
     }, 2000);
   };
 
-  getHumanTimeAgo = value => {
+  getHumanTimeAgo = () => {
     const { ts } = this.state;
+    const { value, type } = this.props;
 
     if (!value) {
       return '--';
@@ -52,7 +55,11 @@ class TimeAgo extends Component {
       return '0sec';
     }
     if (diff < 60000) {
-      return `${Math.floor(diff / 1000)}sec`;
+      return (
+        <StyledSpan color={diff >= 15000 && type === 'answered' ? '#f2d24b' : undefined}>{`${Math.floor(
+          diff / 1000
+        )}sec`}</StyledSpan>
+      );
     }
     const duration = moment.duration(ts - value);
     const hours = Math.floor(duration.asHours());
@@ -61,18 +68,21 @@ class TimeAgo extends Component {
     if (!hours && !minutes && !seconds) {
       return '0sec';
     }
-    return `${hours ? `${hours}h ` : ''}${minutes ? `${minutes}m ` : ''}${seconds ? `${seconds}sec ` : ''}`;
+    return (
+      <StyledSpan color={type === 'answered' ? '#ff5456' : undefined}>{`${hours ? `${hours}h ` : ''}${
+        minutes ? `${minutes}m ` : ''
+      }${seconds ? `${seconds}sec ` : ''}`}</StyledSpan>
+    );
   };
 
   render() {
-    const { value } = this.props;
-
-    return this.getHumanTimeAgo(value);
+    return this.getHumanTimeAgo();
   }
 }
 
 TimeAgo.propTypes = {
   value: PropTypes.number,
+  type: PropTypes.string,
 };
 
 export default TimeAgo;

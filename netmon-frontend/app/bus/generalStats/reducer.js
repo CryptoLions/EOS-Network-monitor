@@ -42,6 +42,7 @@ export const generalStatsReducer = (state = initialState, { type, payload }) => 
           maxTpsBlock: payload.max_tps_block,
           liveTps: payload.live_tps,
           maxAps: payload.max_aps,
+          maxApsBlock: payload.max_aps_block,
           liveAps: payload.live_aps,
         },
       };

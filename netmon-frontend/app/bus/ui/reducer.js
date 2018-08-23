@@ -21,6 +21,7 @@ const DEFAULT_COLUMNS_STATE = {
   txs: false,
   organisation: false,
   votes: true,
+  expectedIncome: false,
 };
 
 const initialState = {

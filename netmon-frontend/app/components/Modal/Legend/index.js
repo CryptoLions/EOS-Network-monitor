@@ -18,7 +18,6 @@ import {
   ColorDescDash,
   Green,
   Red,
-  Yellow,
   Purple,
   Grey,
   NoteDiv,
@@ -67,9 +66,6 @@ export default class Legend extends PureComponent {
               <Red />
               <ColorDescDash>-</ColorDescDash>
               {t('i18nModal.i18nLegend.noResponse')}.
-            </ColorDiv>
-            <ColorDiv>
-              <Yellow /> - {t('i18nModal.i18nLegend.otherVersion')}.
             </ColorDiv>
             <ColorDesc>{t('i18nModal.i18nLegend.versionInformation')}</ColorDesc>
             <ColorDiv>

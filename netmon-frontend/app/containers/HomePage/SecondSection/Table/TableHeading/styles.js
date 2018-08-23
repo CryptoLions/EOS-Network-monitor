@@ -11,6 +11,7 @@ export const Tdata = styled.td`
   height: 35px;
   color: #747474;
   text-align: center;
+  white-space: nowrap;
 `;
 
 export const ColumnMenuTdata = styled.td`

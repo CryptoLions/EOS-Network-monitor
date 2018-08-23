@@ -37,6 +37,9 @@ export default class TableHeading extends PureComponent {
           )}
           {tableColumnState.organisation && <Tdata>{t('i18nSecondSection.i18nTableColumnNames.organisation')}</Tdata>}
           {tableColumnState.votes && <Tdata>{t('i18nSecondSection.i18nTableColumnNames.votes')}</Tdata>}
+          {tableColumnState.expectedIncome && (
+            <Tdata>{t('i18nSecondSection.i18nTableColumnNames.expectedIncome')}</Tdata>
+          )}
           <ColumnMenuTdata>
             <TableColumnMenu />
           </ColumnMenuTdata>

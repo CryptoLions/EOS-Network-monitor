@@ -18,6 +18,7 @@ import { producerActions } from '../../../../bus/producers/actions';
 // Selectors
 import { selectProducers, selectFilterInputValue, selectCheckedProducers } from '../../../../bus/producers/selectors';
 import { selectTableColumnState } from '../../../../bus/ui/selectors';
+import { selectHeadBlockNum } from '../../../../bus/generalStats/selectors';
 
 // Utils
 import renderEnhancer from '../../../../hoc/renderEnhancer';
@@ -34,6 +35,8 @@ const mapStateToProps = createStructuredSelector({
   selectedProducers: selectCheckedProducers(),
   // Filter table value
   filterInputValue: selectFilterInputValue(),
+  // CurrentBlockInfo
+  headBlockNum: selectHeadBlockNum(),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -51,9 +54,20 @@ const mapDispatchToProps = dispatch => ({
   mapDispatchToProps
 )
 class Table extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.tableContainer = React.createRef();
+    this.table = React.createRef();
+    this.tableContainerToggler = false;
+  }
+
   state = {
     colsNumber: null,
   };
+
+  componentDidMount() {
+    this.tableContainerToggler = this.tableContainer.current.offsetHeight > 2000;
+  }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.selectedProducers.length !== this.props.selectedProducers.length)
@@ -71,8 +85,15 @@ class Table extends PureComponent {
   }
 
   componentDidUpdate() {
+    const isTableContainerFiltered = this.tableContainer.current.offsetHeight > 2000;
+
+    if (isTableContainerFiltered !== this.tableContainerToggler) {
+      this.tableContainerToggler = isTableContainerFiltered;
+      this.tableContainer.current.style.paddingTop = isTableContainerFiltered ? '0' : '90vh';
+    }
+
     if (this.visibleColumnsChanged) {
-      this.tableContainer.scrollLeft = this.table.offsetWidth - this.tableContainer.offsetWidth;
+      this.tableContainer.current.scrollLeft = this.table.current.offsetWidth - this.tableContainer.current.offsetWidth;
       this.visibleColumnsChanged = false;
     }
   }
@@ -95,6 +116,7 @@ class Table extends PureComponent {
     const {
       producers,
       tableColumnState,
+      headBlockNum,
       actions: { toggleModal, toggleProducerSelection },
       selectedProducers,
       filterInputValue,
@@ -105,17 +127,9 @@ class Table extends PureComponent {
 
     return (
       <Fragment>
-        {/* @TODO redesign */}
-        <TableContainer
-          innerRef={el => {
-            this.tableContainer = el;
-          }}
-        >
-          <TableTag
-            innerRef={el => {
-              this.table = el;
-            }}
-          >
+        <TableContainer innerRef={this.tableContainer}>
+          {!filteredProducers.length && <NoDataDiv>No data found</NoDataDiv>}
+          <TableTag innerRef={this.table}>
             <TableHeading tableColumnState={tableColumnState} />
             <tbody>
               {filteredProducers.length !== 0 &&
@@ -126,6 +140,7 @@ class Table extends PureComponent {
                       producer={producer}
                       isNodeChecked={selectedProducers.some(item => item === producer.name)}
                       tableColumnState={tableColumnState}
+                      headBlockNum={headBlockNum}
                       toggleModal={toggleModal}
                       toggleProducerSelection={toggleProducerSelection}
                       colsNumber={colsNumber}
@@ -134,7 +149,6 @@ class Table extends PureComponent {
                 ))}
             </tbody>
           </TableTag>
-          {!filteredProducers.length && <NoDataDiv>No data found</NoDataDiv>}
         </TableContainer>
       </Fragment>
     );
@@ -145,6 +159,7 @@ Table.propTypes = {
   producers: PropTypes.array,
   selectedProducers: PropTypes.array,
   tableColumnState: PropTypes.object,
+  headBlockNum: PropTypes.number,
   actions: PropTypes.object,
   filterInputValue: PropTypes.string,
 };

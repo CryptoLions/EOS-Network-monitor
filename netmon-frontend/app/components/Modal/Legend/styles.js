@@ -50,7 +50,7 @@ export const TextSpan = styled.span`
 `;
 
 export const GreyText = styled.span`
-  color: rgb(211, 211, 211);
+  color: #84878b;
 `;
 
 export const ColorDescDash = styled.span`

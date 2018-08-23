@@ -1,11 +1,29 @@
 import styled from 'styled-components';
 
 export const TableContainer = styled.div`
-  overflow-x: scroll;
+  overflow-x: auto;
   width: 100%;
   min-height: 75vh;
-  ::-webkit-scrollbar {
-    display: none;
+  transform: rotateX(180deg);
+  padding-top: 100vh;
+
+  & ::-webkit-scrollbar {
+    height: 10px;
+    background-color: rgb(178, 216, 155, 1);
+  }
+
+  & ::-webkit-scrollbar:horizontal {
+    position: top;
+  }
+
+  & ::-webkit-scrollbar-thumb {
+    border: 1px solid rgb(255, 255, 255, 0.7);
+    background: rgb(11, 126, 61, 1);
+    border-radius: 5px;
+  }
+
+  & ::-webkit-scrollbar-thumb:hover {
+    background: rgb(11, 126, 61, 0.7);
   }
 
   @media (max-width: 1280px) {
@@ -18,6 +36,7 @@ export const TableContainer = styled.div`
 `;
 
 export const TableTag = styled.table`
+  transform: rotateX(180deg);
   min-width: 100%;
 `;
 
@@ -59,7 +78,7 @@ export const NoDataDiv = styled.div`
   width: 100%;
   padding: 20px 0px;
   background-color: rgb(255, 255, 255, 0.7);
-
+  transform: rotateX(180deg);
   font-size: 18px;
   font-weight: 500;
   color: #747474;

@@ -1,6 +1,6 @@
 // Instruments
 import types from './types';
-import { URL, HISTORY_ITEMS_PER_PAGE } from '../../constants';
+import { URL, HISTORY_ITEMS_PER_PAGE, EOS } from '../../constants';
 
 export const modalActions = Object.freeze({
   fetchAccountInfo: producerName => async dispatch => {
@@ -30,12 +30,11 @@ export const modalActions = Object.freeze({
   fetchBlockInfo: blockNum => async dispatch => {
     dispatch({ type: types.FETCHING_BLOCK_INFO });
 
-    const response = await fetch(`${URL}/api/v1/blocks/${blockNum}`);
-    const data = await response.json();
+    const response = await EOS.getBlock(blockNum);
 
     return dispatch({
       type: types.FETCHING_BLOCK_INFO_SUCCESS,
-      payload: data,
+      payload: response,
     });
   },
 

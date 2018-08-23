@@ -44,3 +44,7 @@ export const Cross = styled.div`
     color: red;
   }
 `;
+
+export const StyledLink = styled.a`
+  color: #fff;
+`;

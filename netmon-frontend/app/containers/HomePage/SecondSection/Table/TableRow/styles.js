@@ -29,13 +29,13 @@ export const IndexCell = Cell.extend`
 `;
 
 export const VotesCell = Cell.extend`
-  width: 135px;
+  width: 155px;
   min-width: 155px;
 `;
 
-export const OrganisationCell = Cell.extend`
-  width: 250px;
-  min-width: 250px;
+export const OrgNameCell = Cell.extend`
+  width: 200px;
+  min-width: 200px;
 `;
 
 export const NameCell = Cell.extend`
@@ -69,13 +69,17 @@ export const ArrowCell = Cell.extend`
 
 // Ping
 export const PingCell = Cell.extend`
-  width: 50px;
-  min-width: 50px;
+  width: 150px;
+  min-width: 150px;
 `;
 
 export const PingSpan = styled.span`
   font-size: 14px;
   color: ${({ isPingUptated }) => (isPingUptated ? '#000' : '#84878b')};
+`;
+
+export const StyledSpan = styled.span`
+  color: ${props => props.color};
 `;
 
 // time ago

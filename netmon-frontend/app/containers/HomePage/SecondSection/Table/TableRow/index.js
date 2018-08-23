@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 
 // Components
 import TimeAgo from '../../../../../components/TimeAgo';
+import ServerAddress from '../../../../../components/ServerAddress';
 import DetailsRow from '../DetailsRow';
 
 // Utils
@@ -24,10 +25,11 @@ import {
   CheckboxCell,
   IndexCell,
   VotesCell,
-  OrganisationCell,
+  OrgNameCell,
   // Ping
   PingCell,
   PingSpan,
+  StyledSpan,
   NameCell,
   TimeAgoCell,
   ArrowCell,
@@ -80,24 +82,61 @@ export default class TableRow extends PureComponent {
     return <VersionCell />;
   };
 
-  serverAddressHandler = (https, http, p2pHostname) => {
-    const [hostname, port] = (https || http || '').split(':');
+  extractCorrectAddress = nodes => {
+    if (!nodes) {
+      return '';
+    }
+    for (let i = 0; i < nodes.length; i += 1) {
+      const node = nodes[i];
+      const [p2pHostname] = (node.p2p_server_address || '').split(':');
+      if (p2pHostname) {
+        return p2pHostname;
+      }
+      const [httpHostname] = (node.http_server_address || '').split(':');
+      if (httpHostname) {
+        return httpHostname;
+      }
+      const [httpsHostname] = (node.https_server_address || '').split(':');
+      if (httpsHostname) {
+        return httpsHostname;
+      }
+    }
+    return '';
+  };
 
-    return (
-      <span>
-        {hostname && port ? (
-          <TextLink
-            href={`${https ? 'https' : 'http'}://${
-              hostname === '0.0.0.0' ? p2pHostname : hostname
-            }:${port}/v1/chain/get_info`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {port}
-          </TextLink>
-        ) : null}
-      </span>
-    );
+  pingColorsHandler = () => {
+    const { producer } = this.props;
+
+    if (producer.ping) {
+      return <StyledSpan color={producer.ping > 1000 ? '#f2d24b' : undefined}>{`${producer.ping}ms`}</StyledSpan>;
+    }
+    return <StyledSpan color="#ff5456">--</StyledSpan>;
+  };
+
+  blkSeenColorsHandler = () => {
+    const { producer, headBlockNum } = this.props;
+    const difference = headBlockNum - producer.answeredBlock;
+    let color;
+    if (difference > 252) {
+      color = '#ff5456';
+    } else if (difference > 126) {
+      color = '#f2d24b';
+    }
+    return <StyledSpan color={color}>{producer.answeredBlock}</StyledSpan>;
+  };
+
+  extractCorrectP2pPort = nodes => {
+    if (!nodes) {
+      return '';
+    }
+    for (let i = 0; i < nodes.length; i += 1) {
+      const node = nodes[i];
+      const port = (node.p2p_server_address || '').split(':')[1];
+      if (port && port.length > 0) {
+        return port;
+      }
+    }
+    return '';
   };
 
   toggleProducerSelection = e => {
@@ -112,9 +151,11 @@ export default class TableRow extends PureComponent {
     const { isPingUptated, isArrowClicked } = this.state;
     const { producer, index, tableColumnState, toggleModal, isNodeChecked, colsNumber } = this.props;
     const node = producer.nodes && producer.nodes.length ? producer.nodes[0] : {};
+    const { nodes } = producer;
 
     const producerUrl = this.getProducerUrl();
-    const [p2pHostname, p2pPort] = (node.p2p_server_address || '').split(':');
+    const p2pPort = this.extractCorrectP2pPort(nodes);
+    const address = this.extractCorrectAddress(nodes);
 
     let backgroundColor;
     if (producer.isCurrentNode) backgroundColor = 'rgb(17, 168, 39, 0.7)';
@@ -135,7 +176,7 @@ export default class TableRow extends PureComponent {
           <IndexCell>{producer.index + 1}</IndexCell>
           {tableColumnState.ping && (
             <PingCell>
-              <PingSpan isPingUptated={isPingUptated}>{`${producer.ping || '--'}ms`}</PingSpan>
+              <PingSpan isPingUptated={isPingUptated}>{this.pingColorsHandler()}</PingSpan>
             </PingCell>
           )}
           {/* {1.Name} */}
@@ -149,17 +190,17 @@ export default class TableRow extends PureComponent {
           {tableColumnState.answered && (
             <TimeAgoCell>
               <TimeAgoBlock>
-                <TimeAgo value={producer.answeredTimestamp} />
+                <TimeAgo value={producer.answeredTimestamp} type="answered" />
               </TimeAgoBlock>
             </TimeAgoCell>
           )}
           {/* {3.Blk seen} */}
-          {tableColumnState.blkSeen && <Tdata>{producer.answeredBlock}</Tdata>}
+          {tableColumnState.blkSeen && <Tdata>{this.blkSeenColorsHandler()}</Tdata>}
           {/* {4.Produced} */}
           {tableColumnState.produced && (
             <TimeAgoCell>
               <TimeAgoBlock>
-                <TimeAgo value={producer.producedTimestamp} />
+                {producer.isCurrentNode ? '0sec' : <TimeAgo value={producer.producedTimestamp} />}
               </TimeAgoBlock>
             </TimeAgoCell>
           )}
@@ -168,10 +209,12 @@ export default class TableRow extends PureComponent {
           {/* {6.Version} */}
           {tableColumnState.version && this.versionColorsHandler()}
           {/* {7.Address} */}
-          {tableColumnState.address && <AddressCell>{p2pHostname}</AddressCell>}
+          {tableColumnState.address && <AddressCell>{address}</AddressCell>}
           {/* {8.HTTP} */}
           {tableColumnState.http && (
-            <Tdata>{this.serverAddressHandler(node.https_server_address, node.http_server_address, p2pHostname)}</Tdata>
+            <Tdata>
+              <ServerAddress nodes={nodes} />
+            </Tdata>
           )}
           {/* {9.P2P} */}
           {tableColumnState.p2p && <Tdata>{p2pPort}</Tdata>}
@@ -179,15 +222,15 @@ export default class TableRow extends PureComponent {
           {tableColumnState.location && <Tdata>{node.location}</Tdata>}
           {/* {11.# produced} */}
           {tableColumnState.numberProduced && <Tdata>{producer.produced}</Tdata>}
-          {/* {12.TXs} */}
+          {/* {12.# TXs} */}
           {tableColumnState.txs && <Tdata>{producer.tx_count}</Tdata>}
-          {/* {13.Organisation} */}
+          {/* {13.Org Name} */}
           {tableColumnState.organisation && (
-            <OrganisationCell>
+            <OrgNameCell>
               <TextLink href={producerUrl} target="_blank" rel="noopener noreferrer">
                 {node.organisation}
               </TextLink>
-            </OrganisationCell>
+            </OrgNameCell>
           )}
           {/* {14.Votes} */}
           {tableColumnState.votes && (
@@ -195,6 +238,8 @@ export default class TableRow extends PureComponent {
               {formatNumber(producer.votesInEOS)} <TextSpan>{`${formatNumber(producer.votesPercentage)}%`}</TextSpan>
             </VotesCell>
           )}
+          {/* {15.Expected income} */}
+          {tableColumnState.expectedIncome && <VotesCell>{formatNumber(producer.rewards_per_day)} </VotesCell>}
           <ArrowCell onClick={this.toggleArrowRotate}>
             <DownArrow isArrowClicked={isArrowClicked} />
           </ArrowCell>
@@ -206,10 +251,8 @@ export default class TableRow extends PureComponent {
             producer={producer}
             toggleModal={toggleModal}
             producerUrl={producerUrl}
-            p2pHostname={p2pHostname}
+            address={address}
             p2pPort={p2pPort}
-            node={node}
-            serverAddressHandler={this.serverAddressHandler}
           />
         )}
       </Fragment>
@@ -221,6 +264,7 @@ TableRow.propTypes = {
   producer: PropTypes.object,
   index: PropTypes.number,
   tableColumnState: PropTypes.object,
+  headBlockNum: PropTypes.number,
   toggleModal: PropTypes.func,
   toggleProducerSelection: PropTypes.func,
   isNodeChecked: PropTypes.bool,

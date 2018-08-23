@@ -153,12 +153,19 @@ export default class Vote extends PureComponent {
         </Header>
         <MainContainer>
           <TextSpan>
-            {t('i18nModal.i18nVote.byProceedingYouAgreeToAbideByThe')}{' '}
-            <Link href="#" target="_blank">
+            {t('i18nModal.i18nVote.byCompletingThisAction')}{' '}
+            <Link
+              href="https://github.com/EOS-Mainnet/governance/blob/master/eosio.system/eosio.system-clause-constitution-rc.md"
+              target="_blank"
+            >
               {t('i18nModal.i18nVote.eosConstitution')}
             </Link>
             .
           </TextSpan>
+          <TextSpan>{t('i18nModal.i18nVote.theIntentOf')} </TextSpan>
+          <TextSpan>{t('i18nModal.i18nVote.iAmEitherThe')} </TextSpan>
+          <TextSpan>{t('i18nModal.i18nVote.iStipulateThat')} </TextSpan>
+          <TextSpan>{t('i18nModal.i18nVote.iStipulateThatIAmNot')} </TextSpan>
           <TextSpan>
             {t('i18nModal.i18nVote.thisFeatureWas')}{' '}
             <Link href="https://github.com/CryptoLions/EOS-MainNet/blob/master/cleos.sh" target="_blank">

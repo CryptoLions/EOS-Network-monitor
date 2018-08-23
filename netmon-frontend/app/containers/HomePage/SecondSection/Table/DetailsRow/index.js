@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 // Components
 import TimeAgo from '../../../../../components/TimeAgo';
+import ServerAddress from '../../../../../components/ServerAddress';
 
 // Utils
 import { formatNumber } from '../../../../../utils/intUtils';
@@ -41,17 +42,8 @@ export default class DetailsRow extends PureComponent {
   };
 
   render() {
-    const {
-      colsNumber,
-      isPingUptated,
-      producer,
-      toggleModal,
-      producerUrl,
-      p2pHostname,
-      p2pPort,
-      node,
-      serverAddressHandler,
-    } = this.props;
+    const { colsNumber, isPingUptated, producer, toggleModal, producerUrl, address, p2pPort } = this.props;
+    const node = producer.nodes && producer.nodes.length ? producer.nodes[0] : {};
     return (
       <Trow>
         <td colSpan={colsNumber + 3}>
@@ -96,11 +88,13 @@ export default class DetailsRow extends PureComponent {
               </DetailsListItem>
               <DetailsListItem>
                 Address:
-                <Bold>{p2pHostname}</Bold>
+                <Bold>{address}</Bold>
               </DetailsListItem>
               <DetailsListItem>
                 HTTP:
-                <Bold>{serverAddressHandler(node.https_server_address, node.http_server_address, p2pHostname)}</Bold>
+                <Bold>
+                  <ServerAddress nodes={producer.nodes} />
+                </Bold>
               </DetailsListItem>
               <DetailsListItem>
                 P2P:
@@ -121,7 +115,7 @@ export default class DetailsRow extends PureComponent {
                 <Bold>{producer.tx_count}</Bold>
               </DetailsListItem>
               <DetailsListItem>
-                Organisation:
+                Org Name:
                 <Bold>
                   <TextLink href={producerUrl} target="_blank" rel="noopener noreferrer">
                     {node.organisation}
@@ -157,10 +151,8 @@ DetailsRow.propTypes = {
   colsNumber: PropTypes.number,
   isPingUptated: PropTypes.bool,
   producer: PropTypes.object,
-  node: PropTypes.object,
+  address: PropTypes.string,
   toggleModal: PropTypes.func,
-  serverAddressHandler: PropTypes.func,
   producerUrl: PropTypes.string,
-  p2pHostname: PropTypes.string,
   p2pPort: PropTypes.string,
 };

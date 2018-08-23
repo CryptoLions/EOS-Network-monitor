@@ -109,7 +109,6 @@ export default Object.freeze({
         colorsLegend: 'COLORS LEGEND',
         producingRightNow: 'producing right now',
         noResponse: 'No response from public API endpoint (Does not necessarily mean that producers node is down)',
-        otherVersion: 'Other version',
         versionInformation: `Version information is obtained from querying public nodes. Block producing nodes are usually hidden. There may be legitimate reasons for "off version" public nodes, like sidestepping a known bug, but these are rare`,
         unsynced: 'Unsynced',
         thisDoesNot: `This does NOT necessarily mean there's a fork or a difference in consensus. It could be that the node is resynchronizing and will soon by synced again`,
@@ -131,8 +130,12 @@ export default Object.freeze({
       i18nVote: {
         title: 'VOTE',
         // Main Text
-        byProceedingYouAgreeToAbideByThe: 'By proceeding you agree to abide by the',
+        byCompletingThisAction: 'By completing this action, I agree to the',
         eosConstitution: 'EOS Constitution',
+        theIntentOf: `The intent of the 'vote producer' action is to cast a valid vote for up to 30 BP candidates.`,
+        iAmEitherThe: `I am either the beneficial owner of the tokens with which I am voting, or I have proof that I have been authorized to vote on behalf of the beneficial owner(s).`,
+        iStipulateThat: `I stipulate that I have not and will not accept anything of value in exchange for these votes, on penalty of confiscation of these tokens, and other penalties.`,
+        iStipulateThatIAmNot: `I stipulate that I am not using any system of automatic voting, re-voting, or vote refreshing. Doing so violates this contract.`,
         thisFeatureWas: `This feature was created to help with voting. It creates a cleos command based on checked producers, and
       uses`,
         ourCleosWrapper: 'our cleos wrapper (which just configures ports and addresses)',
@@ -179,7 +182,7 @@ export default Object.freeze({
       i18nVote: 'VOTE',
       // <TableColumnMenu /> && <TableHeading />
       i18nTableColumnNames: {
-        ping: 'Ping',
+        ping: 'Ping from Europe',
         name: 'Name',
         answered: 'Answered',
         blkSeen: 'Blk seen',
@@ -191,9 +194,10 @@ export default Object.freeze({
         p2p: 'P2P',
         location: 'Location',
         numberProduced: '# produced',
-        txs: 'TXs',
-        organisation: 'Organisation',
+        txs: '# TXs',
+        organisation: 'Org Name',
         votes: 'Votes',
+        expectedIncome: 'Expected income',
       },
       // <TableColumnMenu />
       i18nTableColumnMenu: {

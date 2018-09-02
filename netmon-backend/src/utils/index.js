@@ -4,6 +4,7 @@ const updateTotalTransactionsCount = require('./updateTotalTransactionsCount');
 const updateTpsAps = require('./updateTpsAps');
 const updateTransactions = require('./updateTransactions');
 const updateTransactionToAccountCollection = require('./updateTransactionToAccountCollection');
+const checkProducedBlocks = require('./checkProducedBlocks');
 const { createLogger } = require('../helpers');
 
 const { error: logError } = createLogger();
@@ -46,6 +47,14 @@ const startUtilsIfNeed = async () => {
     try {
       await updateTransactions();
       await StateModelV2.updateOne({ id: 1 }, { 'utils.updateTransactions.start': false }).exec();
+    } catch (e) {
+      logError(e);
+    }
+  }
+  if (utils.checkProducedBlocks.start) {
+    try {
+      await checkProducedBlocks();
+      await StateModelV2.updateOne({ id: 1 }, { 'utils.checkProducedBlocks.start': false }).exec();
     } catch (e) {
       logError(e);
     }

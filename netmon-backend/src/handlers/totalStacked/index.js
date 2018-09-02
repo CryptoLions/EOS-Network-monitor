@@ -9,7 +9,7 @@ const eosApi = createEosApi();
 const getTotalStacked = async () => {
   const [stake] = await eosApi.getCurrencyBalance('eosio.token', 'eosio.stake');
 
-  return castToInt(stake.split(' ')[0]);
+  return castToInt(stake.split(' ')[0]) * 10000;
 };
 
 const initTotalStackedHandler = async () => {

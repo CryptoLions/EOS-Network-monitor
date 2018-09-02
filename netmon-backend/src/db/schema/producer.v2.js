@@ -3,8 +3,10 @@ const Node = require('./node.v2');
 
 const Producer = new Schema({
   name: { type: String, index: true },
-  produced: { type: Number, index: true, default: 0 },
-  tx_count: { type: Number, index: true, default: 0 },
+  checkedData: {
+    produced: { type: Number, index: true, default: 0 },
+    tx_count: { type: Number, index: true, default: 0 },
+  },
   total_votes: { type: Number, index: true, default: 0 },
   rewards_per_day: { type: Number, default: 0 },
   produced_per_day: { type: Number, default: 0 },

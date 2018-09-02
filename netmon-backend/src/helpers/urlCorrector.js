@@ -10,10 +10,15 @@ const correctBpUrl = url => {
   if (!url || url.length < 1) {
     return url;
   }
-  if (url.indexOf('http') < 0 && url.length > 0) {
-    url = `http://${url}`;
+  let correctedUrl = url;
+  if (correctedUrl.indexOf('http') < 0 && correctedUrl.length > 0) {
+    correctedUrl = `http://${correctedUrl}`;
   }
-  return removeLastSlashIfExist(url);
+  correctedUrl = removeLastSlashIfExist(correctedUrl);
+  if (correctedUrl === 'http://www.zbeos.com') {
+    correctedUrl = 'https://www.zbeos.com';
+  }
+  return correctedUrl;
 };
 
 const correctP2PUrl = url => {

@@ -13,11 +13,12 @@ const { ProducerModelV2, StateModelV2 } = require('../../db');
 const { createEosApi, eosApi, castToInt, createLogger } = require('../../helpers');
 const { SERVER_NOT_FOUND, CHECK_URLS, CONNECTION_REFUSED_BY_SERVER } = require('../../constants');
 const createStorage = require('./storage');
+const checkMissedProducing = require('./checkMissedProducing');
 
 const { info: logInfo, error: logError } = createLogger();
 
 const saveTable = storage => async () => {
-  const table = storage.getAll();
+  const table = await storage.getAll();
   StateModelV2.updateOne({ id: 1 }, { table }).exec();
 };
 
@@ -34,6 +35,13 @@ const calculateEosFromVotes = votes => {
   return castToInt(votes) / 2 ** weight / 10000;
 };
 
+const isNode = (producer) => {
+  if (!producer || !producer.nodes || !producer.nodes.length) {
+    return false;
+  }
+  return !!producer.nodes.find(n => CHECK_URLS.find(type => n[type] && n[type].length));
+};
+
 const getProducersInfo = async () => {
   const { total_producer_vote_weight } = await eosApi.getProducers({ json: true, limit: 1 });
   const onePercent = castToInt(total_producer_vote_weight) / 100;
@@ -46,7 +54,7 @@ const getProducersInfo = async () => {
     produced: p.produced,
     tx_count: p.tx_count,
     name: p.name,
-    isNode: p.nodes && p.nodes.length,
+    isNode: isNode(p),
     nodes: p.nodes,
     producer_key: p.producer_key,
     specialNodeEndpoint: p.specialNodeEndpoint,
@@ -61,7 +69,7 @@ const getProducersInfo = async () => {
 };
 
 const processNodeAndGetInfo = async (host, port, name, nodeId, wasEnabled) => {
-  const localEosApi = createEosApi({ host, port });
+  const localEosApi = createEosApi({ host, port, isVariable: false });
   const startTs = Date.now();
   let info;
 
@@ -131,11 +139,6 @@ const processNodeAndGetInfo = async (host, port, name, nodeId, wasEnabled) => {
     },
   };
 };
-const sort = rows => {
-  const result = [...rows].filter(e => e.totalVotes);
-  result.sort((a, b) => castToInt(b.totalVotes) - a.totalVotes);
-  return result;
-};
 
 const getFirstGoodNodeInfo = async nodes => {
   let serverInfo = null;
@@ -183,8 +186,13 @@ const initProducerHandler = async () => {
     storage.updateGeneralInfo(info);
   };
 
-  const notify = () => {
-    const updated = storage.getUpdated();
+  const checkMissedProducingTime = async () => {
+    const top21 = (await storage.getAll()).slice(0, 21);
+    storage.updateMissedProducing(checkMissedProducing(top21));
+  };
+
+  const notify = async () => {
+    const updated = await storage.getUpdated();
     if (updated.length < 1) {
       return;
     }
@@ -200,6 +208,11 @@ const initProducerHandler = async () => {
       storage.updateProducers(producers);
       const orderIsChanged = nextProducersOrder.find((e, i) => e !== previousProducersOrder[i]);
       if (orderIsChanged) {
+        nextProducersOrder.forEach((name, i) => {
+          if (name !== previousProducersOrder[i]) {
+            console.log(`${name} changed position on ${i}. Time: ${new Date()}`);
+          }
+        });
         previousProducersOrder.length = 0;
         previousProducersOrder.push(...nextProducersOrder);
         orderOnChangeListeners.forEach(listener => {
@@ -213,7 +226,7 @@ const initProducerHandler = async () => {
   };
 
   const checkInfo = producersType => async () => {
-    const allProducers = storage.getAll();
+    const allProducers = await storage.getAll();
     const slicedProducers = producersType === 'top' ? allProducers.slice(0, 21) : allProducers.slice(21);
     const producers = slicedProducers.filter(e => e.isNode);
 
@@ -251,13 +264,13 @@ const initProducerHandler = async () => {
       logInfo(`Info of ${name} not received`);
     }
   };
-
   await restoreTable(storage);
 
   setInterval(checkProducers, PRODUCERS_CHECK_INTERVAL);
   setInterval(checkInfo('other'), GET_INFO_INTERVAL);
   setInterval(checkInfo('top'), GET_INFO_TOP21_INTERVAL);
   setInterval(saveTable(storage), SAVE_TABLE_INTERVAL);
+  setInterval(checkMissedProducingTime, PRODUCERS_CHECK_INTERVAL);
 
   if (ON_PRODUCERS_INFO_CHANGE_INTERVAL !== 0) {
     setInterval(notify, ON_PRODUCERS_INFO_CHANGE_INTERVAL);
@@ -272,7 +285,7 @@ const initProducerHandler = async () => {
     },
     setCurrentInfo,
     getAll() {
-      return sort(storage.getAll());
+      return storage.getAll();
     },
   };
 };

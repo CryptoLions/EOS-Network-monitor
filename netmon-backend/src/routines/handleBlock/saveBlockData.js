@@ -21,7 +21,13 @@ const saveBlockData = async transactions => {
   await StateModelV2
     .update(
       { id: 1 },
-      { $inc: { total_txblocks_count: 1, produced_per_day: 1, totalTransactionsCount: transactions.length } },
+      { $inc: {
+        total_txblocks_count: 1,
+        produced_per_day: 1,
+        totalTransactionsCount: transactions.length,
+        'checkedData.total_txblocks_count': 1,
+        'checkedData.totalTransactionsCount': transactions.length,
+      } },
     )
     .exec();
 
@@ -89,7 +95,15 @@ const saveBlockData = async transactions => {
   const bulkWriteProducersOptions = Object.values(producersData).map(({ name, tx_count }) => ({
     updateOne: {
       filter: { name },
-      update: { $inc: { tx_count, produced: 1, produced_per_day: 1 } },
+      update: { $inc:
+          {
+            tx_count,
+            produced: 1,
+            produced_per_day: 1,
+            'checkedData.tx_count': tx_count,
+            'checkedData.produced': 1,
+          },
+      },
       upsert: true,
     },
   }));

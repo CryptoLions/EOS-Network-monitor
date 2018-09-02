@@ -51,9 +51,8 @@ const startRoutine = async () => {
   await connectToDB();
 
   // update producers immediately
-  //
+  updateProducers();
 
-  checkProducersSites()
   // start routine to update producers every 30min
   startUpdateProducersRoutine();
 

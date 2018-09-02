@@ -1,9 +1,9 @@
 const { connect } = require('../../db');
-const updateTransactions = require('./index');
+const checkProducedBlocks = require('./index');
 
 const start = async () => {
   await connect();
-  updateTransactions();
+  checkProducedBlocks();
 };
 
 start();

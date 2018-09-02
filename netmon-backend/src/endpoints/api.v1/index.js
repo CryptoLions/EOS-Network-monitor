@@ -6,8 +6,8 @@ const { TransactionModelV2, TransactionToAccountV2 } = require('../../db');
 
 const init = ({ app, handlers }) => {
   const { table: tableHandler, info: infoHandler, account: accountHandler, transaction: transactionHandler } = handlers;
-  app.get(`${API_PREFIX}/table/`, (req, res) => {
-    const table = tableHandler.getAll();
+  app.get(`${API_PREFIX}/table/`, async (req, res) => {
+    const table = await tableHandler.getAll();
     res.status(200).send(table);
   });
   app.get(`${API_PREFIX}/blocks/:number/`, async (req, res) => {

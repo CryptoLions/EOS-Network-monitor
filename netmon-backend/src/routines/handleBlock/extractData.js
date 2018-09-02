@@ -239,13 +239,13 @@ const processAction = ({ block_num, transaction, id, producer, withSubActions = 
     case 'updateauth': {
       msgObject.c3 = action.authorization[0].actor;
       msgObject.c4 = `${data.account}@${data.parent}`;
-      if (data.auth.keys.legth > 0) {
+      if (data && data.auth && data.auth.keys.legth > 0) {
         if (data.auth.keys[0].key) {
           msgObject.c5 = data.auth.keys[0].key;
         }
       }
 
-      if (data.auth.accounts.legth > 0) {
+      if (data && data.auth && data.auth.accounts.legth > 0) {
         if (data.auth.accounts[0].actor) {
           msgObject.c6 = data.auth.accounts[0].actor;
         }

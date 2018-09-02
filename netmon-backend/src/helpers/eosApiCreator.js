@@ -4,8 +4,7 @@ const request = require('request-promise-native');
 
 const { info: logInfo } = require('./logger').createLogger();
 
-module.exports = ({ host = NODE.HOST, port = NODE.PORT } = {}) => {
-  const isVariable = host === NODE.HOST && port === NODE.PORT;
+module.exports = ({ host = NODE.HOST, port = NODE.PORT, isVariable = true } = {}) => {
   const logger = { // Default logging functions
     log: () => {},
     error: () => {},
@@ -32,7 +31,7 @@ module.exports = ({ host = NODE.HOST, port = NODE.PORT } = {}) => {
     try {
       const startTs = Date.now();
       res = await eos.getInfo(args);
-      if ((Date.now() - startTs) > NODE.ALLOWABLE_MAX_PING) {
+      if ((Date.now() - startTs) > NODE.ALLOWABLE_MAX_PING && isVariable) {
         changeNode();
       }
     } catch (e) {

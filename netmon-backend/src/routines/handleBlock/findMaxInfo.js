@@ -6,7 +6,7 @@ const { SECOND } = require('../../constants');
 const eosApi = createEosApi();
 
 const findMaxInfo = async ({ current = { transactions: [] }, previous, max_tps = 0, max_aps = 0 }) => {
-  if (!previous) {
+  if (!previous || !previous.block_num) {
     previous = await eosApi.getBlock(current.block_num - 1);
   }
   const currentTs = Date.parse(current.timestamp);
@@ -41,6 +41,7 @@ const findMaxInfo = async ({ current = { transactions: [] }, previous, max_tps =
     res.max_tps_block = current.block_num;
   }
   if (live_aps > max_aps) {
+    res.max_aps_block = current.block_num;
     res.max_aps = live_aps;
   }
   if (res.max_aps || res.max_tps) {

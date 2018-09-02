@@ -1,7 +1,14 @@
 const { omit } = require('lodash');
 
 const getBPjson = require('./getBPjson');
-const { castToInt, correctBpUrl, correctApiUrl, correctP2PUrl, correctSslUrl, createLogger } = require('../../helpers');
+const {
+  castToInt,
+  correctBpUrl,
+  correctApiUrl,
+  correctP2PUrl,
+  correctSslUrl,
+  createLogger,
+} = require('../../helpers');
 const { ProducerModelV2 } = require('../../db');
 
 const { info: logInfo } = createLogger();
@@ -12,10 +19,12 @@ const updateProducer = async producer => {
   if (oldProducerFromDb && oldProducerFromDb.nodes) {
     const producerCopy = {
       ...producer,
-      nodes: producer.nodes && producer.nodes.map((node, index) => ({
+      nodes:
+      (producer.nodes && producer.nodes.map((node, index) => ({
         ...node,
         downtimes: (oldProducerFromDb.nodes[index] && oldProducerFromDb.nodes[index].downtimes) || [],
-      })),
+      })))
+      || oldProducerFromDb.nodes,
     };
     await ProducerModelV2.updateOne({ name: producer.name }, { $set: producerCopy }, { upsert: true }).exec();
   } else {
@@ -39,7 +48,6 @@ const handleData = async producers => {
       .map(async producer => {
         const { bp_name, bp_key, total_votes, unpaid_blocks, last_claim_time, location } = producer;
         const url = correctBpUrl(producer.url);
-
         if (!url.startsWith('http')) {
           PRODUCERS_WITHOUT_URL.push(bp_name);
           return updateProducer({

@@ -1,9 +1,9 @@
 const { connect } = require('../../db');
-const doWork = require('./index');
+const updateTotalTransactionsCount = require('./index');
 
 const start = async () => {
   await connect();
-  doWork();
+  updateTotalTransactionsCount();
 };
 
 start();

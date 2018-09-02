@@ -57,7 +57,7 @@ const listeners = [];
 
 const notify = () => {
   listeners.forEach(listener => {
-    listener(info);
+    listener({ ...info, info: { ...info.additionalInfo, ...info.info } });
   });
 };
 

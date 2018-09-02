@@ -1,9 +1,9 @@
 const { connect } = require('../../db');
-const doWork = require('./index');
+const cleanAccountCollection = require('./index');
 
 const start = async () => {
   await connect();
-  doWork();
+  cleanAccountCollection();
 };
 
 start();

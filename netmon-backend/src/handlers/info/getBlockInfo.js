@@ -1,4 +1,6 @@
-const { eosApi } = require('../../helpers');
+const { createEosApi } = require('../../helpers');
+
+const eosApi = createEosApi();
 
 const findNextProducer = (list, current) => {
   const currentIndex = list.indexOf(current);

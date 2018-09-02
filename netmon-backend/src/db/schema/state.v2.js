@@ -1,7 +1,7 @@
 const { Schema } = require('mongoose');
 const { UPDATE_TRANSACTIONS: { DEFAULT_VALUE } } = require('config');
 
-const Producer = new Schema({
+const State = new Schema({
   id: Number,
   telegramUpdatedAt: Date,
   lastHandledBlock: { type: Number, default: 0 },
@@ -17,6 +17,11 @@ const Producer = new Schema({
   table: {},
   adminData: {
     frontendPageReloadAt: { type: Date, default: 0 },
+  },
+  checkedData: {
+    startFromBlock: { type: Number },
+    total_txblocks_count: { type: Number, default: 0 },
+    totalTransactionsCount: { type: Number, default: 0 },
   },
   utils: {
     updateTransactions: {
@@ -35,7 +40,12 @@ const Producer = new Schema({
     updateTransactionToAccountCollection: {
       start: { type: Boolean, default: true },
     },
+    checkProducedBlocks: {
+      start: { type: Boolean, default: true },
+      lastCheckedBlock: { type: Number, default: 0 },
+      endBlock: { type: Number, default: 13279486 },
+    },
   },
 }, { collection: 'State' });
 
-module.exports = Producer;
+module.exports = State;

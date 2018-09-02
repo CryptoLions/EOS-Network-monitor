@@ -16,9 +16,12 @@ const { info: logInfo } = createLogger();
 let previous = {};
 const handleBlock = async () => {
   try {
-    const { lastHandledBlock, max_tps, max_aps } = await StateModelV2.findOne({ id: 1 });
+    const { lastHandledBlock, max_tps, max_aps, checkedData } =
+      await StateModelV2.findOne({ id: 1 }).select('lastHandledBlock max_tps max_aps checkedData');
     const timeMark = Date.now();
-
+    if (!checkedData.startFromBlock) {
+      await StateModelV2.updateOne({ id: 1 }, { 'checkedData.startFromBlock': lastHandledBlock + 1 }).exec();
+    }
     const { last_irreversible_block_num } = await eosApi.getInfo();
     if (last_irreversible_block_num <= lastHandledBlock) {
       setTimeout(handleBlock, 500);
@@ -26,7 +29,7 @@ const handleBlock = async () => {
     }
     const block = await eosApi.getBlock(lastHandledBlock + 1);
     processMissedBlocks({ current: block, previous });
-    const max = findMaxInfo({ current: block, previous, max_aps, max_tps });
+    const max = await findMaxInfo({ current: block, previous, max_aps, max_tps });
     block.producedInSeconds = (Date.parse(block.timestamp) - Date.parse(previous.timestamp)) / SECOND;
     previous = block;
     if (max) {

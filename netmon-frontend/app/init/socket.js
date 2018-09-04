@@ -58,7 +58,9 @@ class SocketClient {
     this.socket.on('usersonline', data => this.dispatch(generalStatsActions.connectedUsersUpdate(data)));
 
     // CurrentBlockInfo
-    this.socket.on('info', data => this.dispatch(generalStatsActions.lastBlockStatsUpdate(data)));
+    this.socket.on('info', data => {
+      this.dispatch(generalStatsActions.lastBlockStatsUpdate(data));
+    });
 
     // Modal
     this.socket.on('api', data => {

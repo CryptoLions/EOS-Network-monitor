@@ -63,6 +63,7 @@ class Table extends PureComponent {
 
   state = {
     colsNumber: null,
+    isTableScrolled: false,
   };
 
   componentDidMount() {
@@ -112,6 +113,16 @@ class Table extends PureComponent {
     return producers.filter(producer => producer.name.toLowerCase().includes(lowerCaseSearch));
   };
 
+  tableScrollHandler = () => {
+    const { isTableScrolled } = this.state;
+    const horizontalScroll = this.tableContainer.current.scrollLeft;
+    if (isTableScrolled !== !!horizontalScroll) {
+      this.setState({
+        isTableScrolled: !!horizontalScroll,
+      });
+    }
+  };
+
   render() {
     const {
       producers,
@@ -121,13 +132,13 @@ class Table extends PureComponent {
       selectedProducers,
       filterInputValue,
     } = this.props;
-    const { colsNumber } = this.state;
+    const { colsNumber, isTableScrolled } = this.state;
 
     const filteredProducers = this.filterHandler(producers);
 
     return (
       <Fragment>
-        <TableContainer innerRef={this.tableContainer}>
+        <TableContainer innerRef={this.tableContainer} onScroll={this.tableScrollHandler}>
           {!filteredProducers.length && <NoDataDiv>No data found</NoDataDiv>}
           <TableTag innerRef={this.table}>
             <TableHeading tableColumnState={tableColumnState} />
@@ -144,6 +155,7 @@ class Table extends PureComponent {
                       toggleModal={toggleModal}
                       toggleProducerSelection={toggleProducerSelection}
                       colsNumber={colsNumber}
+                      isTableScrolled={isTableScrolled}
                     />
                   </Fragment>
                 ))}

@@ -9,6 +9,12 @@ const initialState = {
     maxAps: 0,
     liveAps: 0,
   },
+  additionalInfoStats: {
+    maxRamSize: 0,
+    totalUnpaidBlocks: 0,
+    coreLiquidBalance: undefined,
+    savingTotalBalance: undefined,
+  },
   connectedUsers: 0,
 };
 
@@ -21,8 +27,13 @@ export const generalStatsReducer = (state = initialState, { type, payload }) => 
           ...state.lastBlockStats,
           ...payload,
         },
+        additionalInfoStats: {
+          maxRamSize: payload.maxRamSize,
+          totalUnpaidBlocks: payload.totalUnpaidBlocks,
+          coreLiquidBalance: payload.coreLiquidBalance,
+          savingTotalBalance: payload.savingTotalBalance,
+        },
       };
-
     case types.TOTAL_STACKED_UPDATE:
       return {
         ...state,

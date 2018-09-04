@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Trow = styled.tr`
   padding: 0px 5px;
   border-bottom: 1px solid #dee2e6;
-  background-color: rgb(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.7);
 `;
 
 export const Cell = styled.td`
@@ -17,17 +17,7 @@ export const Tdata = Cell.extend`
   min-width: 90px;
 `;
 
-// Cells
-export const CheckboxCell = Cell.extend`
-  padding-left: 10px;
-  width: 20px;
-`;
-
-export const IndexCell = Cell.extend`
-  width: 40px;
-  min-width: 40px;
-`;
-
+// Cell
 export const VotesCell = Cell.extend`
   width: 155px;
   min-width: 155px;
@@ -39,7 +29,13 @@ export const OrgNameCell = Cell.extend`
 `;
 
 export const NameCell = Cell.extend`
-  min-width: 140px;
+  width: 240px;
+  min-width: 240px;
+  position: sticky !important;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  border-bottom: 1px solid #dee2e6;
 `;
 
 export const AddressCell = Cell.extend`
@@ -94,6 +90,24 @@ export const TimeAgoBlock = styled.div`
 `;
 
 // Others
+export const NameBlock = styled.div`
+  display: flex;
+`;
+
+export const NameWrapper = styled.div`
+  margin-left: 20px;
+`;
+
+export const LabelWrapper = styled.div`
+  padding-left: 10px;
+  max-width: 20px;
+`;
+
+export const Index = styled.div`
+  padding-left: 10px;
+  min-width: 46px;
+`;
+
 export const TextSpan = styled.span`
   position: relative;
   bottom: 6px;

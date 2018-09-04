@@ -22,8 +22,6 @@ import {
   Trow,
   Tdata,
   // cells
-  CheckboxCell,
-  IndexCell,
   VotesCell,
   OrgNameCell,
   // Ping
@@ -36,6 +34,10 @@ import {
   VersionCell,
   AddressCell,
   // Others
+  NameBlock,
+  NameWrapper,
+  LabelWrapper,
+  Index,
   TextSpan,
   TextLink,
   TimeAgoBlock,
@@ -149,7 +151,7 @@ export default class TableRow extends PureComponent {
 
   render() {
     const { isPingUptated, isArrowClicked } = this.state;
-    const { producer, index, tableColumnState, toggleModal, isNodeChecked, colsNumber } = this.props;
+    const { producer, index, tableColumnState, toggleModal, isNodeChecked, colsNumber, isTableScrolled } = this.props;
     const node = producer.nodes && producer.nodes.length ? producer.nodes[0] : {};
     const { nodes } = producer;
 
@@ -158,33 +160,43 @@ export default class TableRow extends PureComponent {
     const address = this.extractCorrectAddress(nodes);
 
     let backgroundColor;
-    if (producer.isCurrentNode) backgroundColor = 'rgb(17, 168, 39, 0.7)';
+    if (producer.isCurrentNode) backgroundColor = 'rgba(17, 168, 39, 0.7)';
     if (!producer.isNode && index < 61) backgroundColor = 'rgb(211, 211, 211)';
-    if (producer.isNodeBroken) backgroundColor = 'rgb(255, 4, 4, 0.7)';
+    if (producer.isNodeBroken) backgroundColor = 'rgba(255, 4, 4, 0.7)';
     if (producer.isUnsynced) backgroundColor = 'rgb(159, 100, 227)';
+
+    let backgroundColorFixedCell;
+    if (isTableScrolled) {
+      backgroundColorFixedCell = '#fff';
+      if (producer.isCurrentNode) backgroundColorFixedCell = 'rgb(17, 168, 39)';
+      if (!producer.isNode && index < 61) backgroundColorFixedCell = 'rgb(211, 211, 211)';
+      if (producer.isNodeBroken) backgroundColorFixedCell = 'rgb(255, 4, 4)';
+      if (producer.isUnsynced) backgroundColorFixedCell = 'rgb(159, 100, 227)';
+    }
 
     return (
       <Fragment>
         <Trow style={{ backgroundColor }}>
-          {/* {#} */}
-          <CheckboxCell>
-            <label>
-              <Checkbox type="checkbox" checked={isNodeChecked} onChange={this.toggleProducerSelection} />
-              {isNodeChecked ? <StyledCheckboxActive /> : <StyledCheckbox />}
-            </label>
-          </CheckboxCell>
-          <IndexCell>{producer.index + 1}</IndexCell>
+          {/* {#} {1.Name} */}
+          <NameCell style={{ backgroundColor: backgroundColorFixedCell }}>
+            <NameBlock>
+              <LabelWrapper>
+                <label>
+                  <Checkbox type="checkbox" checked={isNodeChecked} onChange={this.toggleProducerSelection} />
+                  {isNodeChecked ? <StyledCheckboxActive /> : <StyledCheckbox />}
+                </label>
+              </LabelWrapper>
+              <Index>{producer.index + 1}</Index>
+              <NameWrapper>
+                <TextLink onClick={() => toggleModal('accountInfo', producer.name)}>{producer.name}</TextLink>
+                <ExternalLink link={producerUrl} />
+              </NameWrapper>
+            </NameBlock>
+          </NameCell>
           {tableColumnState.ping && (
             <PingCell>
               <PingSpan isPingUptated={isPingUptated}>{this.pingColorsHandler()}</PingSpan>
             </PingCell>
-          )}
-          {/* {1.Name} */}
-          {tableColumnState.name && (
-            <NameCell>
-              <TextLink onClick={() => toggleModal('accountInfo', producer.name)}>{producer.name}</TextLink>
-              <ExternalLink link={producerUrl} />
-            </NameCell>
           )}
           {/* {2.Answered} */}
           {tableColumnState.answered && (
@@ -204,6 +216,7 @@ export default class TableRow extends PureComponent {
               </TimeAgoBlock>
             </TimeAgoCell>
           )}
+
           {/* {5.Blk produced} */}
           {tableColumnState.blkProduced && <Tdata>{producer.producedBlock}</Tdata>}
           {/* {6.Version} */}
@@ -240,6 +253,8 @@ export default class TableRow extends PureComponent {
           )}
           {/* {15.Expected income} */}
           {tableColumnState.expectedIncome && <VotesCell>{formatNumber(producer.rewards_per_day)} </VotesCell>}
+          {/* {16.Missed blocks} */}
+          {tableColumnState.missedBlocks && <VotesCell>{formatNumber(producer.missedBlocks)} </VotesCell>}
           <ArrowCell onClick={this.toggleArrowRotate}>
             <DownArrow isArrowClicked={isArrowClicked} />
           </ArrowCell>
@@ -268,5 +283,6 @@ TableRow.propTypes = {
   toggleModal: PropTypes.func,
   toggleProducerSelection: PropTypes.func,
   isNodeChecked: PropTypes.bool,
+  isTableScrolled: PropTypes.bool,
   colsNumber: PropTypes.number,
 };

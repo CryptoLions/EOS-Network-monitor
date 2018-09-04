@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const LegendContainer = styled.div`
   width: 100%;
-  background-color: rgb(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.7);
   padding: 0 20px 20px 20px;
 `;
 
@@ -65,15 +65,15 @@ export const Color = styled.span`
 `;
 
 export const Green = Color.extend`
-  background-color: rgb(17, 168, 39, 0.7);
+  background-color: rgba(17, 168, 39, 0.7);
 `;
 
 export const Red = Color.extend`
-  background-color: rgb(255, 4, 4, 0.7);
+  background-color: rgba(255, 4, 4, 0.7);
 `;
 
 export const Yellow = Color.extend`
-  background-color: rgb(255, 255, 155, 0.7);
+  background-color: rgba(255, 255, 155, 0.7);
 `;
 
 export const Purple = Color.extend`

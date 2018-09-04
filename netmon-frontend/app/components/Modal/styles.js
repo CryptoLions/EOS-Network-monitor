@@ -15,7 +15,7 @@ export const ModalWrapper = styled.div`
   position: fixed;
   align-items: center;
   justify-content: center;
-  background-color: rgb(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   z-index: 1;
   top: 0;
   left: 0;
@@ -68,7 +68,7 @@ export const Input = styled.input`
   max-width: 200px;
   height: 45px;
   padding: 0px 10px;
-  border: 1px solid rgb(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.2);
   margin-left: -1px;
 `;
 

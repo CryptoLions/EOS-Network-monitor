@@ -71,7 +71,9 @@ export default class AccountHistory extends PureComponent {
   }
 
   componentWillUnmount() {
+    const yScroll = window.pageYOffset;
     window.location.hash = ``;
+    window.scroll(0, yScroll);
   }
 
   onAccountNameChange = e => this.setState({ producerName: e.target.value });

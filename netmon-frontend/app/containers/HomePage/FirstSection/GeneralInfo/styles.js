@@ -5,7 +5,7 @@ export const Container = styled.div`
 `;
 
 export const GreenLink = styled.a`
-  color: rgb(0, 128, 0, 0.7);
+  color: rgba(0, 128, 0, 0.7);
   font-size: 20px;
   font-weight: bold;
   cursor: pointer;

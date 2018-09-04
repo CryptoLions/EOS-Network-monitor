@@ -78,7 +78,7 @@ export const BlurBG = styled.div`
   filter: blur(5px);
   width: 100%;
   height: 100%;
-  background-color: rgb(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   animation: ${blurBgAnimation} 0.3s;
 `;
 

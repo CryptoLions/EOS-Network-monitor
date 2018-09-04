@@ -25,7 +25,7 @@ export const SectionOne = styled.div`
 export const Wrapper = styled.section`
   display: inherit;
   flex-direction: column;
-  background-color: rgb(255, 255, 255, 0.6);
+  background-color: rgba(255, 255, 255, 0.6);
   width: 100%;
   margin-bottom: 20px;
 
@@ -41,7 +41,7 @@ export const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgb(178, 216, 155, 1);
+  background-color: rgba(178, 216, 155, 1);
 `;
 
 export const HeaderSpan = styled.span`
@@ -62,7 +62,7 @@ export const TextSpan = styled.span`
 `;
 
 export const GreenSpan = styled.span`
-  color: rgb(0, 128, 0, 0.7);
+  color: rgba(0, 128, 0, 0.7);
   font-size: 20px;
   font-weight: bold;
 `;
@@ -103,6 +103,6 @@ export const Spinner = styled.svg`
   animation: ${spinnerRotate} 1.5s infinite;
 
   & path {
-    fill: rgb(178, 216, 155, 1);
+    fill: rgba(178, 216, 155, 1);
   }
 `;

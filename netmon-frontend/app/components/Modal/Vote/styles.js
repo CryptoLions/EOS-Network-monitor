@@ -43,7 +43,7 @@ const InputButton = styled.a`
   height: 100%;
   font-size: 16px;
   padding: 3px 30px;
-  border: 1px solid rgb(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.2);
   cursor: pointer;
   text-decoration: none;
   white-space: nowrap;

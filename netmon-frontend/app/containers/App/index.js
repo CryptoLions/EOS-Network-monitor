@@ -26,7 +26,7 @@ import { selectActualBackgroundNumber } from '../../bus/ui/selectors';
 // Styles
 import { Wrapper } from './styles';
 
-ReactGA.initialize('UA‌-123095269-1');
+ReactGA.initialize('UA-123095269-1');
 
 const mapStateToProps = createStructuredSelector({
   actualBackgroundNumber: selectActualBackgroundNumber(),

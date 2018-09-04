@@ -61,7 +61,9 @@ export default class Transactions extends PureComponent {
   }
 
   componentWillUnmount() {
+    const yScroll = window.pageYOffset;
     window.location.hash = ``;
+    window.scroll(0, yScroll);
   }
 
   onTXidChange = e => this.setState({ txId: e.target.value });

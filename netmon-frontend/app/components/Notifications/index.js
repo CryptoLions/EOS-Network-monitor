@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import store from 'store';
 
 // Svg
-import svg from './svg/alarm.svg';
+// import svg from './svg/alarm.svg';
 
 // Styles
 import { Container, Notification, TextSpan, StyledLink, Cross } from './styles';

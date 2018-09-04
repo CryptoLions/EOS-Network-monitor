@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Trow = styled.tr`
   padding: 0px 5px;
   border-bottom: 1px solid #dee2e6;
-  background-color: rgb(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.7);
 `;
 
 // Details

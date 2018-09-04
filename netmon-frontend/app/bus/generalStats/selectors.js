@@ -8,5 +8,7 @@ export const selectConnectedUsers = () => createSelector(selectGeneralStats(), (
 
 export const selectLastBlockStats = () => createSelector(selectGeneralStats(), ({ lastBlockStats }) => lastBlockStats);
 
+export const selectAdditionalInfoStats = () => createSelector(selectGeneralStats(), data => data.additionalInfoStats);
+
 export const selectHeadBlockNum = () =>
   createSelector(selectGeneralStats(), ({ lastBlockStats }) => lastBlockStats.head_block_num);

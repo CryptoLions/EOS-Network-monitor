@@ -167,6 +167,10 @@ export default Object.freeze({
         tps: 'TPS Live/All time high',
         aps: 'APS Live/All time high',
         connectedUsers: 'Connected Users',
+        maxRamSize: 'RAM in chain',
+        totalUnpaidBlocks: 'Unpaid blocks',
+        coreLiquidBalance: 'Core liquid balance',
+        savingTotalBalance: 'Saving total balance',
       },
       // <Transactions />
       i18nTransactions: {
@@ -181,9 +185,11 @@ export default Object.freeze({
     i18nSecondSection: {
       i18nVote: 'VOTE',
       // <TableColumnMenu /> && <TableHeading />
+      i18nFixedTableColumnNames: {
+        name: 'Name',
+      },
       i18nTableColumnNames: {
         ping: 'Ping from Europe',
-        name: 'Name',
         answered: 'Answered',
         blkSeen: 'Blk seen',
         produced: 'Produced',
@@ -198,6 +204,7 @@ export default Object.freeze({
         organisation: 'Org Name',
         votes: 'Votes',
         expectedIncome: 'Expected income',
+        missedBlocks: 'Missed blocks',
       },
       // <TableColumnMenu />
       i18nTableColumnMenu: {

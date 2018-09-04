@@ -8,7 +8,7 @@ export const Container = styled.section`
 
 export const Table = styled.table`
   min-width: 100%;
-  background-color: rgb(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.7);
 `;
 
 export const Link = styled.a`
@@ -22,7 +22,7 @@ export const Link = styled.a`
 // Table
 export const TableHead = styled.thead`
   border: 1px solid #fff;
-  background-color: rgb(180, 213, 146, 0.7);
+  background-color: rgba(180, 213, 146, 0.7);
 `;
 
 export const TRow = styled.tr`

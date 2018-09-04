@@ -29,7 +29,7 @@ export const PageInput = styled.input`
   height: 38px;
   max-width: 80px;
   padding: 0px 10px;
-  border: 1px solid rgb(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.2);
   margin-left: 5px;
 
   @media (max-width: 500px) {

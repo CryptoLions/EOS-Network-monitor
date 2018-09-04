@@ -6,8 +6,8 @@ import types from './types';
 import modalTypes from '../modal/types';
 
 const DEFAULT_COLUMNS_STATE = {
-  ping: false,
   name: true,
+  ping: false,
   answered: true,
   blkSeen: true,
   produced: false,

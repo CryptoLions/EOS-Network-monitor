@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { translate } from 'react-i18next';
 
 // Styles
-import { TableHead, Tdata, ColumnMenuTdata } from './styles';
+import { TableHead, Tdata, ColumnMenuTdata, FixedCell } from './styles';
 import TableColumnMenu from '../TableColumnMenu';
 
 @translate()
@@ -14,10 +14,8 @@ export default class TableHeading extends PureComponent {
     return (
       <TableHead>
         <tr>
-          <Tdata />
-          <Tdata />
+          <FixedCell>{tableColumnState.name && t('i18nSecondSection.i18nFixedTableColumnNames.name')}</FixedCell>
           {tableColumnState.ping && <Tdata>{t('i18nSecondSection.i18nTableColumnNames.ping')}</Tdata>}
-          {tableColumnState.name && <Tdata>{t('i18nSecondSection.i18nTableColumnNames.name')}</Tdata>}
           {tableColumnState.answered && <Tdata>{t('i18nSecondSection.i18nTableColumnNames.answered')}</Tdata>}
           {tableColumnState.blkSeen && <Tdata>{t('i18nSecondSection.i18nTableColumnNames.blkSeen')}</Tdata>}
           {tableColumnState.produced && <Tdata>{t('i18nSecondSection.i18nTableColumnNames.produced')}</Tdata>}
@@ -40,6 +38,7 @@ export default class TableHeading extends PureComponent {
           {tableColumnState.expectedIncome && (
             <Tdata>{t('i18nSecondSection.i18nTableColumnNames.expectedIncome')}</Tdata>
           )}
+          {tableColumnState.missedBlocks && <Tdata>{t('i18nSecondSection.i18nTableColumnNames.missedBlocks')}</Tdata>}
           <ColumnMenuTdata>
             <TableColumnMenu />
           </ColumnMenuTdata>

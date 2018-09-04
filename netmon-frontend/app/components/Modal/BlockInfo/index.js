@@ -51,7 +51,9 @@ export default class BlockInfoModal extends PureComponent {
   }
 
   componentWillUnmount() {
+    const yScroll = window.pageYOffset;
     window.location.hash = ``;
+    window.scroll(0, yScroll);
   }
 
   onFieldChange = e => this.setState({ [e.target.name]: e.target.value });

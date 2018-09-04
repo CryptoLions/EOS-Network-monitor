@@ -4,7 +4,7 @@ export const Container = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
-  background-color: rgb(44, 168, 78, 1);
+  background-color: rgba(44, 168, 78, 1);
 `;
 
 export const Notification = styled.div`

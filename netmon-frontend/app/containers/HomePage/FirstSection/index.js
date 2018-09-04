@@ -14,7 +14,7 @@ import Transactions from './Transactions';
 import { uiActions } from '../../../bus/ui/actions';
 
 // Selectors
-import { selectLastBlockStats, selectTpsApsStats, selectConnectedUsers } from '../../../bus/generalStats/selectors';
+import { selectLastBlockStats } from '../../../bus/generalStats/selectors';
 import { selectTransactionsList, selectTransactionsInfo } from '../../../bus/transactions/selectors';
 
 // Styles
@@ -24,8 +24,6 @@ const mapStateToProps = createStructuredSelector({
   // CurrentBlockInfo
   lastBlockStats: selectLastBlockStats(),
   // GeneralInfo
-  tpsApsStats: selectTpsApsStats(),
-  connectedUsers: selectConnectedUsers(),
   // Transactions
   transactionsList: selectTransactionsList(),
   transactionsInfo: selectTransactionsInfo(),
@@ -50,8 +48,7 @@ export default class FirstSection extends PureComponent {
       // CurrentBlockInfo
       lastBlockStats,
       // GeneralInfo
-      tpsApsStats,
-      connectedUsers,
+      // additionalInfoStats,
       // Transactions
       transactionsList,
       transactionsInfo,
@@ -61,7 +58,7 @@ export default class FirstSection extends PureComponent {
     return (
       <SectionOne>
         <CurrentBlockInfo lastBlockStats={lastBlockStats} />
-        <GeneralInfo tpsApsStats={tpsApsStats} connectedUsers={connectedUsers} toggleModal={toggleModal} />
+        <GeneralInfo toggleModal={toggleModal} />
         <Transactions
           transactionsList={transactionsList}
           transactionsInfo={transactionsInfo}
@@ -75,9 +72,6 @@ export default class FirstSection extends PureComponent {
 FirstSection.propTypes = {
   // CurrentBlockInfo
   lastBlockStats: PropTypes.object,
-  // GeneralInfo
-  tpsApsStats: PropTypes.object,
-  connectedUsers: PropTypes.number,
   // Transactions
   transactionsList: PropTypes.array,
   transactionsInfo: PropTypes.object,

@@ -29,7 +29,7 @@ Pay attention on:
 - socket.io (https://www.npmjs.com/package/socket.io)
 - eosjs-api (https://www.npmjs.com/package/eosjs-api)
 - mongoose (https://www.npmjs.com/package/mongoose)
-- budsnag (https://www.npmjs.com/package/bugsnag)
+- bugsnag (https://www.npmjs.com/package/bugsnag)
 
 _See `package.json` file._
 

@@ -18,7 +18,7 @@ const init = ({ io, handlers }) => {
     io.to(SOCKET_ROOM).emit('totalstaked', totalStacked);
   });
   tableHandler.onOrderChange(() => {
-    console.log('reload_producers')
+    console.log('reload_producers');
     io.to(SOCKET_ROOM).emit('reload_producers');
   });
   transactionHandler.onUpdate(({ transactions, totalTransactionsCount, notEmptyBlocksCount, totalBlockCount }) => {

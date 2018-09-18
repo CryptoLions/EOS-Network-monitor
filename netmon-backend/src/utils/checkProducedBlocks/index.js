@@ -21,7 +21,7 @@ const handleBlock = async (done) => {
     }
     const { utils: { checkProducedBlocks: { lastCheckedBlock, endBlock } } } = state;
     if (lastCheckedBlock >= endBlock) {
-      console.log('Checking produced blocks finished!')
+      console.log('Checking produced blocks finished!');
       logInfo('Checking produced blocks finished!');
       return;
     }

@@ -29,7 +29,7 @@ Pay attention on:
 - socket.io (https://www.npmjs.com/package/socket.io)
 - eosjs-api (https://www.npmjs.com/package/eosjs-api)
 - mongoose (https://www.npmjs.com/package/mongoose)
-- bugsnag (https://www.npmjs.com/package/bugsnag)
+- budsnag (https://www.npmjs.com/package/bugsnag)
 
 _See `package.json` file._
 
@@ -39,6 +39,9 @@ _See `package.json` file._
 - this `README` file
 - source code
 - API
+    - metric
+        - /appmetrics-dash/ - display Node.js application data as a html web application.
+        https://github.com/RuntimeTools/appmetrics-dash
     - v1
         - API_PREFIX/table/ - returns current state of the producers table.
         For example [{"name":"eos42freedom","totalVotes":332004228560592700,"organizationUrl":"https://www.eos42.io","key":"EOS4tw7vH62TcVtMgm2tjXzn9hTuHEBbGPUK2eos42ssY7ip4LTzu","produced":709035,"tx_count":19959236,"votesPercentage":2.243740551135519,"votesInEOS":78378746.13227776,"isNode":3,"nodes":[{"enabled":true,"downtimes":[],"_id":"5b7a7758ecf5d80972b0327c","bp_name":"eos42freedom","organisation":"EOS42","location":"KY,Cayman Islands","http_server_address":null,"p2p_listen_endpoint":"seed1.eos42.io:9876","https_server_address":null,"p2p_server_address":"seed1.eos42.io:9876","pub_key":"EOS4tw7vH62TcVtMgm2tjXzn9hTuHEBbGPUK2eos42ssY7ip4LTzu","bp":true}],"rewards_per_day":874.2580085055899,"lastGoodAnsweredTime":"2018-08-20T08:13:59.679Z","isUpdated":false,"isCurrentNode":false,"ping":68,"isNodeBroken":false,"requestTS":1534752839611,"version":"b8c1b2c2","answeredBlock":12077667,"isUnsynced":false,"answeredTimestamp":1534752839679,"producedBlock":12077536,"producedTimestamp":1534752773500}]
@@ -48,12 +51,15 @@ _See `package.json` file._
         For example {"account_name":"cryptolions1","head_block_num":12088139,"head_block_time":"2018-08-20T09:41:41.500","privileged":false,"last_code_update":"1970-01-01T00:00:00.000","created":"2018-06-10T13:04:13.500","core_liquid_balance":"13984.6735 EOS","ram_quota":8146,"net_weight":110000,"cpu_weight":910000,"net_limit":{"used":105,"available":7505611,"max":7505716},"cpu_limit":{"used":7674,"available":1631663,"max":1639337},"ram_usage":7400,"permissions":[{"perm_name":"active","parent":"owner","required_auth":{"threshold":1,"keys":[{"key":"EOS6GDCRCFzDCb3cz5esvpGKyf681jeyGDd46vi4Zq8pLkK6npY8R","weight":1}],"accounts":[],"waits":[]}},{"perm_name":"owner","parent":"","required_auth":{"threshold":1,"keys":[{"key":"EOS6GDCRCFzDCb3cz5esvpGKyf681jeyGDd46vi4Zq8pLkK6npY8R","weight":1}],"accounts":[],"waits":[]}}],"total_resources":{"owner":"cryptolions1","net_weight":"11.0000 EOS","cpu_weight":"91.0000 EOS","ram_bytes":8146},"self_delegated_bandwidth":{"from":"cryptolions1","to":"cryptolions1","net_weight":"10.0000 EOS","cpu_weight":"90.0000 EOS"},"refund_request":null,"voter_info":{"owner":"cryptolions1","proxy":"","producers":[],"staked":1160000,"last_vote_weight":"0.00000000000000000","proxied_vote_weight":"0.00000000000000000","is_proxy":0},"balance":"13984.6735 EOS"}
         - API_PREFIX/accounts/:name/history?skip=0&limit=10
         For example [{"_id":"39996257b9d54ff989cc3c755de94afe22da5d1733026faad11350ceeae61a52","id":"5b7a89a8ecf5d80972e4319a","msgObject":{"c1":"12048781","c2":"voteproducer","c3":"g43tanrwgege ","c4":"cryptolions1, eosafricaone, eosamsterdam, eosantpoolbp, eosauthority, eoscanadacom, eoscybexiobp, eoseouldotio, eosisgravity, eoslaomaocom, eosliquideos, eosmesodotio, eosmetaliobp, eosmotioneos, eosnewyorkio, eosorangeeos, eossixparkbp, eosteaeostea, eostitanprod, eosukblocpro, eosyskoreabp, geosoneforbp, strongmonkey, teamgreymass, voldemorteos","c5":"NET: 3022.8212 EOS <BR>CPU: 4022.8211 EOS<BR>","c6":"TOTAL: 7045.6423 EOS"},"mentionedAccounts":["cryptolions1","eosafricaone","eosamsterdam","eosantpoolbp","eosauthority","eoscanadacom","eoscybexiobp","eoseouldotio","eosisgravity","eoslaomaocom","eosliquideos","eosmesodotio","eosmetaliobp","eosmotioneos","eosnewyorkio","eosorangeeos","eossixparkbp","eosteaeostea","eostitanprod","eosukblocpro","eosyskoreabp","geosoneforbp","strongmonkey","teamgreymass","voldemorteos","g43tanrwgege"],"txid":"39996257b9d54ff989cc3c755de94afe22da5d1733026faad11350ceeae61a52","block":12048781,"account":"eosio","to":"","action":"voteproducer","date":"2018-08-20T04:12:40.000Z","description":"voteproducer","createdAt":"2018-08-20T09:28:08.409Z"}]
-        - API_PREFIX/transactions?actions=voteproducer,issue&tsStart=1533658816000&tsEnd=1534758816000 returns list of transactions
-        Where: actions - list of actions what you need, separated by comma, tsStart - timestamp (in ms) from you need transactions, tsEnd - timestamp (in ms) by you need transactions.
+        - API_PREFIX/transactions?actions=voteproducer,issue&mentionedAccounts=cryptolions1,bitfinexeos1&tsStart=1533658816000&tsEnd=1534758816000 returns list of transactions
+        Where: actions - list of actions what you need separated by comma, mentionedAccounts - list of accounts what you need separated by comma, tsStart - timestamp (in ms) from you need transactions, tsEnd - timestamp (in ms) by you need transactions.
         Limit is equals 100
         For example: [{"_id":"5b7a7f91ecf5d80972c772ab","msgObject":{"c1":"12036040","c2":"issue","c3":"boidcomtoken@boidcomtoken","c4":"gyytcmjwhege","c5":"15870.0875 BOID","c6":"Earn more BOIDs at boid.com."},"mentionedAccounts":["boidcomtoken","gyytcmjwhege"],"txid":"8c691e4d166031580342ab265ef344942d3861e1b7ed7cdda59495fd945a27a5","block":12036040,"account":"boidcomtoken","to":"gyytcmjwhege","action":"issue","date":"2018-08-20T02:25:03.000Z","description":"Token issue Funds","createdAt":"2018-08-20T08:45:05.212Z","__v":0}]
         - API_PREFIX/transactions/:txid/ returns transactions by transaction id
         For example {"msgObject":{"c1":"12036050","c2":"issue","c3":"boidcomtoken@boidcomtoken","c4":"gyytcmjxgige","c5":"9019.8000 BOID","c6":"Earn more BOIDs at boid.com."},"mentionedAccounts":["boidcomtoken","gyytcmjxgige"],"_id":"5b7a7f92ecf5d80972c77599","txid":"2ce26019bc87d0b6ad86a989720bb981103264d6514afef820360c5c7883f821","block":12036050,"account":"boidcomtoken","to":"gyytcmjxgige","action":"issue","date":"2018-08-20T02:25:08.000Z","description":"Token issue Funds","createdAt":"2018-08-20T08:45:06.535Z","__v":0}
+        - API_PREFIX/p2p/:type/ if type === endpoints returns p2p endpoints, if type === server returns p2p server addres
+        For example [{"p2p":["fullnode.eoslaomao.com:443"],"name":"eoslaomaocom"},{"p2p":["node1.eosnewyork.io:6987"],"name":"eosnewyorkio"},{"p2p":["seed1.eos42.io:9876","seed2.eos42.io:9876"],"name":"eos42freedom"}]
+
 - socket
     - usersonline - returns the number of users, which using app now
     - table - returns rows that were updated from the last event to now

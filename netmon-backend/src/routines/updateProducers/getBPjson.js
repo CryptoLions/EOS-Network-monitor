@@ -1,9 +1,5 @@
 const request = require('request-promise-native');
 
-const { createLogger } = require('../../helpers');
-
-const { info: logInfo } = createLogger('UPDATE_PRODUCES:GET_BP_JSON');
-
 const getBPjson = async bpUrl => {
   const url = `${bpUrl}/bp.json`;
   try {
@@ -12,7 +8,6 @@ const getBPjson = async bpUrl => {
 
     return JSON.parse(correctedBody);
   } catch (e) {
-    logInfo(e);
     return undefined;
   }
 };

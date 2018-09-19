@@ -14,6 +14,10 @@ const { error: logError } = createLogger();
 
 const saveBlockData = async transactions => {
   if (!transactions || !transactions.length) {
+    await StateModelV2.update(
+      { id: 1 },
+      { $inc: { 'checkedData2.producedBlocks': 1 } },
+    ).exec();
     return;
   }
 
@@ -27,6 +31,9 @@ const saveBlockData = async transactions => {
         totalTransactionsCount: transactions.length,
         'checkedData.total_txblocks_count': 1,
         'checkedData.totalTransactionsCount': transactions.length,
+        'checkedData2.total_txblocks_count': 1,
+        'checkedData2.totalTransactionsCount': transactions.length,
+        'checkedData2.producedBlocks': 1,
       } },
     )
     .exec();
@@ -102,6 +109,8 @@ const saveBlockData = async transactions => {
             produced_per_day: 1,
             'checkedData.tx_count': tx_count,
             'checkedData.produced': 1,
+            'checkedData2.tx_count': tx_count,
+            'checkedData2.produced': 1,
           },
       },
       upsert: true,

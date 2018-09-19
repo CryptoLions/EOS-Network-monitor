@@ -1,7 +1,6 @@
 /* eslint-disable no-param-reassign */
 const {
   UPDATE_TRANSACTIONS: { FROM_BLOCK_NUM, TO_BLOCK_NUM, DEFAULT_VALUE },
-  BLOCK_CHECK_INTERVAL,
 } = require('config');
 const { eosApi, createLogger } = require('../../helpers');
 const { StateModelV2 } = require('../../db');
@@ -13,19 +12,17 @@ const { SECOND } = require('../../constants');
 const { info: logInfo } = createLogger();
 
 const startHandleBlock = async () => {
-  const stateData = await StateModelV2.findOne({ id: 1 });
-  let doWork = true;
+  const stateData = await StateModelV2.findOne({ id: 1 }).select('utils');
   if (!stateData) {
     logInfo('Collection "State" is empty!');
     return;
   }
+  logInfo('Resyncing has been started');
   let previous = {};
   const handleBlock = async () => {
-    if (!doWork) {
-      return;
-    }
     try {
-      const state = await StateModelV2.findOne({ id: 1 });
+      const startTs = Date.now();
+      const state = await StateModelV2.findOne({ id: 1 }).select('utils');
       const { max_aps, max_tps } = state;
       let {
         utils: {
@@ -42,7 +39,6 @@ const startHandleBlock = async () => {
             ' The last handled block is greater than TO_BLOCK_NUM.' +
             ' Stop the script! Or check config and State table!',
         );
-        doWork = false;
         return;
       }
       await StateModelV2.update({ id: 1 }, { $inc: { 'utils.updateTransactions.lastCheckedBlock': 1 } });
@@ -55,15 +51,16 @@ const startHandleBlock = async () => {
       }
       const data = await extractData(block);
       await saveBlockData(data);
+      logInfo(`Block ${lastCheckedBlock + 1} was resynced. Time: ${Date.now() - startTs}`);
+      handleBlock();
     } catch (e) {
-      StateModelV2.update({ id: 1 }, { $inc: { lastHandledBlock: -1 } }).exec();
-      if (e.status === 500 && e.statusText === 'Internal Server Error') {
-        // Block is not produced yet
-      }
-      // change the work node
+      await StateModelV2.update({ id: 1 }, { $inc: { 'utils.updateTransactions.lastCheckedBlock': -1 } });
+      logInfo('resync ERROR');
+      logInfo(e);
+      handleBlock();
     }
   };
-  setInterval(handleBlock, BLOCK_CHECK_INTERVAL);
+  handleBlock();
 };
 
 module.exports = startHandleBlock;

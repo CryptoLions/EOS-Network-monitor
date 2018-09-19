@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+mongoose.set('useCreateIndex', true);
 const { MONGODB } = require('config');
 
 const AccountSchemaV2 = require('./schema/account.v2');
@@ -14,6 +15,7 @@ const connect = () => {
   };
   if (MONGODB.AUTH_IS_REQUIRED) {
     mongooseOptions.authSource = MONGODB.AUTH_SOURCE;
+    mongooseOptions.useNewUrlParser = true;
     mongooseOptions.auth = {
       user: MONGODB.USER,
       password: MONGODB.PASSWORD,

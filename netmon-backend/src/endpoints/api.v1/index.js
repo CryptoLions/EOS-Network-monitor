@@ -2,7 +2,7 @@ const { API_PREFIX } = require('config');
 
 const { castToInt } = require('../../helpers');
 
-const { TransactionModelV2, TransactionToAccountV2 } = require('../../db');
+const { TransactionModelV2, TransactionToAccountV2, ProducerModelV2 } = require('../../db');
 
 const init = ({ app, handlers }) => {
   const { table: tableHandler, info: infoHandler, account: accountHandler, transaction: transactionHandler } = handlers;
@@ -73,10 +73,36 @@ const init = ({ app, handlers }) => {
   });
   app.get(`${API_PREFIX}/transactions/`, async (req, res) => {
     const now = Date.now();
-    const { tsStart = now - 1000, tsEnd, actions } = req.query;
+    const { tsStart = now - 1000, tsEnd, actions, mentionedAccounts } = req.query;
     const correctedActions = actions && actions.split(',');
-    const history = await transactionHandler.getTransactions({ tsStart, tsEnd, actions: correctedActions });
+    const correctedMentionedAccounts = mentionedAccounts && mentionedAccounts.split(',');
+    const history = await transactionHandler.getTransactions({
+      tsStart,
+      tsEnd,
+      actions: correctedActions,
+      mentionedAccounts: correctedMentionedAccounts,
+    });
     res.status(200).send(history);
+  });
+  app.get(`${API_PREFIX}/p2p/:type`, async (req, res) => {
+    const { type } = req.params;
+    const p2pFieldName = type === 'endpoints' ? 'p2p_listen_endpoint' : 'p2p_server_address';
+    try {
+      const pipline = [
+        { $match: { nodes: { $ne: null } } },
+        { $unwind: '$nodes' },
+        { $match: {
+          [`nodes.${p2pFieldName}`]: { $ne: null },
+        } },
+        { $group: { _id: '$name', p2p: { $push: `$nodes.${p2pFieldName}` }, total_votes: { $first: '$total_votes' } } },
+        { $sort: { total_votes: -1 } },
+        { $project: { name: '$_id', p2p: 1, _id: 0 } },
+      ];
+      const endpoints = await ProducerModelV2.aggregate(pipline);
+      res.status(200).send(endpoints);
+    } catch (e) {
+      res.status(500).send('Internal Server Error');
+    }
   });
 };
 

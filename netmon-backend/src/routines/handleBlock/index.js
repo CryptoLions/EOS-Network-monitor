@@ -1,10 +1,7 @@
 /* eslint-disable no-param-reassign */
 const { START_BLOCKS_HANDLING_FROM } = require('config');
 const { eosApi, createLogger } = require('../../helpers');
-const {
-  StateModelV2,
-  ProducerModelV2,
-} = require('../../db');
+const { StateModelV2 } = require('../../db');
 const extractData = require('./extractData');
 const findMaxInfo = require('./findMaxInfo');
 const saveBlockData = require('./saveBlockData');
@@ -16,11 +13,11 @@ const { info: logInfo } = createLogger();
 let previous = {};
 const handleBlock = async () => {
   try {
-    const { lastHandledBlock, max_tps, max_aps, checkedData } =
-      await StateModelV2.findOne({ id: 1 }).select('lastHandledBlock max_tps max_aps checkedData');
+    const { lastHandledBlock, max_tps, max_aps, checkedData2 } =
+      await StateModelV2.findOne({ id: 1 }).select('lastHandledBlock max_tps max_aps checkedData checkedData2');
     const timeMark = Date.now();
-    if (!checkedData.startFromBlock) {
-      await StateModelV2.updateOne({ id: 1 }, { 'checkedData.startFromBlock': lastHandledBlock + 1 }).exec();
+    if (!checkedData2.startFromBlock) {
+      await StateModelV2.updateOne({ id: 1 }, { 'checkedData2.startFromBlock': lastHandledBlock + 1 }).exec();
     }
     const { last_irreversible_block_num } = await eosApi.getInfo();
     if (last_irreversible_block_num <= lastHandledBlock) {
@@ -35,11 +32,6 @@ const handleBlock = async () => {
     if (max) {
       await StateModelV2.update({ id: 1 }, { $set: max }).exec();
     }
-    await ProducerModelV2.update(
-      { name: block.producer },
-      { $inc: { produced: 1, tx_count: block.transactions.length } },
-    ).exec();
-
     const data = await extractData(block);
     await saveBlockData(data);
     logInfo(`handleBlock ${lastHandledBlock} ${Date.now() - timeMark} ms`);

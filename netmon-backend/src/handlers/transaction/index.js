@@ -1,4 +1,4 @@
-/* eslint-disable no-param-reassign,no-mixed-operators */
+/* eslint-disable no-param-reassign,no-mixed-operators,no-empty-pattern */
 const {
   LISTENERS: { ON_TRANSACTIONS_ADD_INTERVAL },
 } = require('config');
@@ -16,18 +16,25 @@ const getCountInfo = async () => {
   };
 };
 
-const getTransactions = ({ tsStart, tsEnd, actions }) => {
+const getTransactions = ({ tsStart, tsEnd, actions, mentionedAccounts }) => {
   const pipeline = [];
+  // time
+  pipeline.push({ $match: { createdAt: { $gte: new Date(castToInt(tsStart)) } } });
+  if (tsEnd) {
+    pipeline.push({ $match: { createdAt: { $lte: new Date(castToInt(tsEnd)) } } });
+  }
+  // actions
   if (actions && actions.length > 1) {
     pipeline.push({ $match: { action: { $in: actions } } });
   } else if (actions && actions.length === 1) {
     pipeline.push({ $match: { action: actions[0] } });
   }
-  pipeline.push({ $match: { createdAt: { $gte: new Date(castToInt(tsStart)) } } });
-  if (tsEnd) {
-    pipeline.push({ $match: { createdAt: { $lte: new Date(castToInt(tsEnd)) } } });
+  // accounts
+  if (mentionedAccounts && mentionedAccounts.length > 1) {
+    pipeline.push({ $match: { mentionedAccounts: { $in: mentionedAccounts } } });
+  } else if (mentionedAccounts && mentionedAccounts.length === 1) {
+    pipeline.push({ $match: { action: mentionedAccounts[0] } });
   }
-  pipeline.push({ $limit: 100 });
   return TransactionLastHourModelV2.aggregate(pipeline);
 };
 
@@ -35,7 +42,6 @@ const initHandler = () => {
   const listeners = [];
 
   const notify = async () => {
-    // Must be optimized
     const transactions = await getTransactions({ tsStart: Date.now() - ON_TRANSACTIONS_ADD_INTERVAL });
     const { notEmptyBlocksCount, totalBlockCount, totalTransactionsCount } = await getCountInfo();
     listeners.forEach(async listener => {

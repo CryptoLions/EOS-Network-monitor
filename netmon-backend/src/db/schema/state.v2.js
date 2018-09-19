@@ -23,6 +23,13 @@ const State = new Schema({
     total_txblocks_count: { type: Number, default: 0 },
     totalTransactionsCount: { type: Number, default: 0 },
   },
+  checkedData2: {
+    startFromBlock: { type: Number },
+    total_txblocks_count: { type: Number, default: 0 },
+    totalTransactionsCount: { type: Number, default: 0 },
+    missedProducedBlocks: { type: Number, default: 0 },
+    producedBlocks: { type: Number, default: 0 },
+  },
   utils: {
     updateTransactions: {
       start: { type: Boolean, default: true },
@@ -43,7 +50,7 @@ const State = new Schema({
     checkProducedBlocks: {
       start: { type: Boolean, default: true },
       lastCheckedBlock: { type: Number, default: 0 },
-      endBlock: { type: Number, default: 13279486 },
+      endBlock: { type: Number, default: 15000000 },
     },
   },
 }, { collection: 'State' });

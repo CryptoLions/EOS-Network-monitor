@@ -1,18 +1,26 @@
 {
   "SERVER": {
-    "HOST": "",
-    "PORT": ""
+    "HOST": "http://localhost1", // webaddress
+    "PORT": "3000"
   },
   "NODE": {
-    "HOST": "",
-    "PORT": ""
+    "HOST": "http://bp.cryptolions.io",
+    "PORT": "8888",
+    "ALLOWABLE_MAX_PING": 500 // in ms. When ping is greater than this value, the node will be changed
   },
+  "RESERVE_NODES": [
+    {
+      "HOST": "https://bp.cryptolions.io",
+      "PORT": "443"
+    }
+  ],
   "MONGODB": {
-    "ADDRESS": "",
-    "AUTH_SOURCE": "",
+    "ADDRESS": "mongodb://localhost:27017/",
+    "DB_NAME": "MainNet",
+    "AUTH_IS_REQUIRED": false,
+    "AUTH_SOURCE": "admin",
     "USER": "",
     "PASSWORD": ""
   },
-  "ENABLE_CORS_SUPPORT": true,
-  "WHITE_LIST": []
+  "LOG_CONSOLE": true
 }

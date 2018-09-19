@@ -86,11 +86,17 @@
   },
   "SOCKET_ROOM": "room",
   "KEYSTORE": {
-    "RELOAD_PAGE": "reloadPageCommandKey",
-    "MAIN": "Nescafe"
+    "RELOAD_PAGE": "reloadKey",
+    "MAIN": "testest"
   },
   "APPROXIMATELY_BLOCKS_PRODUCED_PER_DAY": 172800, // 2 * blocks * 60 sec * 60 m * 24 h
   "RELOAD_PAGE_COOLDAWN": 60000, // not more often than once a minute
-  "BUGSNAG_API_KEY": "498d2d11464881acc5c63e05481d1535",
-  "SAVE_TABLE_INTERVAL": 10000 // in ms
+  "BUGSNAG_API_KEY": "set your key",
+  "SAVE_TABLE_INTERVAL": 10000, // in ms
+  "SLACK": {
+    "TOKEN": "set your token",
+    "CHANEL_ID": "CCM4DMHE3",
+    "ICON_URL": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5vQyHLJ9mUn8BQN7BQ6nG_x9L92pL2zq_tLJh-cs9tU5Zj-ab",
+    "USERNAME": "Dev-Server"
+  }
 }

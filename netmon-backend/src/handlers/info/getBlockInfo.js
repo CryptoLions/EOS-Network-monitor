@@ -8,15 +8,24 @@ const findNextProducer = (list, current) => {
   return list[nextIndex];
 };
 
-const getBlockInfo = async blockNum => {
-  if (blockNum) {
-    return eosApi.getBlock(blockNum);
-  }
+let previous = {};
+let blockNum = 0;
+
+const getBlockInfo = async (schedule) => {
   const info = await eosApi.getInfo({});
-  const schedule = await eosApi.getProducerSchedule({});
+  if (!blockNum) {
+    blockNum = info.head_block_num;
+  }
   info.next_producer = findNextProducer(schedule.active.producers.map(e => e.producer_name), info.head_block_producer);
   const number = info.head_block_num;
-  const block = await eosApi.getBlock(number);
+  let block;
+  try {
+    block = await eosApi.getBlock(blockNum);
+    previous = block;
+    blockNum += 1;
+  } catch (e) {
+    block = previous;
+  }
   return {
     number,
     info,

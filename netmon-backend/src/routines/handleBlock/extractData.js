@@ -304,16 +304,17 @@ const processAction = ({ block_num, transaction, id, producer, withSubActions = 
       }
 
       let voteProds = '';
-      mentionedAccounts.push(
-        ...data.producers.map(item => {
-          if (voteProds !== '') {
-            voteProds += ', ';
-          }
-          voteProds += item;
-          return item;
-        }),
-      );
-
+      if (data.producers) {
+        mentionedAccounts.push(
+          ...data.producers.map(item => {
+            if (voteProds !== '') {
+              voteProds += ', ';
+            }
+            voteProds += item;
+            return item;
+          }),
+        );
+      }
       mentionedAccounts.push(data.voter);
 
       msgObject.c4 = voteProds;
@@ -459,18 +460,23 @@ const processAction = ({ block_num, transaction, id, producer, withSubActions = 
   };
 
   if (name === 'voteproducer') {
-    const stdout_obj = await eosApi.getAccount({ account_name: data.voter });
+    if (data.voter) {
+      const stdout_obj = await eosApi.getAccount({ account_name: data.voter });
 
-    if (stdout_obj.total_resources == null) {
-      stdout_obj.total_resources = { ram_bytes: 0, net_weight: '? EOS', cpu_weight: '? EOS' };
+      if (stdout_obj.total_resources == null) {
+        stdout_obj.total_resources = { ram_bytes: 0, net_weight: '? EOS', cpu_weight: '? EOS' };
+      }
+      txInfo.msgObject.c5 = `NET: ${stdout_obj.total_resources.net_weight} <BR>CPU: ${
+        stdout_obj.total_resources.cpu_weight
+      }<BR>`;
+      const net = stdout_obj.total_resources.net_weight.split(' ');
+      const cpu = stdout_obj.total_resources.cpu_weight.split(' ');
+
+      txInfo.msgObject.c6 = `TOTAL: ${Math.round((net[0] * 1 + cpu[0] * 1) * 10000) / 10000} EOS`;
+    } else {
+      txInfo.msgObject.c5 = 'NET: ERROR <BR>CPU: ERROR <BR>';
+      txInfo.msgObject.c6 = 'TOTAL: ERROR EOS';
     }
-    txInfo.msgObject.c5 = `NET: ${stdout_obj.total_resources.net_weight} <BR>CPU: ${
-      stdout_obj.total_resources.cpu_weight
-    }<BR>`;
-    const net = stdout_obj.total_resources.net_weight.split(' ');
-    const cpu = stdout_obj.total_resources.cpu_weight.split(' ');
-
-    txInfo.msgObject.c6 = `TOTAL: ${Math.round((net[0] * 1 + cpu[0] * 1) * 10000) / 10000} EOS`;
   }
   result.txInfo = txInfo;
   result.accounts = txInfo.mentionedAccounts;

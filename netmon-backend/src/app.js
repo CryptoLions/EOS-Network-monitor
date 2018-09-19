@@ -1,4 +1,5 @@
 const { BUGSNAG_API_KEY, WHITE_LIST, ENABLE_CORS_SUPPORT, SERVER } = require('config');
+require('appmetrics-dash').monitor();
 const express = require('express');
 const createSocketIO = require('socket.io');
 const { Server } = require('http');
@@ -17,9 +18,11 @@ const { createLogger } = require('./helpers');
 const corsOptionsDelegate = require('./helpers/corsOptionsDelegate');
 
 
-const { info: logInfo } = createLogger();
-const startUtilsIfNeed = require('./utils');
+const { info: logInfo, error: logError } = createLogger();
 
+process.on('uncaughtException', (err) => {
+  logError(`======= UncaughtException App :  ${err}`);
+});
 
 const app = express();
 const http = Server(app);
@@ -33,17 +36,18 @@ const start = async () => {
   }
   try {
     await connectToDb();
-    startUtilsIfNeed();
     const handlers = await initHandlers();
     await initSocket({ io, handlers });
     await initEndpoints({ app, handlers, io });
     app.use(bugsnag.errorHandler);
   } catch (e) {
+    logError(e);
     bugsnag.notify(e);
     return;
   }
   http.listen(SERVER.PORT, e => {
     if (e) {
+      logError(e);
       bugsnag.notify(e);
       return;
     }

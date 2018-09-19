@@ -19,11 +19,12 @@ module.exports = async () => {
     const { rows: producers } = await eosApi.getProducers({ json: true, limit: 1000 });
     const bulkWriteOptions = producers.map(p => ({
       updateOne: {
-        filter: { name: p.bp_name },
-        update: { total_votes: p.total_votes },
+        filter: { name: p.owner },
+        update: { total_votes: p.total_votes, unpaid_blocks: p.unpaid_blocks, isActive: true },
       },
     }));
     await ProducerModelV2.bulkWrite(bulkWriteOptions);
+    await ProducerModelV2.updateMany({ name: { $nin: producers.map(p => p.owner) } }, { isActive: false }).exec();
     logInfo('producers positions updated');
   } catch (e) {
     logError(e);

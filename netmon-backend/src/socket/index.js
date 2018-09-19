@@ -17,10 +17,7 @@ const init = ({ io, handlers }) => {
   totalStackedHandler.onUpdate(totalStacked => {
     io.to(SOCKET_ROOM).emit('totalstaked', totalStacked);
   });
-  tableHandler.onOrderChange(() => {
-    console.log('reload_producers')
-    io.to(SOCKET_ROOM).emit('reload_producers');
-  });
+  tableHandler.onOrderChange((table) => io.to(SOCKET_ROOM).emit('reload_producers', table));
   transactionHandler.onUpdate(({ transactions, totalTransactionsCount, notEmptyBlocksCount, totalBlockCount }) => {
     io.to(SOCKET_ROOM).emit('transactions', {
       transactions: transactions.map(t => t.msgObject).slice(0, MAX_TRANSACTIONS_PER_CONNECT_BY_SOCKET),

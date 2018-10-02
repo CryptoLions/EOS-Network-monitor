@@ -3,12 +3,13 @@ const { connect: connectToDB } = require('../db');
 const { CALCULATE_REWARDS_FOR_DAY_INTERVAL } = require('../constants');
 const updateProducers = require('./updateProducers');
 const updateProducersFast = require('./updateProducersFast');
-const checkProducersSites = require('./checkProducersSites');
+const checkProducerEndpointsAndSites = require('./checkProducersSites');
 const startHandleBlockRoutine = require('./handleBlock');
 const cleanTransactionsLastHourCollection = require('./cleanTransactionsLastHourCollection');
 const calculateRewardsPerDay = require('./calculateRewardsPerDay');
 const resetMissedBlocksForDay = require('./resetMissedBlocksForDay');
 const resetProducedTimesForDay = require('./resetProducedTimesForDay');
+const fillBlockChartGaps = require('./fillBlockGaps');
 
 const startUpdateProducersRoutine = () => {
   updateProducers();
@@ -27,12 +28,14 @@ const startUpdateProducersFastRoutine = () =>
     start: true,
   });
 
-const startCheckProducersSitesRoutine = () =>
-  new CronJob({
-    cronTime: '*/30 * * * *', // every 30 min
-    onTick: checkProducersSites,
+const startCheckProducersSitesRoutine = () => {
+  checkProducerEndpointsAndSites();
+  return new CronJob({
+    cronTime: '*/10 * * * *', // every 10 min
+    onTick: checkProducerEndpointsAndSites,
     start: true,
   });
+};
 
 const startCleanTransactionsLastHourCollection = () =>
   new CronJob({
@@ -60,8 +63,20 @@ const startResetProducedTimesForDay = () =>
     start: true,
   });
 
+const startFillBlockChartGaps = () => {
+  fillBlockChartGaps();
+  return new CronJob({
+    cronTime: '0/30 * * * *', // every 30 minutes
+    onTick: fillBlockChartGaps,
+    start: true,
+  });
+};
+
+
 const startRoutine = async () => {
   await connectToDB();
+
+  startFillBlockChartGaps();
 
   startUpdateProducersRoutine();
 

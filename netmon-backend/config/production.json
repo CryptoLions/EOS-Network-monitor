@@ -1,6 +1,6 @@
 {
   "SERVER": {
-    "HOST": "http://localhost1", // webaddress
+    "HOST": "http://localhost", // webaddress
     "PORT": "3000"
   },
   "NODE": {
@@ -10,8 +10,8 @@
   },
   "RESERVE_NODES": [
     {
-      "HOST": "https://bp.cryptolions.io",
-      "PORT": "443"
+      "HOST": "http://api.eossweden.se",
+      "PORT": "80"
     }
   ],
   "MONGODB": {

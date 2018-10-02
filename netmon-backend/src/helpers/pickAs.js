@@ -2,6 +2,9 @@
 
 const pickFromObj = (object, fields) =>
   Object.keys(fields).reduce((acc, key) => {
+    if (typeof fields[key] === 'function') {
+      acc[key] = fields[key]();
+    }
     if (object[fields[key]] !== undefined) {
       acc[key] = object[fields[key]];
     }

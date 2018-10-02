@@ -27,6 +27,7 @@ const getBlockInfo = async (schedule) => {
     block = previous;
   }
   return {
+    blockNum,
     number,
     info,
     block,

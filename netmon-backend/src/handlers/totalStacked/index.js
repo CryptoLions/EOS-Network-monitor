@@ -2,14 +2,20 @@ const {
   LISTENERS: { ON_TOTAL_STACKED_CHANGE_INTERVAL },
   TOTAL_STACKED_CHECK_INTERVAL,
 } = require('config');
-const { createEosApi, castToInt } = require('../../helpers');
+const { createEosApi, castToInt, logError } = require('../../helpers');
 
 const eosApi = createEosApi();
 
 const getTotalStacked = async () => {
-  const [stake] = await eosApi.getCurrencyBalance('eosio.token', 'eosio.stake');
+  try {
+    const [stake] = await eosApi.getCurrencyBalance('eosio.token', 'eosio.stake');
 
-  return castToInt(stake.split(' ')[0]) * 10000;
+    return castToInt(stake.split(' ')[0]) * 10000;
+  } catch (e) {
+    logError('get total stacked error');
+    logError(e);
+    return 0;
+  }
 };
 
 const initTotalStackedHandler = async () => {

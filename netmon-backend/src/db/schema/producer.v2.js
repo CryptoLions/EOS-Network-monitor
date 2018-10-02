@@ -3,6 +3,7 @@ const Node = require('./node.v2');
 
 const Producer = new Schema({
   name: { type: String, index: true },
+  candidateName: { type: String },
   isActive: { type: Boolean, default: true },
   checkedData: { // deprecated
     produced: { type: Number, default: 0 },
@@ -21,6 +22,10 @@ const Producer = new Schema({
     expectedBlockRewardsForDay: { type: Number, default: 0 },
     expectedRewardsOnThisPosition: { type: Number, default: 0 },
     totalBlockUnpaidRewards: { type: Number, default: 0 },
+  },
+  logo: String,
+  contacts: {
+    email: String,
   },
   total_votes: { type: Number, index: true, default: 0 },
   rewards_per_day: { type: Number, default: 0 }, // deprecated
@@ -44,6 +49,10 @@ const Producer = new Schema({
     port: { type: String, default: null },
     use: { type: Boolean, default: false },
   },
+  endpoints: [{
+    endpoint: String,
+    isWorking: { type: Boolean, default: false },
+  }],
 }, { collection: 'Producer' });
 
 module.exports = Producer;

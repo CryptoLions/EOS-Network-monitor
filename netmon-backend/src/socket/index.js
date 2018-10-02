@@ -7,6 +7,7 @@ const init = ({ io, handlers }) => {
     totalStacked: totalStackedHandler,
     transaction: transactionHandler,
     info: infoHandler,
+    ram: ramHandler,
   } = handlers;
   userCountHandler.onUpdate(userCount => {
     io.to(SOCKET_ROOM).emit('usersonline', userCount);
@@ -26,15 +27,18 @@ const init = ({ io, handlers }) => {
       totalBlockCount,
     });
   });
-  infoHandler.onUpdate(({ info, block }) => {
+  infoHandler.onUpdate(({ info, block, chart }) => {
     io.to(SOCKET_ROOM).emit('info', info);
     io.to(SOCKET_ROOM).emit('blockupdate', block);
+    io.to(SOCKET_ROOM).emit('blockchart', chart);
   });
+  ramHandler.onUpdate(ram => io.to(SOCKET_ROOM).emit('ram', ram));
   io.on('connection', socket => {
     socket.join(SOCKET_ROOM);
 
     userCountHandler.addUser();
     socket.on('disconnect', () => {
+      socket.leave(SOCKET_ROOM);
       userCountHandler.minusUser();
     });
   });

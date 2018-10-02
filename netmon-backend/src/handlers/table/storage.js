@@ -86,6 +86,7 @@ const createStorage = () => {
         'missedBlocksForRound',
         'missedBlocksTotal',
         'checkedData2',
+        'endpoints',
         'expectedIncomeData',
         {
           totalVotes: 'total_votes',

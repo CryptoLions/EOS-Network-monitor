@@ -1,6 +1,6 @@
 const { fork } = require('child_process');
 const Path = require('path');
-const { eosApi } = require('../../helpers');
+const { eosApi, logError } = require('../../helpers');
 
 const listeners = [];
 
@@ -16,7 +16,10 @@ const createWorker = () => {
     listeners.forEach(onData =>
       onData(data.additionalInfo ? data : { ...data, info: { ...lastAdditionalInfo, ...data.info } }));
   });
-  worker.on('close', () => createWorker());
+  worker.on('close', () => {
+    createWorker();
+    logError('Info worker was recreated');
+  });
 };
 
 const initInfoHandler = async () => {

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const { LOG_CONSOLE, BUGSNAG_API_KEY, SLACK } = require('config');
 const bugsnag = require('bugsnag');
 const slack = require('slack');
@@ -32,7 +33,7 @@ const createLoggerWrapper = () => ({
       bugsnag.notify(data, { severity: 'info' });
       slackNotifier.notify({ isError: false, message: data });
     }
-    if (LOG_CONSOLE) {
+    if (LOG_CONSOLE || send) {
       console.log(data);
     }
   },
@@ -41,9 +42,7 @@ const createLoggerWrapper = () => ({
       bugsnag.notify(data, { severity: 'error' });
       slackNotifier.notify({ isError: true, message: data });
     }
-    if (LOG_CONSOLE) {
-      console.error(data);
-    }
+    console.error(data);
   },
 });
 

@@ -4,6 +4,7 @@ const initTransactionHandler = require('./transaction');
 const initTotalStackedHandler = require('./totalStacked');
 const initInfoHandler = require('./info');
 const initAccountHandler = require('./account');
+const initRamHandler = require('./ram');
 
 const init = async () => {
   const userCount = await initUserCountHandler();
@@ -12,6 +13,7 @@ const init = async () => {
   const totalStacked = await initTotalStackedHandler();
   const info = await initInfoHandler();
   const account = await initAccountHandler();
+  const ram = await initRamHandler();
 
   info.onUpdate(infoData => table.setCurrentInfo(infoData));
   return {
@@ -21,6 +23,7 @@ const init = async () => {
     transaction,
     info,
     account,
+    ram,
   };
 };
 

@@ -10,6 +10,8 @@ const castToInt = require('./castToInt');
 
 const pickAs = require('./pickAs');
 
+const setSensitiveInterval = require('./setSensitiveInterval');
+
 const { info: logInfo, error: logError } = createLogger();
 
 module.exports = {
@@ -25,4 +27,5 @@ module.exports = {
   exec,
   castToInt,
   pickAs,
+  setSensitiveInterval,
 };

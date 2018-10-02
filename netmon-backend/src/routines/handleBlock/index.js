@@ -33,7 +33,7 @@ const handleBlock = async () => {
       await StateModelV2.update({ id: 1 }, { $set: max }).exec();
     }
     const data = await extractData(block);
-    await saveBlockData(data);
+    await saveBlockData({ transactions: data, producer: block.producer });
     logInfo(`handleBlock ${lastHandledBlock} ${Date.now() - timeMark} ms`);
 
     await StateModelV2.update({ id: 1 }, { $inc: { lastHandledBlock: 1 } });

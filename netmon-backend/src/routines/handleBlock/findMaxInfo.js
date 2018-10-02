@@ -35,6 +35,7 @@ const findMaxInfo = async ({ current = { transactions: [] }, previous, max_tps =
     live_tps = current.transactions.length + (previousTransactionsNumber / previous.producedInSeconds / 2);
     live_aps = getActionsCount(current) + (getActionsCount(previous) / previous.producedInSeconds / 2);
   }
+  live_aps = live_aps < live_tps ? live_tps : live_aps;
   const res = {};
   if (live_tps > max_tps) {
     res.max_tps = live_tps;

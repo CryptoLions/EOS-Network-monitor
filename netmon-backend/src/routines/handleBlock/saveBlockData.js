@@ -12,12 +12,21 @@ const { createLogger } = require('../../helpers');
 
 const { error: logError } = createLogger();
 
-const saveBlockData = async transactions => {
+const saveBlockData = async ({ transactions, producer }) => {
   if (!transactions || !transactions.length) {
     await StateModelV2.update(
       { id: 1 },
       { $inc: { 'checkedData2.producedBlocks': 1 } },
     ).exec();
+    await ProducerModelV2.updateOne({ name: producer }, {
+      $inc:
+        {
+          produced: 1,
+          produced_per_day: 1,
+          'checkedData.produced': 1,
+          'checkedData2.produced': 1,
+        },
+    }).exec();
     return;
   }
 
@@ -60,19 +69,6 @@ const saveBlockData = async transactions => {
       .concat({ txid: t.txInfo.txid, account: t.newAccount.name, block: t.txInfo.block })
     : t.accounts
       .map(a => ({ txid: t.txInfo.txid, account: a, block: t.txInfo.block })))));
-  const producersData = transactions.reduce((acc, t) => {
-    const { blocknum, producer } = t;
-    if (!acc[blocknum]) {
-      acc[blocknum] = {
-        name: producer,
-        tx_count: 1,
-      };
-    } else {
-      acc[blocknum].tx_count += 1;
-    }
-    return acc;
-  }, {});
-
   if (transactionsInfo.length) {
     try {
       await TransactionModelV2.insertMany(transactionsInfo);
@@ -98,31 +94,22 @@ const saveBlockData = async transactions => {
     } catch (e) {
     }
   }
-
-  const bulkWriteProducersOptions = Object.values(producersData).map(({ name, tx_count }) => ({
-    updateOne: {
-      filter: { name },
-      update: { $inc:
-          {
-            tx_count,
-            produced: 1,
-            produced_per_day: 1,
-            'checkedData.tx_count': tx_count,
-            'checkedData.produced': 1,
-            'checkedData2.tx_count': tx_count,
-            'checkedData2.produced': 1,
-          },
-      },
-      upsert: true,
-    },
-  }));
-  if (bulkWriteProducersOptions.length > 0) {
-    try {
-      await ProducerModelV2.bulkWrite(bulkWriteProducersOptions);
-    } catch (e) {
-      logError('Error with: ProducerModelV2.bulkWrite(bulkWriteProducersOptions);');
-      throw e;
-    }
+  try {
+    await ProducerModelV2.updateOne({ name: producer }, {
+      $inc:
+        {
+          tx_count: transactions.length,
+          produced: 1,
+          produced_per_day: 1,
+          'checkedData.tx_count': transactions.length,
+          'checkedData.produced': 1,
+          'checkedData2.tx_count': transactions.length,
+          'checkedData2.produced': 1,
+        },
+    }).exec();
+  } catch (e) {
+    logError('Error with: ProducerModelV2.updateOne;');
+    throw e;
   }
 };
 

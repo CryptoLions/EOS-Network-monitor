@@ -50,7 +50,7 @@ const startHandleBlock = async () => {
         StateModelV2.update({ id: 1 }, { $set: max }).exec();
       }
       const data = await extractData(block);
-      await saveBlockData(data);
+      await saveBlockData({ transactions: data, producer: block.producer });
       logInfo(`Block ${lastCheckedBlock + 1} was resynced. Time: ${Date.now() - startTs}`);
       handleBlock();
     } catch (e) {

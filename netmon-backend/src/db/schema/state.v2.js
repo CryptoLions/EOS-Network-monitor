@@ -31,6 +31,9 @@ const State = new Schema({
     producedBlocks: { type: Number, default: 0 },
   },
   utils: {
+    fillBlockGaps: {
+      lastFilledBlock: { type: Number, default: 1 },
+    },
     updateTransactions: {
       start: { type: Boolean, default: true },
       lastCheckedBlock: { type: Number, default: DEFAULT_VALUE },

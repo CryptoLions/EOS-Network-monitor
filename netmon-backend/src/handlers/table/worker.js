@@ -1,4 +1,4 @@
-/* eslint-disable no-mixed-operators,no-continue,no-await-in-loop,no-param-reassign */
+/* eslint-disable no-mixed-operators,no-continue,no-await-in-loop,no-param-reassign,no-underscore-dangle */
 const {
   PRODUCERS_CHECK_INTERVAL,
   GET_INFO_INTERVAL,
@@ -48,7 +48,7 @@ const isNode = (producer) => {
   return !!producer.nodes.find(n => CHECK_URLS.find(type => n[type] && n[type].length));
 };
 
-const convertFieldsFromStringToArr = fields => fields.split(' ').map(s => s.trim());
+const convertFieldsFromStringToArr = fields => fields.split(' ').map(s => s.trim()).filter(s => s && s.length);
 
 const getProducersInfo = async () => {
   const { total_producer_vote_weight } = await eosApi.getProducers({ json: true, limit: 1 });
@@ -71,6 +71,7 @@ const getProducersInfo = async () => {
       missedBlocksTotal
       checkedData2
       expectedIncomeData
+      endpoints
       nodes
       nodes._id
       nodes.enabled
@@ -90,10 +91,20 @@ const getProducersInfo = async () => {
     .exec();
   return producersFromDb.map(p => (
     {
-      ...pickAs(p, convertFieldsFromStringToArr(fields)),
-      isNode: isNode(p),
-      votesPercentage: p.total_votes / onePercent,
-      votesInEOS: calculateEosFromVotes(p.total_votes),
+      ...pickAs(p._doc, [
+        ...convertFieldsFromStringToArr(fields),
+        {
+          isNode: () => isNode(p),
+          votesPercentage: () => p.total_votes / onePercent,
+          votesInEOS: () => calculateEosFromVotes(p.total_votes),
+          produced: () => (p._doc.produced && p._doc.produced > p.checkedData2.produced
+            ? p._doc.produced
+            : p.checkedData2.produced),
+          tx_count: () => (p._doc.tx_count && p._doc.tx_count > p.checkedData2.tx_count
+            ? p._doc.tx_count
+            : p.checkedData2.tx_count),
+        },
+      ]),
     }));
 };
 
@@ -165,14 +176,6 @@ const processNodeAndGetInfo = async (host, port, name, nodeId, wasEnabled) => {
       errorMessage: null,
       statusCode: 200,
     },
-    // producer: {
-    //   name: info.head_block_producer,
-    //   isNodeBroken: false,
-    //   producedBlock: info.head_block_num,
-    //   producedTimestamp: Date.parse(info.head_block_time),
-    //   isNode: true,
-    //   isUpdated: true,
-    // },
   };
 };
 
@@ -250,6 +253,7 @@ const initProducerHandler = async () => {
   const checkProducers = async () => {
     try {
       const producers = await getProducersInfo();
+      //  console.log(producers[0])
       storage.updateProducers(producers);
       const nextProducersOrder = (await storage.getAll()).map(p => p.name);
       const orderIsChanged = nextProducersOrder.find((e, i) => e !== previousProducersOrder[i]);

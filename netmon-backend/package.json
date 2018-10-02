@@ -10,12 +10,15 @@
     "updateTpsAps": "node ./src/utils/updateTpsAps/start.js",
     "updateTotalTransactionsCount": "node ./src/utils/updateTotalTransactionsCount/start.js",
     "cleanAccountCollectionFromMentionedIn": "node ./src/utils/cleanAccountCollectionFromMentionedIn/start.js",
-    "start": "concurrently --names \"APP,ROUTINE\" \"yarn start-app\" \"yarn start-routine\"",
+    "start": "concurrently --names \"APP,ROUTINE\" \"npm run start-app\" \"npm run start-routine\"",
     "pm2-start": "pm2 start ecosystem.config.js --env production",
     "migrateTransactionToAccount": "pm2 start ./src/migrations/fillTransactionToAccountCollection.js --name tansactionToAccountMigration",
-    "updateTransactionToAccount": "node ./src/utils/updateTransactionToAccountCollection/start.js"
+    "updateTransactionToAccount": "node ./src/utils/updateTransactionToAccountCollection/start.js",
+    "checkProducedBlocks": "node ./src/utils/checkProducedBlocks/start.js",
+    "fillBlockGaps": "node ./src/utils/fillBlockGaps/start.js"
   },
   "dependencies": {
+    "appmetrics-dash": "^4.0.0",
     "body-parser": "^1.18.3",
     "bugsnag": "^2.4.3",
     "compression": "^1.7.2",
@@ -33,6 +36,7 @@
     "mongoose": "^5.2.4",
     "request": "^2.85.0",
     "request-promise-native": "^1.0.5",
+    "slack": "^11.0.1",
     "sleep": "^5.1.1",
     "socket.io": "^2.1.0",
     "url-parse": "^1.4.3",

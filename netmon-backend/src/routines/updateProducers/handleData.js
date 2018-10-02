@@ -106,6 +106,9 @@ const handleData = async producers => {
         return updateProducer({
           name: bp_name,
           nodes,
+          logo: bpData.org.branding && bpData.org.branding.logo_256,
+          'contacts.email': bpData.org.email,
+          candidateName: bpData.org.candidate_name,
           url,
           producer_key: bp_key,
           total_votes,

@@ -38,7 +38,7 @@
     "INTERVAL_BETWEEN_MESSAGES": 900, //900sec = 15minutes
     "URL": "https://api.telegram.org/bot"
   },
-  "LOG_CONSOLE": false,
+  "LOG_CONSOLE": true,
   "GET_INFO_INTERVAL": 250, // Interval between node checking
   "GET_GENERAL_ADDITIONAL_INFO_INTERVAL": 5000,
   "GET_INFO_TOP21_INTERVAL": 500, // Interval between node checking
@@ -46,6 +46,7 @@
   "PRODUCERS_CHECK_INTERVAL": 2000,
   "NODES_CHECK_INTERVAL": 2000,
   "TOTAL_STACKED_CHECK_INTERVAL": 2000,
+  "RAM_CHECK_INTERVAL": 500,
   "TELEGRAM_CHECK_INTERVAL": 5000, // Telegram Bot check intervall
   "ROUNDS_OFF_TO_DISABLE_PROD": 4320, //Disable table when #count rounds is without answer
   "REMOVE_OLD_NODES": true,
@@ -86,8 +87,8 @@
   },
   "SOCKET_ROOM": "room",
   "KEYSTORE": {
-    "RELOAD_PAGE": "reloadKey",
-    "MAIN": "testest"
+    "RELOAD_PAGE": "reloadPageCommandKey",
+    "MAIN": "Nescafe"
   },
   "APPROXIMATELY_BLOCKS_PRODUCED_PER_DAY": 172800, // 2 * blocks * 60 sec * 60 m * 24 h
   "RELOAD_PAGE_COOLDAWN": 60000, // not more often than once a minute

@@ -72,11 +72,19 @@ module.exports = ({ host = NODE.HOST, port = NODE.PORT, isVariable = true, onlyR
     }
     return res;
   };
+  const getProducers = async (args) => {
+    try {
+      return eos.getProducers(args);
+    } catch (e) {
+      changeNode();
+      return getProducers(args);
+    }
+  };
   const getBlock = async (args) => {
     const startTs = Date.now();
     try {
       const res = await eos.getBlock(args);
-      if ((Date.now() - startTs) > NODE.ALLOWABLE_MAX_PING) {
+      if ((Date.now() - startTs) > NODE.ALLOWABLE_MAX_PING && isVariable) {
         changeNode();
       }
       return res;
@@ -88,8 +96,21 @@ module.exports = ({ host = NODE.HOST, port = NODE.PORT, isVariable = true, onlyR
       return getBlock(args);
     }
   };
+  const eosWrapper = Object.keys(eos).reduce((acc, key) => ({
+    ...acc,
+    [key]: typeof eos[key] === 'function'
+      ? (...args) => {
+        try {
+          return eos[key](...args);
+        } catch (e) {
+          changeNode();
+          return eos[key](...args);
+        }
+      }
+      : eos[key],
+  }), Object.create(null));
   return {
-    ...eos,
+    ...eosWrapper,
     getBlock,
     getInfo,
   };

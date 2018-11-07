@@ -38,6 +38,7 @@ const createStorage = () => {
         'isNodeBroken',
         'requestTS',
         'version',
+        'versionString',
         'answeredBlock',
         'isUnsynced',
         'responseIsBad',

@@ -167,6 +167,7 @@ const processNodeAndGetInfo = async (host, port, name, nodeId, wasEnabled) => {
       ping,
       isNodeBroken: false,
       version,
+      versionString: info.server_version_string,
       answeredBlock: info.head_block_num,
       isNode: true,
       requestTS: startTs,

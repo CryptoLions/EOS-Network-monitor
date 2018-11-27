@@ -16,8 +16,8 @@ sudo apt-get install -y nodejs
 sudo apt-get install mongodb  
 ```
 
-Backend repo: https://github.com/CryptoLions/EOS-Network-monitor/tree/master/netmon-backend  
-Frontend repo: https://github.com/CryptoLions/EOS-Network-monitor/tree/master/netmon-frontend  
+Backend repo: https://github.com/CryptoLions/EOS-Network-Monitor-back  
+Frontend repo: https://github.com/CryptoLions/EOS-Network-Monitor-front 
  
 # Creators  
 WebSite: http://cryptolions.io/    

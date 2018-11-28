@@ -20,9 +20,18 @@ Backend repo: https://github.com/CryptoLions/EOS-Network-Monitor-back
 Frontend repo: https://github.com/CryptoLions/EOS-Network-Monitor-front 
  
 # Creators  
-WebSite: http://cryptolions.io/    
-GitGub: https://github.com/CryptoLions  
-SteemIt: https://steemit.com/@cryptolions 
+website: http://cryptolions.io/
+github: https://github.com/CryptoLions
+telegram: https://t.me/CryptoLions_io
+steemit: https://steemit.com/@cryptolions
+twitter: https://twitter.com/EOS_CryptoLions
+medium: https://medium.com/@cryptolions/
+youtube: https://www.youtube.com/channel/UCB7F-KO0mmZ1yVBCq0_1gtA
+
+
+Russian/Ukrainian:
+steemit: https://steemit.com/@cryptolions-ua
+youtube: https://www.youtube.com/channel/UCnVu47FZ09XX9EvrqqgS6uQ
 
 ## Release notes
 
